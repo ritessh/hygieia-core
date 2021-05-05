@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QLibraryPolicyResult.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">QLibraryPolicyResult.java</span></div><h1>QLibraryPolicyResult.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
+import com.querydsl.core.types.PathMetadata;
+import javax.annotation.Generated;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
+
+
+/**
+ * QLibraryPolicyResult is a Querydsl query type for LibraryPolicyResult
+ */
+@Generated(&quot;com.querydsl.codegen.EntitySerializer&quot;)
+public class QLibraryPolicyResult extends EntityPathBase&lt;LibraryPolicyResult&gt; {
+
+    private static final long serialVersionUID = 828663080L;
+
+<span class="fc" id="L21">    private static final PathInits INITS = PathInits.DIRECT2;</span>
+
+<span class="fc" id="L23">    public static final QLibraryPolicyResult libraryPolicyResult = new QLibraryPolicyResult(&quot;libraryPolicyResult&quot;);</span>
+
+    public final QBaseModel _super;
+
+    public final org.bson.types.QObjectId buildId;
+
+<span class="fc" id="L29">    public final StringPath buildUrl = createString(&quot;buildUrl&quot;);</span>
+
+    //inherited
+    public final StringPath clientReference;
+
+    public final org.bson.types.QObjectId collectorItemId;
+
+<span class="fc" id="L36">    public final NumberPath&lt;Long&gt; evaluationTimestamp = createNumber(&quot;evaluationTimestamp&quot;, Long.class);</span>
+
+    // inherited
+    public final org.bson.types.QObjectId id;
+
+<span class="fc" id="L41">    public final NumberPath&lt;Integer&gt; knownComponentCount = createNumber(&quot;knownComponentCount&quot;, Integer.class);</span>
+
+<span class="fc" id="L43">    public final ListPath&lt;PolicyScanMetric, QPolicyScanMetric&gt; policyAlert = this.&lt;PolicyScanMetric, QPolicyScanMetric&gt;createList(&quot;policyAlert&quot;, PolicyScanMetric.class, QPolicyScanMetric.class, PathInits.DIRECT2);</span>
+
+<span class="fc" id="L45">    public final StringPath productName = createString(&quot;productName&quot;);</span>
+
+<span class="fc" id="L47">    public final StringPath projectName = createString(&quot;projectName&quot;);</span>
+
+<span class="fc" id="L49">    public final StringPath reportUrl = createString(&quot;reportUrl&quot;);</span>
+
+<span class="fc" id="L51">    public final StringPath scanState = createString(&quot;scanState&quot;);</span>
+
+<span class="fc" id="L53">    public final MapPath&lt;LibraryPolicyType, java.util.Set&lt;LibraryPolicyResult.Threat&gt;, SimplePath&lt;java.util.Set&lt;LibraryPolicyResult.Threat&gt;&gt;&gt; threats = this.&lt;LibraryPolicyType, java.util.Set&lt;LibraryPolicyResult.Threat&gt;, SimplePath&lt;java.util.Set&lt;LibraryPolicyResult.Threat&gt;&gt;&gt;createMap(&quot;threats&quot;, LibraryPolicyType.class, java.util.Set.class, SimplePath.class);</span>
+
+<span class="fc" id="L55">    public final NumberPath&lt;Long&gt; timestamp = createNumber(&quot;timestamp&quot;, Long.class);</span>
+
+<span class="fc" id="L57">    public final NumberPath&lt;Integer&gt; totalComponentCount = createNumber(&quot;totalComponentCount&quot;, Integer.class);</span>
+
+    //inherited
+    public final DateTimePath&lt;java.util.Date&gt; upsertTime;
+
+    public QLibraryPolicyResult(String variable) {
+<span class="fc" id="L63">        this(LibraryPolicyResult.class, forVariable(variable), INITS);</span>
+<span class="fc" id="L64">    }</span>
+
+    public QLibraryPolicyResult(Path&lt;? extends LibraryPolicyResult&gt; path) {
+<span class="nc" id="L67">        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));</span>
+<span class="nc" id="L68">    }</span>
+
+    public QLibraryPolicyResult(PathMetadata metadata) {
+<span class="nc" id="L71">        this(metadata, PathInits.getFor(metadata, INITS));</span>
+<span class="nc" id="L72">    }</span>
+
+    public QLibraryPolicyResult(PathMetadata metadata, PathInits inits) {
+<span class="nc" id="L75">        this(LibraryPolicyResult.class, metadata, inits);</span>
+<span class="nc" id="L76">    }</span>
+
+    public QLibraryPolicyResult(Class&lt;? extends LibraryPolicyResult&gt; type, PathMetadata metadata, PathInits inits) {
+<span class="fc" id="L79">        super(type, metadata, inits);</span>
+<span class="fc" id="L80">        this._super = new QBaseModel(type, metadata, inits);</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        this.buildId = inits.isInitialized(&quot;buildId&quot;) ? new org.bson.types.QObjectId(forProperty(&quot;buildId&quot;)) : null;</span>
+<span class="fc" id="L82">        this.clientReference = _super.clientReference;</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        this.collectorItemId = inits.isInitialized(&quot;collectorItemId&quot;) ? new org.bson.types.QObjectId(forProperty(&quot;collectorItemId&quot;)) : null;</span>
+<span class="fc" id="L84">        this.id = _super.id;</span>
+<span class="fc" id="L85">        this.upsertTime = _super.upsertTime;</span>
+<span class="fc" id="L86">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

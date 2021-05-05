@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QAutoDiscoveredEntry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">QAutoDiscoveredEntry.java</span></div><h1>QAutoDiscoveredEntry.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
+import com.querydsl.core.types.PathMetadata;
+import javax.annotation.Generated;
+import com.querydsl.core.types.Path;
+
+
+/**
+ * QAutoDiscoveredEntry is a Querydsl query type for AutoDiscoveredEntry
+ */
+@Generated(&quot;com.querydsl.codegen.EmbeddableSerializer&quot;)
+public class QAutoDiscoveredEntry extends BeanPath&lt;AutoDiscoveredEntry&gt; {
+
+    private static final long serialVersionUID = -1064403399L;
+
+<span class="nc" id="L20">    public static final QAutoDiscoveredEntry autoDiscoveredEntry = new QAutoDiscoveredEntry(&quot;autoDiscoveredEntry&quot;);</span>
+
+<span class="nc" id="L22">    public final StringPath description = createString(&quot;description&quot;);</span>
+
+<span class="nc" id="L24">    public final BooleanPath enabled = createBoolean(&quot;enabled&quot;);</span>
+
+<span class="nc" id="L26">    public final StringPath niceName = createString(&quot;niceName&quot;);</span>
+
+<span class="nc" id="L28">    public final MapPath&lt;String, Object, SimplePath&lt;Object&gt;&gt; options = this.&lt;String, Object, SimplePath&lt;Object&gt;&gt;createMap(&quot;options&quot;, String.class, Object.class, SimplePath.class);</span>
+
+<span class="nc" id="L30">    public final BooleanPath pushed = createBoolean(&quot;pushed&quot;);</span>
+
+<span class="nc" id="L32">    public final EnumPath&lt;AutoDiscoveryStatusType&gt; status = createEnum(&quot;status&quot;, AutoDiscoveryStatusType.class);</span>
+
+<span class="nc" id="L34">    public final StringPath toolName = createString(&quot;toolName&quot;);</span>
+
+    public QAutoDiscoveredEntry(String variable) {
+<span class="nc" id="L37">        super(AutoDiscoveredEntry.class, forVariable(variable));</span>
+<span class="nc" id="L38">    }</span>
+
+    public QAutoDiscoveredEntry(Path&lt;? extends AutoDiscoveredEntry&gt; path) {
+<span class="nc" id="L41">        super(path.getType(), path.getMetadata());</span>
+<span class="nc" id="L42">    }</span>
+
+    public QAutoDiscoveredEntry(PathMetadata metadata) {
+<span class="nc" id="L45">        super(AutoDiscoveredEntry.class, metadata);</span>
+<span class="nc" id="L46">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

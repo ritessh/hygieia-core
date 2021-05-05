@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QAutoDiscoverCollectorItem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">QAutoDiscoverCollectorItem.java</span></div><h1>QAutoDiscoverCollectorItem.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
+import com.querydsl.core.types.PathMetadata;
+import javax.annotation.Generated;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
+
+
+/**
+ * QAutoDiscoverCollectorItem is a Querydsl query type for AutoDiscoverCollectorItem
+ */
+@Generated(&quot;com.querydsl.codegen.EntitySerializer&quot;)
+public class QAutoDiscoverCollectorItem extends EntityPathBase&lt;AutoDiscoverCollectorItem&gt; {
+
+    private static final long serialVersionUID = 421187526L;
+
+<span class="nc" id="L21">    private static final PathInits INITS = PathInits.DIRECT2;</span>
+
+<span class="nc" id="L23">    public static final QAutoDiscoverCollectorItem autoDiscoverCollectorItem = new QAutoDiscoverCollectorItem(&quot;autoDiscoverCollectorItem&quot;);</span>
+
+    public final QCollectorItem _super;
+
+<span class="nc" id="L27">    public final EnumPath&lt;AutoDiscoveryStatusType&gt; autoDiscoverStatus = createEnum(&quot;autoDiscoverStatus&quot;, AutoDiscoveryStatusType.class);</span>
+
+    //inherited
+    public final StringPath clientReference;
+
+    // inherited
+    public final QCollector collector;
+
+    // inherited
+    public final org.bson.types.QObjectId collectorId;
+
+    //inherited
+    public final StringPath description;
+
+    //inherited
+    public final BooleanPath enabled;
+
+    //inherited
+    public final StringPath environment;
+
+    //inherited
+    public final NumberPath&lt;Integer&gt; errorCount;
+
+    //inherited
+    public final ListPath&lt;CollectionError, QCollectionError&gt; errors;
+
+    // inherited
+    public final org.bson.types.QObjectId id;
+
+    //inherited
+    public final NumberPath&lt;Long&gt; lastUpdated;
+
+    //inherited
+    public final StringPath niceName;
+
+    //inherited
+    public final MapPath&lt;String, Object, SimplePath&lt;Object&gt;&gt; options;
+
+    //inherited
+    public final BooleanPath pushed;
+
+    //inherited
+    public final StringPath refreshLink;
+
+    //inherited
+    public final DateTimePath&lt;java.util.Date&gt; upsertTime;
+
+    public QAutoDiscoverCollectorItem(String variable) {
+<span class="nc" id="L75">        this(AutoDiscoverCollectorItem.class, forVariable(variable), INITS);</span>
+<span class="nc" id="L76">    }</span>
+
+    public QAutoDiscoverCollectorItem(Path&lt;? extends AutoDiscoverCollectorItem&gt; path) {
+<span class="nc" id="L79">        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));</span>
+<span class="nc" id="L80">    }</span>
+
+    public QAutoDiscoverCollectorItem(PathMetadata metadata) {
+<span class="nc" id="L83">        this(metadata, PathInits.getFor(metadata, INITS));</span>
+<span class="nc" id="L84">    }</span>
+
+    public QAutoDiscoverCollectorItem(PathMetadata metadata, PathInits inits) {
+<span class="nc" id="L87">        this(AutoDiscoverCollectorItem.class, metadata, inits);</span>
+<span class="nc" id="L88">    }</span>
+
+    public QAutoDiscoverCollectorItem(Class&lt;? extends AutoDiscoverCollectorItem&gt; type, PathMetadata metadata, PathInits inits) {
+<span class="nc" id="L91">        super(type, metadata, inits);</span>
+<span class="nc" id="L92">        this._super = new QCollectorItem(type, metadata, inits);</span>
+<span class="nc" id="L93">        this.clientReference = _super.clientReference;</span>
+<span class="nc" id="L94">        this.collector = _super.collector;</span>
+<span class="nc" id="L95">        this.collectorId = _super.collectorId;</span>
+<span class="nc" id="L96">        this.description = _super.description;</span>
+<span class="nc" id="L97">        this.enabled = _super.enabled;</span>
+<span class="nc" id="L98">        this.environment = _super.environment;</span>
+<span class="nc" id="L99">        this.errorCount = _super.errorCount;</span>
+<span class="nc" id="L100">        this.errors = _super.errors;</span>
+<span class="nc" id="L101">        this.id = _super.id;</span>
+<span class="nc" id="L102">        this.lastUpdated = _super.lastUpdated;</span>
+<span class="nc" id="L103">        this.niceName = _super.niceName;</span>
+<span class="nc" id="L104">        this.options = _super.options;</span>
+<span class="nc" id="L105">        this.pushed = _super.pushed;</span>
+<span class="nc" id="L106">        this.refreshLink = _super.refreshLink;</span>
+<span class="nc" id="L107">        this.upsertTime = _super.upsertTime;</span>
+<span class="nc" id="L108">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

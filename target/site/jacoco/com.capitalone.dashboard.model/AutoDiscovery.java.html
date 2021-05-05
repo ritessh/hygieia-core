@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AutoDiscovery.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">AutoDiscovery.java</span></div><h1>AutoDiscovery.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * A collection of auto discovered end points that represent a software
+ * project under development and/or in production use.
+ *
+ */
+@Document(collection=&quot;auto_discovery_status&quot;)
+public class AutoDiscovery extends BaseModel {
+    @Valid
+    private AutoDiscoveryMetaData metaData;
+
+<span class="nc" id="L20">    @Valid</span>
+    private List&lt;AutoDiscoveredEntry&gt; codeRepoEntries = new ArrayList&lt;&gt;();
+
+<span class="nc" id="L23">    @Valid</span>
+    private List&lt;AutoDiscoveredEntry&gt; buildEntries = new ArrayList&lt;&gt;();
+
+<span class="nc" id="L26">    @Valid</span>
+    private List&lt;AutoDiscoveredEntry&gt; securityScanEntries = new ArrayList&lt;&gt;();
+
+<span class="nc" id="L29">    @Valid</span>
+    private List&lt;AutoDiscoveredEntry&gt; deploymentEntries = new ArrayList&lt;&gt;();
+
+<span class="nc" id="L32">    @Valid</span>
+    private List&lt;AutoDiscoveredEntry&gt; libraryScanEntries = new ArrayList&lt;&gt;();
+
+<span class="nc" id="L35">    @Valid</span>
+    private List&lt;AutoDiscoveredEntry&gt; functionalTestEntries = new ArrayList&lt;&gt;();
+
+<span class="nc" id="L38">    @Valid</span>
+    private List&lt;AutoDiscoveredEntry&gt; artifactEntries = new ArrayList&lt;&gt;();
+
+<span class="nc" id="L41">    @Valid</span>
+    private List&lt;AutoDiscoveredEntry&gt; staticCodeEntries = new ArrayList&lt;&gt;();
+
+<span class="nc" id="L44">    @Valid</span>
+    private List&lt;AutoDiscoveredEntry&gt; featureEntries = new ArrayList&lt;&gt;();
+
+<span class="nc" id="L47">    @Valid</span>
+    private List&lt;AutoDiscoveredEntry&gt; performanceTestEntries = new ArrayList&lt;&gt;();
+
+<span class="nc" id="L50">    @Valid</span>
+    private List&lt;AutoDiscoveredEntry&gt; infraStructureScanEntries = new ArrayList&lt;&gt;();
+
+    private long createdTimestamp;
+
+    private long modifiedTimestamp;
+
+<span class="nc" id="L57">    public  AutoDiscovery() {</span>
+<span class="nc" id="L58">        metaData = null;</span>
+<span class="nc" id="L59">    }</span>
+    public AutoDiscovery(AutoDiscoveryMetaData metaData, List&lt;AutoDiscoveredEntry&gt; codeRepoEntries, List&lt;AutoDiscoveredEntry&gt; buildEntries, List&lt;AutoDiscoveredEntry&gt; securityScanEntries,
+                         List&lt;AutoDiscoveredEntry&gt; deploymentEntries, List&lt;AutoDiscoveredEntry&gt; libraryScanEntries, List&lt;AutoDiscoveredEntry&gt; functionalTestEntries,
+                         List&lt;AutoDiscoveredEntry&gt; artifactEntries, List&lt;AutoDiscoveredEntry&gt; staticCodeEntries, List&lt;AutoDiscoveredEntry&gt; featureEntries,List&lt;AutoDiscoveredEntry&gt; performanceTestEntries,
+<span class="nc" id="L63">                         List&lt;AutoDiscoveredEntry&gt; infraStructureScanEntries) {</span>
+<span class="nc" id="L64">        setMetaData(metaData);</span>
+<span class="nc" id="L65">        setCodeRepoEntries(codeRepoEntries);</span>
+<span class="nc" id="L66">        setBuildEntries(buildEntries);</span>
+<span class="nc" id="L67">        setSecurityScanEntries(securityScanEntries);</span>
+<span class="nc" id="L68">        setDeploymentEntries(deploymentEntries);</span>
+<span class="nc" id="L69">        setLibraryScanEntries(libraryScanEntries);</span>
+<span class="nc" id="L70">        setFunctionalTestEntries(functionalTestEntries);</span>
+<span class="nc" id="L71">        setArtifactEntries(artifactEntries);</span>
+<span class="nc" id="L72">        setStaticCodeEntries(staticCodeEntries);</span>
+<span class="nc" id="L73">        setFeatureEntries(featureEntries);</span>
+<span class="nc" id="L74">        setPerformanceTestEntries(performanceTestEntries);</span>
+<span class="nc" id="L75">        setInfraStructureScanEntries(infraStructureScanEntries);</span>
+<span class="nc" id="L76">    }</span>
+
+
+    // Getters and setters
+
+<span class="nc" id="L81">    public AutoDiscoveryMetaData getMetaData() { return metaData; }</span>
+
+<span class="nc" id="L83">    public void setMetaData(AutoDiscoveryMetaData metaData) { this.metaData = metaData; }</span>
+
+    public List&lt;AutoDiscoveredEntry&gt; getCodeRepoEntries() {
+<span class="nc" id="L86">        return codeRepoEntries;</span>
+    }
+
+    public void setCodeRepoEntries(List&lt;AutoDiscoveredEntry&gt; codeRepoEntries) {
+<span class="nc" id="L90">        this.codeRepoEntries = codeRepoEntries;</span>
+<span class="nc" id="L91">    }</span>
+
+    public List&lt;AutoDiscoveredEntry&gt; getBuildEntries() {
+<span class="nc" id="L94">        return buildEntries;</span>
+    }
+
+    public void setBuildEntries(List&lt;AutoDiscoveredEntry&gt; buildEntries) {
+<span class="nc" id="L98">        this.buildEntries = buildEntries;</span>
+<span class="nc" id="L99">    }</span>
+
+    public List&lt;AutoDiscoveredEntry&gt; getSecurityScanEntries() {
+<span class="nc" id="L102">        return securityScanEntries;</span>
+    }
+
+    public void setSecurityScanEntries(List&lt;AutoDiscoveredEntry&gt; securityScanEntries) {
+<span class="nc" id="L106">        this.securityScanEntries = securityScanEntries;</span>
+<span class="nc" id="L107">    }</span>
+
+    public List&lt;AutoDiscoveredEntry&gt; getDeploymentEntries() {
+<span class="nc" id="L110">        return deploymentEntries;</span>
+    }
+
+    public void setDeploymentEntries(List&lt;AutoDiscoveredEntry&gt; deploymentEntries) {
+<span class="nc" id="L114">        this.deploymentEntries = deploymentEntries;</span>
+<span class="nc" id="L115">    }</span>
+
+    public List&lt;AutoDiscoveredEntry&gt; getLibraryScanEntries() {
+<span class="nc" id="L118">        return libraryScanEntries;</span>
+    }
+
+    public void setLibraryScanEntries(List&lt;AutoDiscoveredEntry&gt; libraryScanEntries) {
+<span class="nc" id="L122">        this.libraryScanEntries = libraryScanEntries;</span>
+<span class="nc" id="L123">    }</span>
+
+    public List&lt;AutoDiscoveredEntry&gt; getFunctionalTestEntries() {
+<span class="nc" id="L126">        return functionalTestEntries;</span>
+    }
+
+    public void setFunctionalTestEntries(List&lt;AutoDiscoveredEntry&gt; functionalTestEntries) {
+<span class="nc" id="L130">        this.functionalTestEntries = functionalTestEntries;</span>
+<span class="nc" id="L131">    }</span>
+
+    public List&lt;AutoDiscoveredEntry&gt; getArtifactEntries() {
+<span class="nc" id="L134">        return artifactEntries;</span>
+    }
+
+    public void setArtifactEntries(List&lt;AutoDiscoveredEntry&gt; artifactEntries) {
+<span class="nc" id="L138">        this.artifactEntries = artifactEntries;</span>
+<span class="nc" id="L139">    }</span>
+
+<span class="nc" id="L141">    public List&lt;AutoDiscoveredEntry&gt; getStaticCodeEntries() { return staticCodeEntries; }</span>
+
+    public void setStaticCodeEntries(List&lt;AutoDiscoveredEntry&gt; staticCodeEntries) {
+<span class="nc" id="L144">        this.staticCodeEntries = staticCodeEntries;</span>
+<span class="nc" id="L145">    }</span>
+
+
+    public List&lt;AutoDiscoveredEntry&gt; getPerformanceTestEntries() {
+<span class="nc" id="L149">        return performanceTestEntries;</span>
+    }
+
+    public void setPerformanceTestEntries(List&lt;AutoDiscoveredEntry&gt; performanceTestEntries) {
+<span class="nc" id="L153">        this.performanceTestEntries = performanceTestEntries;</span>
+<span class="nc" id="L154">    }</span>
+
+
+    public long getCreatedTimestamp() {
+<span class="nc" id="L158">        return createdTimestamp;</span>
+    }
+
+    public void setCreatedTimestamp(long createdTimestamp) {
+<span class="nc" id="L162">        this.createdTimestamp = createdTimestamp;</span>
+<span class="nc" id="L163">    }</span>
+
+    public long getModifiedTimestamp() {
+<span class="nc" id="L166">        return modifiedTimestamp;</span>
+    }
+
+    public void setModifiedTimestamp(long modifiedTimestamp) {
+<span class="nc" id="L170">        this.modifiedTimestamp = modifiedTimestamp;</span>
+<span class="nc" id="L171">    }</span>
+
+<span class="nc" id="L173">    public List&lt;AutoDiscoveredEntry&gt; getFeatureEntries() { return featureEntries; }</span>
+
+    public void setFeatureEntries(List&lt;AutoDiscoveredEntry&gt; featureEntries) {
+<span class="nc" id="L176">        this.featureEntries = featureEntries;</span>
+<span class="nc" id="L177">    }</span>
+
+    public List&lt;AutoDiscoveredEntry&gt; getInfraStructureScanEntries() {
+<span class="nc" id="L180">        return infraStructureScanEntries;</span>
+    }
+
+    public void setInfraStructureScanEntries(List&lt;AutoDiscoveredEntry&gt; infraStructureScanEntries) {
+<span class="nc" id="L184">        this.infraStructureScanEntries = infraStructureScanEntries;</span>
+<span class="nc" id="L185">    }</span>
+
+    public List&lt;AutoDiscoveredEntry&gt; getAllEntries() {
+<span class="nc" id="L188">        List&lt;AutoDiscoveredEntry&gt; all = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L189">        all.addAll(buildEntries);</span>
+<span class="nc" id="L190">        all.addAll(codeRepoEntries);</span>
+<span class="nc" id="L191">        all.addAll(staticCodeEntries);</span>
+<span class="nc" id="L192">        all.addAll(libraryScanEntries);</span>
+<span class="nc" id="L193">        all.addAll(securityScanEntries);</span>
+<span class="nc" id="L194">        all.addAll(functionalTestEntries);</span>
+<span class="nc" id="L195">        all.addAll(deploymentEntries);</span>
+<span class="nc" id="L196">        all.addAll(featureEntries);</span>
+<span class="nc" id="L197">        all.addAll(artifactEntries);</span>
+<span class="nc" id="L198">        all.addAll(performanceTestEntries);</span>
+<span class="nc" id="L199">        all.addAll(infraStructureScanEntries);</span>
+<span class="nc" id="L200">        return all;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

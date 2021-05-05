@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CollectorServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.service</a> &gt; <span class="el_source">CollectorServiceImpl.java</span></div><h1>CollectorServiceImpl.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.service;
+
+import com.capitalone.dashboard.misc.HygieiaException;
+import com.capitalone.dashboard.model.Cmdb;
+import com.capitalone.dashboard.model.Collector;
+import com.capitalone.dashboard.model.CollectorItem;
+import com.capitalone.dashboard.model.CollectorType;
+import com.capitalone.dashboard.model.Component;
+import com.capitalone.dashboard.model.Dashboard;
+import com.capitalone.dashboard.model.MultiSearchFilter;
+import com.capitalone.dashboard.repository.CmdbRepository;
+import com.capitalone.dashboard.repository.CollectorItemRepository;
+import com.capitalone.dashboard.repository.CollectorRepository;
+import com.capitalone.dashboard.repository.ComponentRepository;
+import com.capitalone.dashboard.repository.CustomRepositoryQuery;
+import com.capitalone.dashboard.repository.DashboardRepository;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+public class CollectorServiceImpl implements CollectorService {
+
+    private final CollectorRepository collectorRepository;
+    private final CollectorItemRepository collectorItemRepository;
+    private final ComponentRepository componentRepository;
+    private final DashboardRepository dashboardRepository;
+    private final CustomRepositoryQuery customRepositoryQuery;
+    private final CmdbRepository cmdbRepository;
+
+    @Autowired
+    public CollectorServiceImpl(CollectorRepository collectorRepository,
+                                CollectorItemRepository collectorItemRepository,
+                                ComponentRepository componentRepository, DashboardRepository dashboardRepository,
+<span class="nc" id="L58">                                CustomRepositoryQuery customRepositoryQuery, CmdbRepository cmdbRepository) {</span>
+<span class="nc" id="L59">        this.collectorRepository = collectorRepository;</span>
+<span class="nc" id="L60">        this.collectorItemRepository = collectorItemRepository;</span>
+<span class="nc" id="L61">        this.componentRepository = componentRepository;</span>
+<span class="nc" id="L62">        this.dashboardRepository = dashboardRepository;</span>
+<span class="nc" id="L63">        this.customRepositoryQuery = customRepositoryQuery;</span>
+<span class="nc" id="L64">        this.cmdbRepository = cmdbRepository;</span>
+<span class="nc" id="L65">    }</span>
+
+    @Override
+    public Iterable&lt;Collector&gt; all() {
+<span class="nc" id="L69">        Iterable&lt;Collector&gt; collectors = collectorRepository.findAll(new Sort(Sort.Direction.ASC, &quot;name&quot;));</span>
+<span class="nc" id="L70">        return collectors;</span>
+    }
+
+    @Override
+    public List&lt;Collector&gt; collectorsByType(CollectorType collectorType) {
+<span class="nc" id="L75">        return collectorRepository.findByCollectorType(collectorType);</span>
+    }
+
+    @Override
+    public List&lt;Collector&gt; collectorsById(ObjectId id) {
+<span class="nc" id="L80">        return collectorRepository.findById(id);</span>
+    }
+
+    @Override
+    public Page&lt;CollectorItem&gt; collectorItemsByTypeWithFilter(CollectorType collectorType, String searchFilterValue, Pageable pageable) {
+<span class="nc" id="L85">        List&lt;Collector&gt; collectors = collectorRepository.findByCollectorType(collectorType);</span>
+<span class="nc" id="L86">        List&lt;ObjectId&gt; collectorIds = Lists.newArrayList(Iterables.transform(collectors, new ToCollectorId()));</span>
+        Page&lt;CollectorItem&gt; collectorItems;
+<span class="nc" id="L88">        MultiSearchFilter searchFilter = new MultiSearchFilter(searchFilterValue).invoke();</span>
+<span class="nc" id="L89">        List&lt;String&gt; criteria = getSearchFields(collectors);</span>
+<span class="nc" id="L90">        String defaultSearchField = getDefaultSearchField(criteria);</span>
+        // multiple search criteria
+<span class="nc bnc" id="L92" title="All 4 branches missed.">        if(!StringUtils.isEmpty(searchFilter.getAdvancedSearchKey()) &amp;&amp; criteria.size()&gt;1){</span>
+<span class="nc" id="L93">            String advSearchField = getAdvSearchField(criteria);</span>
+<span class="nc" id="L94">            collectorItems = collectorItemRepository.findByCollectorIdAndSearchFields(collectorIds,defaultSearchField,searchFilter.getSearchKey(),advSearchField,searchFilter.getAdvancedSearchKey(),pageable);</span>
+<span class="nc" id="L95">        }else{</span>
+            // single search criteria
+<span class="nc" id="L97">            collectorItems = collectorItemRepository.findByCollectorIdAndSearchField(collectorIds,defaultSearchField,searchFilterValue,pageable);</span>
+        }
+<span class="nc" id="L99">        removeJobUrlAndInstanceUrl(collectorItems);</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        for (CollectorItem options : collectorItems) {</span>
+<span class="nc" id="L101">            options.setCollector(collectorById(options.getCollectorId(), collectors));</span>
+<span class="nc" id="L102">        }</span>
+
+<span class="nc" id="L104">        return collectorItems;</span>
+    }
+
+    @Override
+    public Page&lt;CollectorItem&gt; collectorItemsByTypeWithFilter(CollectorType collectorType, String searchFilterValue, String searchField, Pageable pageable) {
+<span class="nc" id="L109">        List&lt;Collector&gt; collectors = collectorRepository.findByCollectorType(collectorType);</span>
+<span class="nc" id="L110">        List&lt;ObjectId&gt; collectorIds = Lists.newArrayList(Iterables.transform(collectors, new ToCollectorId()));</span>
+        Page&lt;CollectorItem&gt; collectorItems;
+<span class="nc" id="L112">        collectorItems = collectorItemRepository.findByCollectorIdAndSearchField(collectorIds,searchField,searchFilterValue,pageable);</span>
+<span class="nc" id="L113">        removeJobUrlAndInstanceUrl(collectorItems);</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        for (CollectorItem options : collectorItems) {</span>
+<span class="nc" id="L115">            options.setCollector(collectorById(options.getCollectorId(), collectors));</span>
+<span class="nc" id="L116">        }</span>
+
+<span class="nc" id="L118">        return collectorItems;</span>
+    }
+
+    // method to remove jobUrl and instanceUrl from build collector items.
+    private Page&lt;CollectorItem&gt; removeJobUrlAndInstanceUrl(Page&lt;CollectorItem&gt; collectorItems) {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        for (CollectorItem cItem : collectorItems) {</span>
+<span class="nc" id="L124">            cItem.getOptions().remove(&quot;jobUrl&quot;);</span>
+<span class="nc" id="L125">            cItem.getOptions().remove(&quot;instanceUrl&quot;);</span>
+<span class="nc" id="L126">        }</span>
+<span class="nc" id="L127">        return collectorItems;</span>
+    }
+
+    /**
+     * We want to initialize the Quasi-product collector when the API starts up
+     * so that any existing Team dashboards will be added as CollectorItems.
+     * &lt;p&gt;
+     * TODO - Is this the best home for this method??
+     */
+    @PostConstruct
+    public void initProductCollectorOnStartup() {
+<span class="nc" id="L138">        Collector productCollector = collectorRepository.findByName(&quot;Product&quot;);</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (productCollector == null) {</span>
+<span class="nc" id="L140">            productCollector = new Collector();</span>
+<span class="nc" id="L141">            productCollector.setName(&quot;Product&quot;);</span>
+<span class="nc" id="L142">            productCollector.setCollectorType(CollectorType.Product);</span>
+<span class="nc" id="L143">            productCollector.setEnabled(true);</span>
+<span class="nc" id="L144">            productCollector.setOnline(true);</span>
+<span class="nc" id="L145">            collectorRepository.save(productCollector);</span>
+
+            // Create collector items for existing team dashboards
+<span class="nc bnc" id="L148" title="All 2 branches missed.">            for (Dashboard dashboard : dashboardRepository.findTeamDashboards()) {</span>
+<span class="nc" id="L149">                CollectorItem item = new CollectorItem();</span>
+<span class="nc" id="L150">                item.setCollectorId(productCollector.getId());</span>
+<span class="nc" id="L151">                item.getOptions().put(&quot;dashboardId&quot;, dashboard.getId().toString());</span>
+<span class="nc" id="L152">                item.setDescription(dashboard.getTitle());</span>
+<span class="nc" id="L153">                collectorItemRepository.save(item);</span>
+<span class="nc" id="L154">            }</span>
+        }
+<span class="nc" id="L156">    }</span>
+
+    @Override
+    public CollectorItem getCollectorItem(ObjectId id) throws HygieiaException {
+<span class="nc" id="L160">        CollectorItem item = collectorItemRepository.findOne(id);</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        if(item == null){</span>
+<span class="nc" id="L162">            throw new HygieiaException(&quot;Failed to find collectorItem by Id.&quot;, HygieiaException.BAD_DATA);</span>
+        }
+<span class="nc" id="L164">        item.setCollector(collectorRepository.findOne(item.getCollectorId()));</span>
+<span class="nc" id="L165">        return item;</span>
+    }
+
+    @Override
+    public CollectorItem createCollectorItem(CollectorItem item) {
+<span class="nc" id="L170">        List&lt;CollectorItem&gt; existing = lookUpCollectorItem(item);</span>
+<span class="nc" id="L171">        existing.sort(Comparator.comparing(CollectorItem::getLastUpdated).reversed());</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (CollectionUtils.isNotEmpty(existing)) {</span>
+<span class="nc" id="L173">            Optional&lt;CollectorItem&gt; enabledItem = existing.stream().filter(CollectorItem::isEnabled).findFirst();</span>
+            //if enabled item is found, set itemId
+<span class="nc bnc" id="L175" title="All 2 branches missed.">            if(enabledItem.isPresent()){</span>
+<span class="nc" id="L176">                item.setId(enabledItem.get().getId());</span>
+            }else{    // if no enabled item found, get first from list sorted by lastUpdated.
+<span class="nc" id="L178">                item.setId(existing.stream().findFirst().get().getId());</span>
+            }
+        }
+<span class="nc" id="L181">        return collectorItemRepository.save(item);</span>
+    }
+
+    private  List&lt;CollectorItem&gt; lookUpCollectorItem(CollectorItem collectorItem){
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (collectorItem==null){</span>
+<span class="nc" id="L186">            return Collections.emptyList();</span>
+        }
+<span class="nc" id="L188">        Collector collector = collectorRepository.findOne(collectorItem.getCollectorId());</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">        if (collector == null){</span>
+<span class="nc" id="L190">            return Collections.emptyList();</span>
+        }
+<span class="nc" id="L192">        Map&lt;String, Object&gt; uniqueOptions = collector.getUniqueFields()</span>
+<span class="nc" id="L193">                .keySet()</span>
+<span class="nc" id="L194">                .stream()</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">                .filter(option -&gt;collectorItem.getOptions().get(option)!=null )</span>
+<span class="nc" id="L196">                .collect(Collectors.toMap(java.util.function.Function.identity(),option-&gt; collectorItem.getOptions().get(option),(a,b)-&gt;a));</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">        if(MapUtils.isEmpty(uniqueOptions)){</span>
+<span class="nc" id="L198">            return Collections.emptyList();</span>
+        }
+<span class="nc" id="L200">        return IterableUtils.toList(collectorItemRepository.findAllByOptionMapAndCollectorIdsIn(uniqueOptions,Lists.newArrayList(collector.getId())));</span>
+
+    }
+
+    // This is to handle scenarios where the option contains user credentials etc. We do not want to create a new collector item -
+    // just update the new credentials.
+    @Override
+    public CollectorItem createCollectorItemSelectOptions(CollectorItem item, Map&lt;String, Object&gt; allOptions, Map&lt;String, Object&gt; uniqueOptions) {
+<span class="nc" id="L208">        Collector collector =  collectorRepository.findOne(item.getCollectorId());</span>
+<span class="nc" id="L209">        Map&lt;String,Object&gt; uniqueFieldsFromCollector = collector.getUniqueFields();</span>
+<span class="nc" id="L210">        List&lt;CollectorItem&gt; existing = customRepositoryQuery.findCollectorItemsBySubsetOptions(</span>
+<span class="nc" id="L211">                item.getCollectorId(), allOptions, uniqueOptions,uniqueFieldsFromCollector);</span>
+
+<span class="nc bnc" id="L213" title="All 2 branches missed.">        if (!CollectionUtils.isEmpty(existing)) {</span>
+<span class="nc" id="L214">            CollectorItem existingItem = existing.get(0);</span>
+<span class="nc" id="L215">            existingItem.getOptions().putAll(item.getOptions());</span>
+<span class="nc" id="L216">            return collectorItemRepository.save(existingItem);</span>
+        }
+<span class="nc" id="L218">        return collectorItemRepository.save(item);</span>
+    }
+
+    @Override
+    public CollectorItem createCollectorItemSelectOptions(CollectorItem item, Collector collector, Map&lt;String, Object&gt; allOptions, Map&lt;String, Object&gt; uniqueOptions) {
+<span class="nc" id="L223">        Map&lt;String,Object&gt; uniqueFieldsFromCollector = collector.getUniqueFields();</span>
+<span class="nc" id="L224">        List&lt;CollectorItem&gt; existing = customRepositoryQuery.findCollectorItemsBySubsetOptions(</span>
+<span class="nc" id="L225">                item.getCollectorId(), allOptions, uniqueOptions,uniqueFieldsFromCollector);</span>
+
+<span class="nc bnc" id="L227" title="All 2 branches missed.">        if (!CollectionUtils.isEmpty(existing)) {</span>
+<span class="nc" id="L228">            CollectorItem existingItem = existing.get(0);</span>
+<span class="nc" id="L229">            existingItem.getOptions().putAll(item.getOptions());</span>
+<span class="nc" id="L230">            return collectorItemRepository.save(existingItem);</span>
+        }
+<span class="nc" id="L232">        return collectorItemRepository.save(item);</span>
+    }
+
+
+    @Override
+    public CollectorItem createCollectorItemByNiceNameAndProjectId(CollectorItem item, String projectId) throws HygieiaException {
+        //Try to find a matching by collector ID and niceName.
+<span class="nc" id="L239">        CollectorItem existing = collectorItemRepository.findByCollectorIdNiceNameAndProjectId(item.getCollectorId(), item.getNiceName(), projectId);</span>
+
+        //if not found, call the method to look up by collector ID and options. NiceName would be saved too
+<span class="nc bnc" id="L242" title="All 2 branches missed.">        if (existing == null) return createCollectorItem(item);</span>
+
+        //Flow is here because there is only one collector item with the same collector id and niceName. So, update with
+        // the new info - keep the same collector item id. Save = Update or Insert.
+<span class="nc" id="L246">        item.setId(existing.getId());</span>
+<span class="nc" id="L247">        return collectorItemRepository.save(item);</span>
+    }
+
+    @Override
+    public CollectorItem createCollectorItemByNiceNameAndJobName(CollectorItem item, String jobName) throws HygieiaException {
+        //Try to find a matching by collector ID and niceName.
+<span class="nc" id="L253">        CollectorItem existing = collectorItemRepository.findByCollectorIdNiceNameAndJobName(item.getCollectorId(), item.getNiceName(), jobName);</span>
+
+        //if not found, call the method to look up by collector ID and options. NiceName would be saved too
+<span class="nc bnc" id="L256" title="All 2 branches missed.">        if (existing == null) return createCollectorItem(item);</span>
+
+        //Flow is here because there is only one collector item with the same collector id and niceName. So, update with
+        // the new info - keep the same collector item id. Save = Update or Insert.
+<span class="nc" id="L260">        item.setId(existing.getId());</span>
+<span class="nc" id="L261">        return collectorItemRepository.save(item);</span>
+    }
+
+    @Override
+    public Collector createCollector(Collector collector) {
+<span class="nc" id="L266">        Collector existing = collectorRepository.findByName(collector.getName());</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">        if (existing != null) {</span>
+<span class="nc" id="L268">            collector.setId(existing.getId());</span>
+            /*
+             * Since this is invoked by api it always needs to be enabled and online,
+             * additionally since this record is fetched from the database existing record
+             * needs to updated with these values.
+             * */
+<span class="nc" id="L274">            existing.setEnabled(true);</span>
+<span class="nc" id="L275">            existing.setOnline(true);</span>
+<span class="nc" id="L276">            existing.setLastExecuted(System.currentTimeMillis());</span>
+<span class="nc" id="L277">            existing.setProperties(collector.getProperties());</span>
+
+<span class="nc" id="L279">            return collectorRepository.save(existing);</span>
+        }
+        /*
+         * create a new collector record
+         * */
+<span class="nc" id="L284">        return collectorRepository.save(collector);</span>
+    }
+
+    @Override
+    public List&lt;CollectorItem&gt; getCollectorItemForComponent(String id, String type) {
+<span class="nc" id="L289">        ObjectId oid = new ObjectId(id);</span>
+<span class="nc" id="L290">        CollectorType ctype = CollectorType.fromString(type);</span>
+<span class="nc" id="L291">        Component component = componentRepository.findOne(oid);</span>
+
+<span class="nc" id="L293">        List&lt;CollectorItem&gt; items = component.getCollectorItems(ctype);</span>
+
+        // the collector items from component are not updated for collector run. We need to
+        // get the 'live' collector items from the collectorItemRepository
+<span class="nc" id="L297">        List&lt;ObjectId&gt; ids = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L298" title="All 2 branches missed.">        for (CollectorItem item : items) {</span>
+<span class="nc" id="L299">            ids.add(item.getId());</span>
+<span class="nc" id="L300">        }</span>
+<span class="nc" id="L301">        return (List&lt;CollectorItem&gt;) collectorItemRepository.findAll(ids);</span>
+    }
+
+    @Override
+    public void deletePropertiesInCollectorById(String id) {
+<span class="nc" id="L306">        ObjectId objectId = new ObjectId(id);</span>
+<span class="nc" id="L307">        Collector collectorById = collectorRepository.findOne(objectId);</span>
+<span class="nc" id="L308">        Map&lt;String, Object&gt; blankMap = new HashMap&lt;&gt;();</span>
+
+<span class="nc bnc" id="L310" title="All 2 branches missed.">        if(collectorById.getProperties().size() &gt; 0) {</span>
+<span class="nc" id="L311">            collectorById.setProperties(blankMap);</span>
+<span class="nc" id="L312">            collectorRepository.save(collectorById);</span>
+        }
+<span class="nc" id="L314">    }</span>
+
+    @Override
+    public void deleteCollectorItem(String id, boolean deleteFromComponent) throws HygieiaException {
+<span class="nc" id="L318">        ObjectId objectId = new ObjectId(id);</span>
+<span class="nc" id="L319">        CollectorItem ci = getCollectorItem(objectId);</span>
+<span class="nc bnc" id="L320" title="All 2 branches missed.">        if(ci == null) {return;}</span>
+<span class="nc" id="L321">        CollectorType type = ci.getCollector().getCollectorType();</span>
+        // First remove the association from component
+<span class="nc bnc" id="L323" title="All 2 branches missed.">        if(deleteFromComponent) {</span>
+<span class="nc" id="L324">            List&lt;Component&gt; components = componentRepository.findByCollectorTypeAndItemIdIn(type, Arrays.asList(objectId));</span>
+<span class="nc bnc" id="L325" title="All 2 branches missed.">            if (CollectionUtils.isEmpty(components)) return;</span>
+<span class="nc bnc" id="L326" title="All 2 branches missed.">            for (Component component : components) {</span>
+<span class="nc bnc" id="L327" title="All 2 branches missed.">                if (component == null) continue;</span>
+<span class="nc" id="L328">                Map&lt;CollectorType, List&lt;CollectorItem&gt;&gt; itemMap = component.getCollectorItems();</span>
+<span class="nc bnc" id="L329" title="All 2 branches missed.">                if(MapUtils.isEmpty(itemMap)) continue;</span>
+<span class="nc" id="L330">                List&lt;CollectorItem&gt; items = component.getCollectorItems(type);</span>
+<span class="nc bnc" id="L331" title="All 2 branches missed.">                if(CollectionUtils.isEmpty(items)) continue;</span>
+<span class="nc" id="L332">                List&lt;CollectorItem&gt; itemsCopy = Lists.newArrayList(items);</span>
+<span class="nc" id="L333">                items.stream().filter(item -&gt; objectId.equals(item.getId())).forEach(itemsCopy::remove);</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">                if(CollectionUtils.isEmpty(itemsCopy)) {</span>
+<span class="nc" id="L335">                    itemMap.remove(type);</span>
+                } else {
+<span class="nc" id="L337">                    itemMap.put(type,itemsCopy);</span>
+                }
+<span class="nc" id="L339">                componentRepository.save(component);</span>
+<span class="nc" id="L340">            }</span>
+        }
+
+        //delete the collector item.
+<span class="nc" id="L344">        collectorItemRepository.delete(objectId);</span>
+<span class="nc" id="L345">    }</span>
+
+    private Collector collectorById(ObjectId collectorId, List&lt;Collector&gt; collectors) {
+<span class="nc bnc" id="L348" title="All 2 branches missed.">        for (Collector collector : collectors) {</span>
+<span class="nc bnc" id="L349" title="All 2 branches missed.">            if (collector.getId().equals(collectorId)) {</span>
+<span class="nc" id="L350">                return collector;</span>
+            }
+<span class="nc" id="L352">        }</span>
+<span class="nc" id="L353">        return null;</span>
+    }
+
+    private static class ToCollectorId implements Function&lt;Collector, ObjectId&gt; {
+        @Override
+        public ObjectId apply(Collector input) {
+<span class="nc" id="L359">            return input.getId();</span>
+        }
+    }
+
+    private String getAdvSearchField(List&lt;String&gt; searchList) {
+<span class="nc bnc" id="L364" title="All 4 branches missed.">        return searchList!=null &amp;&amp; searchList.size()&gt;1?searchList.get(1):null;</span>
+    }
+
+    private String getDefaultSearchField(List&lt;String&gt; searchList) {
+<span class="nc bnc" id="L368" title="All 2 branches missed.">        return searchList!=null?searchList.get(0):null;</span>
+    }
+
+    private List&lt;String&gt; getSearchFields(List&lt;Collector&gt; collectors){
+<span class="nc" id="L372">        List&lt;List&lt;String&gt;&gt; searchList  = Lists.newArrayList(Iterables.transform(collectors, new ToCollectorSearchFields()));</span>
+<span class="nc bnc" id="L373" title="All 4 branches missed.">        return (!searchList.isEmpty() &amp;&amp; searchList.get(0)!=null)? searchList.stream().flatMap(List::stream).collect(Collectors.toList()): null;</span>
+    }
+
+    private static class ToCollectorSearchFields implements Function&lt;Collector, List&lt;String&gt;&gt; {
+        @Override
+        public List&lt;String&gt; apply(Collector input) {
+<span class="nc" id="L379">            return input.getSearchFields();</span>
+        }
+    }
+
+    @Override
+    public Set&lt;Cmdb&gt; getCmdbByStaticAnalysis(String collectorName, String projectName) throws HygieiaException {
+<span class="nc bnc" id="L385" title="All 4 branches missed.">        if (StringUtils.isNotEmpty(collectorName) &amp;&amp; StringUtils.isNotEmpty(projectName)) {</span>
+<span class="nc" id="L386">            Collector collector = collectorRepository.findByName(collectorName);</span>
+<span class="nc bnc" id="L387" title="All 2 branches missed.">            if (Objects.nonNull(collector)) {</span>
+<span class="nc" id="L388">                Iterable&lt;CollectorItem&gt; collectorItems = collectorItemRepository</span>
+<span class="nc" id="L389">                        .findAllByOptionNameValueAndCollectorIdsIn(&quot;projectName&quot;, projectName, Arrays.asList(collector.getId()));</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">                if (!IterableUtils.isEmpty(collectorItems)) {</span>
+<span class="nc" id="L391">                    List&lt;ObjectId&gt; collectorItemIds = IterableUtils.toList(collectorItems).stream().map(CollectorItem::getId).collect(Collectors.toList());</span>
+<span class="nc" id="L392">                    List&lt;Component&gt; components = componentRepository.findByCollectorTypeAndItemIdIn(CollectorType.CodeQuality, collectorItemIds);</span>
+<span class="nc bnc" id="L393" title="All 2 branches missed.">                    if (CollectionUtils.isNotEmpty(components)) {</span>
+<span class="nc" id="L394">                        List&lt;ObjectId&gt; componentIds = components.stream().map(Component::getId).collect(Collectors.toList());</span>
+<span class="nc" id="L395">                        List&lt;Dashboard&gt; dashboards = dashboardRepository.findByApplicationComponentIdsIn(componentIds);</span>
+<span class="nc bnc" id="L396" title="All 2 branches missed.">                        if (CollectionUtils.isNotEmpty(dashboards)) {</span>
+<span class="nc" id="L397">                            Set&lt;Cmdb&gt; cmdbs = dashboards.stream().map(dashboard -&gt; cmdbRepository.findByConfigurationItemAndItemTypeAndValidConfigItem(dashboard.getConfigurationItemBusAppName(),</span>
+<span class="nc" id="L398">                                    &quot;component&quot;, true)).filter(Objects::nonNull).collect(Collectors.toSet());</span>
+<span class="nc bnc" id="L399" title="All 2 branches missed.">                            if (CollectionUtils.isNotEmpty(cmdbs)) {</span>
+<span class="nc" id="L400">                                return cmdbs;</span>
+                            }
+<span class="nc" id="L402">                            throw new HygieiaException(&quot;valid cmdb not exists&quot;, HygieiaException.NOTHING_TO_UPDATE);</span>
+                        }
+<span class="nc" id="L404">                        throw new HygieiaException(&quot;dashboard not exists&quot;, HygieiaException.NOTHING_TO_UPDATE);</span>
+                    }
+<span class="nc" id="L406">                    throw new HygieiaException(&quot;dashboard component not exists&quot;, HygieiaException.NOTHING_TO_UPDATE);</span>
+                }
+<span class="nc" id="L408">                throw new HygieiaException(&quot;collector item not exists&quot;, HygieiaException.NOTHING_TO_UPDATE);</span>
+            }
+<span class="nc" id="L410">            throw new HygieiaException(&quot;collector not exists&quot;, HygieiaException.NOTHING_TO_UPDATE);</span>
+        }
+<span class="nc" id="L412">        throw new HygieiaException(&quot;invalid collectorName or projectName&quot;, HygieiaException.NOTHING_TO_UPDATE);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FeatureFlagAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model.adapter</a> &gt; <span class="el_source">FeatureFlagAdapter.java</span></div><h1>FeatureFlagAdapter.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model.adapter;
+
+import com.capitalone.dashboard.model.FeatureFlag;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+
+import java.lang.reflect.Type;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+<span class="nc" id="L15">public class FeatureFlagAdapter implements JsonDeserializer&lt;FeatureFlag&gt; {</span>
+
+
+    @Override
+    public FeatureFlag deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+<span class="nc" id="L20">        FeatureFlag featureFlag = new FeatureFlag();</span>
+<span class="nc" id="L21">        JsonObject jsonObject = jsonElement.getAsJsonObject();</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">        if (jsonObject == null) return null;</span>
+<span class="nc" id="L23">        Map&lt;String, Boolean&gt; b = new TreeMap&lt;&gt;(String.CASE_INSENSITIVE_ORDER);</span>
+<span class="nc" id="L24">        JsonObject flags = jsonObject.getAsJsonObject(&quot;flags&quot;);</span>
+<span class="nc" id="L25">        Set&lt;Map.Entry&lt;String, JsonElement&gt;&gt; entries = flags.entrySet();</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        for (Map.Entry&lt;String, JsonElement&gt; entry: entries) {</span>
+<span class="nc" id="L27">          b.put(entry.getKey(),getBoolean(flags, entry.getKey()));</span>
+<span class="nc" id="L28">        }</span>
+<span class="nc" id="L29">        featureFlag.setFlags(b);</span>
+<span class="nc" id="L30">        featureFlag.setName(getStringValue(jsonObject,&quot;name&quot;));</span>
+<span class="nc" id="L31">        featureFlag.setDescription(getStringValue(jsonObject,&quot;description&quot;));</span>
+<span class="nc" id="L32">        return featureFlag;</span>
+    }
+
+    private boolean getBoolean(JsonObject jsonObject, String key) {
+<span class="nc bnc" id="L36" title="All 4 branches missed.">        if (jsonObject == null || jsonObject.get(key) == null) return false;</span>
+<span class="nc" id="L37">        return jsonObject.get(key).getAsBoolean();</span>
+    }
+    private String getStringValue(JsonObject jsonObject, String key) {
+<span class="nc bnc" id="L40" title="All 4 branches missed.">        if (jsonObject == null || jsonObject.get(key) == null) return null;</span>
+<span class="nc" id="L41">        return jsonObject.get(key).getAsString();</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

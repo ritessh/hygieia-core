@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommitPullMatcher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.util</a> &gt; <span class="el_source">CommitPullMatcher.java</span></div><h1>CommitPullMatcher.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.util;
+
+import com.capitalone.dashboard.model.Commit;
+import com.capitalone.dashboard.model.GitRequest;
+import org.apache.commons.collections.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+<span class="nc" id="L13">public class CommitPullMatcher {</span>
+
+        /**
+         * Normal merge: Match PR's commit sha's with commit list
+         * Squash merge: Match PR's merge sha's with commit list
+         * Rebase merge: Match PR's commit's &quot;message&quot;+&quot;author name&quot;+&quot;date&quot; with commit list
+         * &lt;p&gt;
+         * If match found, set the commit's PR number and possibly set the PR merge type
+         * &lt;p&gt;
+         * For setting type:
+         * If PR commit's SHAs are all found in commit stream, then the commit for the merge sha is a merge commit.
+         * In all other cases it is a new commit
+         */
+
+        public static List&lt;Commit&gt; matchCommitToPulls(List&lt;Commit&gt; commits, List&lt;GitRequest&gt; pullRequests) {
+            // No commits or pull requests to match
+<span class="nc bnc" id="L29" title="All 4 branches missed.">            if (CollectionUtils.isEmpty(commits) || CollectionUtils.isEmpty(pullRequests)) {</span>
+<span class="nc" id="L30">                return commits;</span>
+            }
+<span class="nc" id="L32">            List&lt;Commit&gt; newCommits = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L33">            List&lt;Commit&gt; noMatch = new ArrayList&lt;&gt;();</span>
+            // Convert to map for faster look up
+<span class="nc" id="L35">            Map&lt;String, GitRequest&gt; revNumToPR = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">            for(GitRequest pr : pullRequests) {</span>
+<span class="nc" id="L37">                revNumToPR.put(pr.getScmRevisionNumber(), pr);</span>
+<span class="nc" id="L38">                revNumToPR.put(pr.getScmMergeEventRevisionNumber(), pr);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">                if(Objects.equals(&quot;merged&quot;, pr.getState())) {</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">                    for(Commit commit : pr.getCommits()) {</span>
+<span class="nc" id="L41">                        revNumToPR.put(commit.getScmRevisionNumber(), pr);</span>
+<span class="nc" id="L42">                    }</span>
+                }
+
+<span class="nc" id="L45">            }</span>
+            // Try to find a match
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            for(Commit commit : commits) {</span>
+                // Look with scm revision number
+<span class="nc bnc" id="L49" title="All 2 branches missed.">                if(revNumToPR.get(commit.getScmRevisionNumber()) != null) {</span>
+<span class="nc" id="L50">                    commit.setPullNumber(revNumToPR.get(commit.getScmRevisionNumber()).getNumber());</span>
+<span class="nc" id="L51">                    newCommits.add(commit);</span>
+                } else {
+                    // Rebase merge commit
+<span class="nc" id="L54">                    noMatch.add(commit);</span>
+                }
+<span class="nc" id="L56">            }</span>
+            // Try to find a match for rebase merge commit
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            for(Commit commit : noMatch) {</span>
+                search: {
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                    for(GitRequest pr : pullRequests) {</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">                        if(Objects.equals(&quot;merged&quot;, pr.getState())) {</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                            for(Commit prCommit : pr.getCommits()) {</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                                if(Objects.equals(commit.getScmAuthor(), prCommit.getScmAuthor()) &amp;&amp;</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                                        Objects.equals(commit.getScmCommitLog(), prCommit.getScmCommitLog()) &amp;&amp;</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                                        commit.getScmCommitTimestamp() == prCommit.getScmCommitTimestamp()) {</span>
+<span class="nc" id="L66">                                    commit.setPullNumber(pr.getNumber());</span>
+<span class="nc" id="L67">                                    newCommits.add(commit);</span>
+<span class="nc" id="L68">                                    break search;</span>
+                                }
+<span class="nc" id="L70">                            }</span>
+                        }
+<span class="nc" id="L72">                    }</span>
+                }
+<span class="nc" id="L74">            }</span>
+<span class="nc" id="L75">            return newCommits;</span>
+        }
+    }
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InfrastructureScan.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">InfrastructureScan.java</span></div><h1>InfrastructureScan.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Document(collection = &quot;infrastructure_scan&quot;)
+<span class="nc" id="L11">public class InfrastructureScan extends BaseModel{</span>
+    private ObjectId collectorItemId;
+    private String businessService;
+    private String businessApplication;
+    private String instanceId;
+    private String ipAddress;
+    private String createdTimeStamp;
+    private List&lt;Labels&gt; labels;
+    private RepositoryDigest repositoryDigest;
+    private String ownerDept;
+    private String ownerSubDept;
+    private String developmentOwner;
+    private String ownerEmailAddress;
+    private String applicationOwnerFullName;
+    private List&lt;Vulnerability&gt; vulnerabilities;
+    private int limit;
+    private String nextRecordKey;
+    private long timestamp;
+    private ObjectId buildId;
+    private String buildUrl;
+
+    public ObjectId getCollectorItemId() {
+<span class="nc" id="L33">        return collectorItemId;</span>
+    }
+
+    public void setCollectorItemId(ObjectId collectorItemId) {
+<span class="nc" id="L37">        this.collectorItemId = collectorItemId;</span>
+<span class="nc" id="L38">    }</span>
+
+    public String getBusinessService() {
+<span class="nc" id="L41">        return businessService;</span>
+    }
+
+    public void setBusinessService(String businessService) {
+<span class="nc" id="L45">        this.businessService = businessService;</span>
+<span class="nc" id="L46">    }</span>
+
+    public String getBusinessApplication() {
+<span class="nc" id="L49">        return businessApplication;</span>
+    }
+
+    public void setBusinessApplication(String businessApplication) {
+<span class="nc" id="L53">        this.businessApplication = businessApplication;</span>
+<span class="nc" id="L54">    }</span>
+
+    public String getInstanceId() {
+<span class="nc" id="L57">        return instanceId;</span>
+    }
+
+    public void setInstanceId(String instanceId) {
+<span class="nc" id="L61">        this.instanceId = instanceId;</span>
+<span class="nc" id="L62">    }</span>
+
+    public String getIpAddress() {
+<span class="nc" id="L65">        return ipAddress;</span>
+    }
+
+    public void setIpAddress(String ipAddress) {
+<span class="nc" id="L69">        this.ipAddress = ipAddress;</span>
+<span class="nc" id="L70">    }</span>
+
+    public String getCreatedTimeStamp() {
+<span class="nc" id="L73">        return createdTimeStamp;</span>
+    }
+
+    public void setCreatedTimeStamp(String createdTimeStamp) {
+<span class="nc" id="L77">        this.createdTimeStamp = createdTimeStamp;</span>
+<span class="nc" id="L78">    }</span>
+
+    public List&lt;Labels&gt; getLabels() {
+<span class="nc" id="L81">        return labels;</span>
+    }
+
+    public void setLabels(List&lt;Labels&gt; labels) {
+<span class="nc" id="L85">        this.labels = labels;</span>
+<span class="nc" id="L86">    }</span>
+
+    public RepositoryDigest getRepositoryDigest() {
+<span class="nc" id="L89">        return repositoryDigest;</span>
+    }
+
+    public void setRepositoryDigest(RepositoryDigest repositoryDigest) {
+<span class="nc" id="L93">        this.repositoryDigest = repositoryDigest;</span>
+<span class="nc" id="L94">    }</span>
+
+    public String getOwnerDept() {
+<span class="nc" id="L97">        return ownerDept;</span>
+    }
+
+    public void setOwnerDept(String ownerDept) {
+<span class="nc" id="L101">        this.ownerDept = ownerDept;</span>
+<span class="nc" id="L102">    }</span>
+
+    public String getOwnerSubDept() {
+<span class="nc" id="L105">        return ownerSubDept;</span>
+    }
+
+    public void setOwnerSubDept(String ownerSubDept) {
+<span class="nc" id="L109">        this.ownerSubDept = ownerSubDept;</span>
+<span class="nc" id="L110">    }</span>
+
+    public String getDevelopmentOwner() {
+<span class="nc" id="L113">        return developmentOwner;</span>
+    }
+
+    public void setDevelopmentOwner(String developmentOwner) {
+<span class="nc" id="L117">        this.developmentOwner = developmentOwner;</span>
+<span class="nc" id="L118">    }</span>
+
+    public String getOwnerEmailAddress() {
+<span class="nc" id="L121">        return ownerEmailAddress;</span>
+    }
+
+    public void setOwnerEmailAddress(String ownerEmailAddress) {
+<span class="nc" id="L125">        this.ownerEmailAddress = ownerEmailAddress;</span>
+<span class="nc" id="L126">    }</span>
+
+    public String getApplicationOwnerFullName() {
+<span class="nc" id="L129">        return applicationOwnerFullName;</span>
+    }
+
+    public void setApplicationOwnerFullName(String applicationOwnerFullName) {
+<span class="nc" id="L133">        this.applicationOwnerFullName = applicationOwnerFullName;</span>
+<span class="nc" id="L134">    }</span>
+
+    public List&lt;Vulnerability&gt; getVulnerabilities() {
+<span class="nc" id="L137">        return vulnerabilities;</span>
+    }
+
+    public void setVulnerabilities(List&lt;Vulnerability&gt; vulnerabilities) {
+<span class="nc" id="L141">        this.vulnerabilities = vulnerabilities;</span>
+<span class="nc" id="L142">    }</span>
+
+    public int getLimit() {
+<span class="nc" id="L145">        return limit;</span>
+    }
+
+    public void setLimit(int limit) {
+<span class="nc" id="L149">        this.limit = limit;</span>
+<span class="nc" id="L150">    }</span>
+
+    public String getNextRecordKey() {
+<span class="nc" id="L153">        return nextRecordKey;</span>
+    }
+
+    public void setNextRecordKey(String nextRecordKey) {
+<span class="nc" id="L157">        this.nextRecordKey = nextRecordKey;</span>
+<span class="nc" id="L158">    }</span>
+
+    public long getTimestamp() {
+<span class="nc" id="L161">        return timestamp;</span>
+    }
+
+    public void setTimestamp(long timestamp) {
+<span class="nc" id="L165">        this.timestamp = timestamp;</span>
+<span class="nc" id="L166">    }</span>
+
+    public ObjectId getBuildId() {
+<span class="nc" id="L169">        return buildId;</span>
+    }
+
+    public void setBuildId(ObjectId buildId) {
+<span class="nc" id="L173">        this.buildId = buildId;</span>
+<span class="nc" id="L174">    }</span>
+
+    public String getBuildUrl() {
+<span class="nc" id="L177">        return buildUrl;</span>
+    }
+
+    public void setBuildUrl(String buildUrl) {
+<span class="nc" id="L181">        this.buildUrl = buildUrl;</span>
+<span class="nc" id="L182">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

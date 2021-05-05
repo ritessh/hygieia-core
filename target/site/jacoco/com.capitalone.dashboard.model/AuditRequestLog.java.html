@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuditRequestLog.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">AuditRequestLog.java</span></div><h1>AuditRequestLog.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = &quot;audit_requests&quot;)
+<span class="nc" id="L7">public class AuditRequestLog extends BaseModel {</span>
+
+    @Indexed
+    private String apiUser;
+    private String client;
+    @Indexed
+    private String endpoint;
+    private String method;
+    private Object parameter;
+    private long requestSize;
+    private String requestContentType;
+    private Object requestBody;
+    private long responseSize;
+    private String responseContentType;
+    private Object responseBody;
+    private int responseCode;
+    private long timestamp;
+    private long responseTime;
+
+
+<span class="nc" id="L27">    public String getApiUser() { return apiUser; }</span>
+
+<span class="nc" id="L29">    public void setApiUser(String apiUser) { this.apiUser = apiUser; }</span>
+
+    public String getClient() {
+<span class="nc" id="L32">        return client;</span>
+    }
+
+    public void setClient(String client) {
+<span class="nc" id="L36">        this.client = client;</span>
+<span class="nc" id="L37">    }</span>
+
+    public String getEndpoint() {
+<span class="nc" id="L40">        return endpoint;</span>
+    }
+
+    public void setEndpoint(String endpoint) {
+<span class="nc" id="L44">        this.endpoint = endpoint;</span>
+<span class="nc" id="L45">    }</span>
+
+    public String getMethod() {
+<span class="nc" id="L48">        return method;</span>
+    }
+
+    public void setMethod(String method) {
+<span class="nc" id="L52">        this.method = method;</span>
+<span class="nc" id="L53">    }</span>
+
+    public Object getParameter() {
+<span class="nc" id="L56">        return parameter;</span>
+    }
+
+    public void setParameter(Object parameter) {
+<span class="nc" id="L60">        this.parameter = parameter;</span>
+<span class="nc" id="L61">    }</span>
+
+    public Object getResponseBody() {
+<span class="nc" id="L64">        return responseBody;</span>
+    }
+
+    public void setResponseBody(Object responseBody) {
+<span class="nc" id="L68">        this.responseBody = responseBody;</span>
+<span class="nc" id="L69">    }</span>
+
+    public Object getRequestBody() {
+<span class="nc" id="L72">        return requestBody;</span>
+    }
+
+    public void setRequestBody(Object requestBody) {
+<span class="nc" id="L76">        this.requestBody = requestBody;</span>
+<span class="nc" id="L77">    }</span>
+
+    public long getTimestamp() {
+<span class="nc" id="L80">        return timestamp;</span>
+    }
+
+    public void setTimestamp(long timestamp) {
+<span class="nc" id="L84">        this.timestamp = timestamp;</span>
+<span class="nc" id="L85">    }</span>
+
+    public int getResponseCode() {
+<span class="nc" id="L88">        return responseCode;</span>
+    }
+
+    public void setResponseCode(int responseCode) {
+<span class="nc" id="L92">        this.responseCode = responseCode;</span>
+<span class="nc" id="L93">    }</span>
+
+    public long getRequestSize() {
+<span class="nc" id="L96">        return requestSize;</span>
+    }
+
+    public void setRequestSize(long requestSize) {
+<span class="nc" id="L100">        this.requestSize = requestSize;</span>
+<span class="nc" id="L101">    }</span>
+
+    public long getResponseSize() {
+<span class="nc" id="L104">        return responseSize;</span>
+    }
+
+    public void setResponseSize(long responseSize) {
+<span class="nc" id="L108">        this.responseSize = responseSize;</span>
+<span class="nc" id="L109">    }</span>
+
+    public String getRequestContentType() {
+<span class="nc" id="L112">        return requestContentType;</span>
+    }
+
+    public void setRequestContentType(String requestContentType) {
+<span class="nc" id="L116">        this.requestContentType = requestContentType;</span>
+<span class="nc" id="L117">    }</span>
+
+    public String getResponseContentType() {
+<span class="nc" id="L120">        return responseContentType;</span>
+    }
+
+    public void setResponseContentType(String responseContentType) {
+<span class="nc" id="L124">        this.responseContentType = responseContentType;</span>
+<span class="nc" id="L125">    }</span>
+
+<span class="nc" id="L127">    public long getResponseTime() { return responseTime; }</span>
+
+<span class="nc" id="L129">    public void setResponseTime(long responseTime) { this.responseTime = responseTime; }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L133">        return &quot;REST Request - &quot; + &quot;[&quot; + this.method + &quot;] [PARAMETERS:&quot; + parameter + &quot;] [APIUSER:&quot; + apiUser + &quot;] [BODY:&quot; + requestBody + &quot;] [REMOTE:&quot; + client + &quot;] [clientReference:&quot; + getClientReference() + &quot;] [STATUS:&quot; + responseCode + &quot;] [RESPONSE TIME:&quot; + responseTime + &quot;]&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

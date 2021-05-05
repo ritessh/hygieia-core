@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CucumberJsonToTestCapabilityTransformer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">hygieia.transformer</a> &gt; <span class="el_source">CucumberJsonToTestCapabilityTransformer.java</span></div><h1>CucumberJsonToTestCapabilityTransformer.java</h1><pre class="source lang-java linenums">package hygieia.transformer;
+
+import com.capitalone.dashboard.model.TestCapability;
+import com.capitalone.dashboard.model.TestCase;
+import com.capitalone.dashboard.model.TestCaseCondition;
+import com.capitalone.dashboard.model.TestCaseStatus;
+import com.capitalone.dashboard.model.TestCaseStep;
+import com.capitalone.dashboard.model.TestSuite;
+import com.capitalone.dashboard.model.TestSuiteType;
+import com.capitalone.dashboard.model.quality.CucumberJsonReport;
+import com.capitalone.dashboard.request.BuildDataCreateRequest;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Transforms a Cucumber result JSON string into a TestResult
+ */
+
+public class CucumberJsonToTestCapabilityTransformer {
+
+    private BuildDataCreateRequest buildDataCreateRequest;
+    private String capabilityDescription;
+
+<span class="fc" id="L28">    public CucumberJsonToTestCapabilityTransformer(BuildDataCreateRequest buildDataCreateRequest, String capabilityDescription) {</span>
+<span class="fc" id="L29">        this.buildDataCreateRequest = buildDataCreateRequest;</span>
+<span class="fc" id="L30">        this.capabilityDescription = capabilityDescription;</span>
+<span class="fc" id="L31">    }</span>
+
+    private TestSuite parseFeatureAsTestSuite(CucumberJsonReport.Feature featureElement) {
+<span class="fc" id="L34">        TestSuite suite = new TestSuite();</span>
+<span class="fc" id="L35">        suite.setId(featureElement.getId());</span>
+<span class="fc" id="L36">        suite.setType(TestSuiteType.Functional);</span>
+<span class="fc" id="L37">        suite.setDescription(featureElement.getKeyword() + &quot;:&quot; + featureElement.getName());</span>
+
+<span class="fc" id="L39">        long duration = 0;</span>
+
+<span class="fc" id="L41">        int testCaseTotalCount = featureElement.getElements().size();</span>
+<span class="fc" id="L42">        int testCaseSkippedCount = 0, testCaseSuccessCount = 0, testCaseFailCount = 0, testCaseUnknownCount = 0;</span>
+
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        for (CucumberJsonReport.Element scenarioElement : featureElement.getElements()) {</span>
+<span class="fc" id="L45">            TestCase testCase = parseScenarioAsTestCase(scenarioElement);</span>
+<span class="fc" id="L46">            duration += testCase.getDuration();</span>
+<span class="pc bpc" id="L47" title="3 of 4 branches missed.">            switch (testCase.getStatus()) {</span>
+                case Success:
+<span class="nc" id="L49">                    testCaseSuccessCount++;</span>
+<span class="nc" id="L50">                    break;</span>
+                case Failure:
+<span class="fc" id="L52">                    testCaseFailCount++;</span>
+<span class="fc" id="L53">                    break;</span>
+                case Skipped:
+<span class="nc" id="L55">                    testCaseSkippedCount++;</span>
+<span class="nc" id="L56">                    break;</span>
+                default:
+<span class="nc" id="L58">                    testCaseUnknownCount++;</span>
+                    break;
+            }
+<span class="fc" id="L61">            suite.getTestCases().add(testCase);</span>
+<span class="fc" id="L62">        }</span>
+<span class="fc" id="L63">        suite.setSuccessTestCaseCount(testCaseSuccessCount);</span>
+<span class="fc" id="L64">        suite.setFailedTestCaseCount(testCaseFailCount);</span>
+<span class="fc" id="L65">        suite.setSkippedTestCaseCount(testCaseSkippedCount);</span>
+<span class="fc" id="L66">        suite.setTotalTestCaseCount(testCaseTotalCount);</span>
+<span class="fc" id="L67">        suite.setUnknownStatusCount(testCaseUnknownCount);</span>
+<span class="fc" id="L68">        suite.setDuration(duration);</span>
+
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        if (testCaseFailCount &gt; 0) {</span>
+<span class="fc" id="L71">            suite.setStatus(TestCaseStatus.Failure);</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        } else if (testCaseSkippedCount &gt; 0) {</span>
+<span class="nc" id="L73">            suite.setStatus(TestCaseStatus.Skipped);</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        } else if (testCaseSuccessCount &gt; 0) {</span>
+<span class="nc" id="L75">            suite.setStatus(TestCaseStatus.Success);</span>
+        } else {
+<span class="nc" id="L77">            suite.setStatus(TestCaseStatus.Unknown);</span>
+        }
+<span class="fc" id="L79">        return suite;</span>
+    }
+
+    private TestCase parseScenarioAsTestCase(CucumberJsonReport.Element scenarioElement) {
+<span class="fc" id="L83">        TestCase testCase = new TestCase();</span>
+<span class="fc" id="L84">        testCase.setId(scenarioElement.getId());</span>
+<span class="fc" id="L85">        testCase.setDescription(scenarioElement.getKeyword() + &quot;:&quot; + scenarioElement.getName());</span>
+        // Parse each step as a TestCase
+<span class="fc" id="L87">        int testStepSuccessCount = 0, testStepFailCount = 0, testStepSkippedCount = 0, testStepUnknownCount = 0;</span>
+<span class="fc" id="L88">        long testDuration = 0;</span>
+
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        for (CucumberJsonReport.Step step : scenarioElement.getSteps()) {</span>
+<span class="fc" id="L91">            TestCaseStep testCaseStep = parseStepAsTestCaseStep(step);</span>
+<span class="fc" id="L92">            testDuration += testCaseStep.getDuration();</span>
+            // Count Statuses
+<span class="pc bpc" id="L94" title="2 of 4 branches missed.">            switch (testCaseStep.getStatus()) {</span>
+                case Success:
+<span class="fc" id="L96">                    testStepSuccessCount++;</span>
+<span class="fc" id="L97">                    break;</span>
+                case Failure:
+<span class="fc" id="L99">                    testStepFailCount++;</span>
+<span class="fc" id="L100">                    break;</span>
+                case Skipped:
+<span class="nc" id="L102">                    testStepSkippedCount++;</span>
+<span class="nc" id="L103">                    break;</span>
+                default:
+<span class="nc" id="L105">                    testStepUnknownCount++;</span>
+                    break;
+
+            }
+<span class="fc" id="L109">            testCase.getTestSteps().add(testCaseStep);</span>
+<span class="fc" id="L110">        }</span>
+        // Set Duration
+<span class="fc" id="L112">        testCase.setDuration(testDuration);</span>
+<span class="fc" id="L113">        testCase.setSuccessTestStepCount(testStepSuccessCount);</span>
+<span class="fc" id="L114">        testCase.setSkippedTestStepCount(testStepSkippedCount);</span>
+<span class="fc" id="L115">        testCase.setFailedTestStepCount(testStepFailCount);</span>
+<span class="fc" id="L116">        testCase.setUnknownStatusCount(testStepUnknownCount);</span>
+<span class="fc" id="L117">        testCase.setTotalTestStepCount(testCase.getTestSteps().size());</span>
+        // Set Status
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        if (testStepFailCount &gt; 0) {</span>
+<span class="fc" id="L120">            testCase.setStatus(TestCaseStatus.Failure);</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        } else if (testStepSkippedCount &gt; 0) {</span>
+<span class="nc" id="L122">            testCase.setStatus(TestCaseStatus.Skipped);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        } else if (testStepSuccessCount &gt; 0) {</span>
+<span class="nc" id="L124">            testCase.setStatus(TestCaseStatus.Success);</span>
+        } else {
+<span class="nc" id="L126">            testCase.setStatus(TestCaseStatus.Unknown);</span>
+        }
+
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (null != scenarioElement.getTags()) {</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            for (CucumberJsonReport.Tag tag : scenarioElement.getTags()) {</span>
+<span class="nc" id="L131">                testCase.getTags().add(tag.getName());</span>
+<span class="nc" id="L132">            }</span>
+        }
+
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (null != scenarioElement.getBefore()) {</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">            for (CucumberJsonReport.Condition before : scenarioElement.getBefore()) {</span>
+<span class="nc" id="L137">                TestCaseCondition condition = getTestCondition(before);</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                if (condition != null) {</span>
+<span class="nc" id="L139">                    testCase.getBefore().add(condition);</span>
+                }
+<span class="nc" id="L141">            }</span>
+        }
+
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">        if (null != scenarioElement.getAfter()) {</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            for (CucumberJsonReport.Condition after : scenarioElement.getAfter()) {</span>
+<span class="nc" id="L146">                TestCaseCondition condition = getTestCondition(after);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                if (condition != null) {</span>
+<span class="nc" id="L148">                    testCase.getAfter().add(condition);</span>
+                }
+<span class="nc" id="L150">            }</span>
+        }
+<span class="fc" id="L152">        return testCase;</span>
+    }
+
+    private TestCaseCondition getTestCondition(CucumberJsonReport.Condition cond) {
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (cond == null) return null;</span>
+<span class="nc" id="L157">        TestCaseCondition condition = new TestCaseCondition();</span>
+<span class="nc" id="L158">        CucumberJsonReport.Match match = cond.getMatch();</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        if (match == null) return null;</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (match.getLocation() instanceof ObjectNode) {</span>
+<span class="nc" id="L161">            ObjectNode location = (ObjectNode) match.getLocation();</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">            if (location == null) return null;</span>
+<span class="nc" id="L163">            JsonNode filepath = location.get(&quot;filepath&quot;);</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">            if (filepath == null) return null;</span>
+<span class="nc" id="L165">            condition.setCondition(&quot;Match: &quot; + location.toString());</span>
+<span class="nc" id="L166">        } else {</span>
+<span class="nc" id="L167">            condition.setCondition(&quot;Match: &quot; + match.toString());</span>
+        }
+<span class="nc" id="L169">        CucumberJsonReport.Result result = cond.getResult();</span>
+<span class="nc" id="L170">        String stat = result.getStatus();</span>
+<span class="nc" id="L171">        long duration = result.getDuration();</span>
+<span class="nc" id="L172">        condition.setResult(getStatus(stat), duration);</span>
+<span class="nc" id="L173">        return condition;</span>
+    }
+
+    private TestCaseStatus getStatus(String stat) {
+<span class="pc bpc" id="L177" title="2 of 4 branches missed.">        switch (stat) {</span>
+            case &quot;passed&quot;:
+<span class="fc" id="L179">                return TestCaseStatus.Success;</span>
+            case &quot;skipped&quot;:
+<span class="nc" id="L181">                return TestCaseStatus.Skipped;</span>
+            case &quot;failed&quot;:
+<span class="fc" id="L183">                return TestCaseStatus.Failure;</span>
+            default:
+<span class="nc" id="L185">                return TestCaseStatus.Unknown;</span>
+        }
+    }
+
+    private TestCaseStep parseStepAsTestCaseStep(CucumberJsonReport.Step stepObject) {
+<span class="fc" id="L190">        TestCaseStep step = new TestCaseStep();</span>
+<span class="fc" id="L191">        step.setDescription(stepObject.getKeyword() + &quot;:&quot; + stepObject.getName());</span>
+<span class="fc" id="L192">        step.setId(stepObject.getLine());</span>
+<span class="fc" id="L193">        TestCaseStatus stepStatus = TestCaseStatus.Unknown;</span>
+
+<span class="fc" id="L195">        CucumberJsonReport.Result resultObj = stepObject.getResult();</span>
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">        if (resultObj != null) {</span>
+<span class="fc" id="L197">            step.setDuration(resultObj.getDuration() / 1000000l);</span>
+<span class="fc" id="L198">            stepStatus = getStatus(resultObj.getStatus());</span>
+        }
+<span class="fc" id="L200">        step.setStatus(stepStatus);</span>
+<span class="fc" id="L201">        return step;</span>
+    }
+
+
+    public TestCapability convert(CucumberJsonReport cucumberJsonReport) {
+
+<span class="fc" id="L207">        List&lt;TestSuite&gt; testSuites = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L208">        List&lt;CucumberJsonReport.Feature&gt; features = cucumberJsonReport.getFeatures();</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        for (CucumberJsonReport.Feature feature : features) {</span>
+<span class="fc" id="L210">            testSuites.add(this.parseFeatureAsTestSuite(feature));</span>
+<span class="fc" id="L211">        }</span>
+
+<span class="fc" id="L213">        return this.processTestSuites(testSuites);</span>
+    }
+
+    private TestCapability processTestSuites(List&lt;TestSuite&gt; testSuites) {
+<span class="fc" id="L217">        TestCapability cap = new TestCapability();</span>
+<span class="fc" id="L218">        cap.setType(TestSuiteType.Functional);</span>
+
+<span class="fc" id="L220">        cap.getTestSuites().addAll(testSuites); //add test suites</span>
+<span class="fc" id="L221">        long duration = 0;</span>
+<span class="fc" id="L222">        int testSuiteSkippedCount = 0, testSuiteSuccessCount = 0, testSuiteFailCount = 0, testSuiteUnknownCount = 0;</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        for (TestSuite t : testSuites) {</span>
+<span class="fc" id="L224">            duration += t.getDuration();</span>
+<span class="pc bpc" id="L225" title="3 of 4 branches missed.">            switch (t.getStatus()) {</span>
+                case Success:
+<span class="nc" id="L227">                    testSuiteSuccessCount++;</span>
+<span class="nc" id="L228">                    break;</span>
+                case Failure:
+<span class="fc" id="L230">                    testSuiteFailCount++;</span>
+<span class="fc" id="L231">                    break;</span>
+                case Skipped:
+<span class="nc" id="L233">                    testSuiteSkippedCount++;</span>
+<span class="nc" id="L234">                    break;</span>
+                default:
+<span class="nc" id="L236">                    testSuiteUnknownCount++;</span>
+                    break;
+            }
+<span class="fc" id="L239">        }</span>
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">        if (testSuiteFailCount &gt; 0) {</span>
+<span class="fc" id="L241">            cap.setStatus(TestCaseStatus.Failure);</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">        } else if (testSuiteSkippedCount &gt; 0) {</span>
+<span class="nc" id="L243">            cap.setStatus(TestCaseStatus.Skipped);</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">        } else if (testSuiteSuccessCount &gt; 0) {</span>
+<span class="nc" id="L245">            cap.setStatus(TestCaseStatus.Success);</span>
+        } else {
+<span class="nc" id="L247">            cap.setStatus(TestCaseStatus.Unknown);</span>
+        }
+<span class="fc" id="L249">        cap.setFailedTestSuiteCount(testSuiteFailCount);</span>
+<span class="fc" id="L250">        cap.setSkippedTestSuiteCount(testSuiteSkippedCount);</span>
+<span class="fc" id="L251">        cap.setSuccessTestSuiteCount(testSuiteSuccessCount);</span>
+<span class="fc" id="L252">        cap.setUnknownStatusTestSuiteCount(testSuiteUnknownCount);</span>
+<span class="fc" id="L253">        cap.setTotalTestSuiteCount(testSuites.size());</span>
+<span class="fc" id="L254">        cap.setDuration(duration);</span>
+<span class="pc bpc" id="L255" title="1 of 2 branches missed.">        cap.setExecutionId(buildDataCreateRequest == null ? null : String.valueOf(buildDataCreateRequest.getNumber()));</span>
+<span class="fc" id="L256">        cap.setDescription(this.capabilityDescription);</span>
+<span class="fc" id="L257">        return cap;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EnvironmentComponent.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">EnvironmentComponent.java</span></div><h1>EnvironmentComponent.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+/**
+ * Represents deployable units (components) deployed to an environment.
+ */
+@Document(collection = &quot;environment_components&quot;)
+<span class="fc" id="L10">public class EnvironmentComponent extends BaseModel {</span>
+    /**
+     * Deploy collectorItemId
+     */
+    private ObjectId collectorItemId;
+    private String environmentID;
+    private String environmentName;
+    private String environmentUrl;
+    private String componentID;
+	private String componentName;
+    private String componentVersion;
+    private String componentPath;
+    private String jobUrl;
+    private boolean deployed;
+    private long deployTime;
+    private long asOfDate;
+    private ObjectId buildId;
+    private String jobStageName;
+    private String jobStageStatus;
+    private String applicationName;
+    private String serviceName;
+    private String changeReference;
+
+
+	
+    public ObjectId getCollectorItemId() {
+<span class="fc" id="L36">        return collectorItemId;</span>
+    }
+
+    public void setCollectorItemId(ObjectId collectorItemId) {
+<span class="nc" id="L40">        this.collectorItemId = collectorItemId;</span>
+<span class="nc" id="L41">    }</span>
+    
+    public String getEnvironmentID() {
+<span class="nc" id="L44">    	return environmentID;</span>
+    }
+    
+    public void setEnvironmentID(String environmentID) {
+<span class="nc" id="L48">    	this.environmentID = environmentID;</span>
+<span class="nc" id="L49">    }</span>
+
+    public String getEnvironmentName() {
+<span class="fc" id="L52">        return environmentName;</span>
+    }
+
+    public void setEnvironmentName(String environmentName) {
+<span class="fc" id="L56">        this.environmentName = environmentName;</span>
+<span class="fc" id="L57">    }</span>
+
+    public String getEnvironmentUrl() {
+<span class="nc" id="L60">        return environmentUrl;</span>
+    }
+
+    public void setEnvironmentUrl(String environmentUrl) {
+<span class="nc" id="L64">        this.environmentUrl = environmentUrl;</span>
+<span class="nc" id="L65">    }</span>
+
+    
+    public String getComponentID() {
+<span class="nc" id="L69">		return componentID;</span>
+	}
+
+	public void setComponentID(String componentID) {
+<span class="nc" id="L73">		this.componentID = componentID;</span>
+<span class="nc" id="L74">	}</span>
+	
+    public String getComponentName() {
+<span class="fc" id="L77">        return componentName;</span>
+    }
+
+    public void setComponentName(String componentName) {
+<span class="fc" id="L81">        this.componentName = componentName;</span>
+<span class="fc" id="L82">    }</span>
+
+    public String getComponentVersion() {
+<span class="nc" id="L85">        return componentVersion;</span>
+    }
+
+    public void setComponentVersion(String componentVersion) {
+<span class="nc" id="L89">        this.componentVersion = componentVersion;</span>
+<span class="nc" id="L90">    }</span>
+
+    public String getJobUrl() {
+<span class="nc" id="L93">		return jobUrl;</span>
+    }
+
+    public void setJobUrl(String jobUrl) {
+<span class="nc" id="L97">        this.jobUrl = jobUrl;</span>
+<span class="nc" id="L98">    }</span>
+
+    public boolean isDeployed() {
+<span class="fc" id="L101">        return deployed;</span>
+    }
+
+    public void setDeployed(boolean deployed) {
+<span class="fc" id="L105">        this.deployed = deployed;</span>
+<span class="fc" id="L106">    }</span>
+
+    public long getAsOfDate() {
+<span class="fc" id="L109">        return asOfDate;</span>
+    }
+
+    public void setAsOfDate(long asOfDate) {
+<span class="nc" id="L113">        this.asOfDate = asOfDate;</span>
+<span class="nc" id="L114">    }</span>
+
+    public long getDeployTime() {
+<span class="nc" id="L117">        return deployTime;</span>
+    }
+
+    public void setDeployTime(long deployTime) {
+<span class="nc" id="L121">        this.deployTime = deployTime;</span>
+<span class="nc" id="L122">    }</span>
+
+<span class="nc" id="L124">    public ObjectId getBuildId() { return buildId; }</span>
+
+<span class="nc" id="L126">    public void setBuildId(ObjectId buildId) { this.buildId = buildId; }</span>
+
+<span class="nc" id="L128">    public String getJobStageName() { return jobStageName; }</span>
+
+<span class="nc" id="L130">    public void setJobStageName(String jobStageName) { this.jobStageName = jobStageName; }</span>
+
+<span class="nc" id="L132">    public String getJobStageStatus() { return jobStageStatus; }</span>
+
+<span class="nc" id="L134">    public void setJobStageStatus(String jobStageStatus) { this.jobStageStatus = jobStageStatus; }</span>
+
+<span class="nc" id="L136">    public String getComponentPath() { return componentPath; }</span>
+
+<span class="nc" id="L138">    public void setComponentPath(String componentPath) { this.componentPath = componentPath; }</span>
+
+<span class="nc" id="L140">    public String getApplicationName() { return applicationName; }</span>
+
+<span class="nc" id="L142">    public void setApplicationName(String applicationName) { this.applicationName = applicationName; }</span>
+
+<span class="nc" id="L144">    public String getServiceName() { return serviceName; }</span>
+
+<span class="nc" id="L146">    public void setServiceName(String serviceName) { this.serviceName = serviceName; }</span>
+
+<span class="nc" id="L148">    public String getChangeReference() { return changeReference; }</span>
+
+<span class="nc" id="L150">    public void setChangeReference(String changeReference) { this.changeReference = changeReference; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

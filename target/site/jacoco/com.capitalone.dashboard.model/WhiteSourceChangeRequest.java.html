@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WhiteSourceChangeRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">WhiteSourceChangeRequest.java</span></div><h1>WhiteSourceChangeRequest.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+
+import java.util.List;
+import java.util.Objects;
+
+<span class="nc" id="L7">public class WhiteSourceChangeRequest extends BaseModel {</span>
+
+    private Long startDateTime;
+    private String changeCategory;
+    private String changeClass;
+    private String changeAspect;
+    private String scope;
+    private String orgName;
+    private String productName;
+    private String projectName;
+    private long lastUpdated;
+    private String scopeName;
+    private Long changeScopeId;
+    private List&lt;String&gt; beforeChange;
+    private List&lt;String&gt; afterChange;
+    private String operator;
+    private String userEmail;
+    private String orgId;
+
+    public Long getStartDateTime() {
+<span class="nc" id="L27">        return startDateTime;</span>
+    }
+
+    public void setStartDateTime(Long startDateTime) {
+<span class="nc" id="L31">        this.startDateTime = startDateTime;</span>
+<span class="nc" id="L32">    }</span>
+
+    public String getChangeCategory() {
+<span class="nc" id="L35">        return changeCategory;</span>
+    }
+
+    public void setChangeCategory(String changeCategory) {
+<span class="nc" id="L39">        this.changeCategory = changeCategory;</span>
+<span class="nc" id="L40">    }</span>
+
+    public String getChangeClass() {
+<span class="nc" id="L43">        return changeClass;</span>
+    }
+
+    public void setChangeClass(String changeClass) {
+<span class="nc" id="L47">        this.changeClass = changeClass;</span>
+<span class="nc" id="L48">    }</span>
+
+    public String getChangeAspect() {
+<span class="nc" id="L51">        return changeAspect;</span>
+    }
+
+    public void setChangeAspect(String changeAspect) {
+<span class="nc" id="L55">        this.changeAspect = changeAspect;</span>
+<span class="nc" id="L56">    }</span>
+
+    public String getScope() {
+<span class="nc" id="L59">        return scope;</span>
+    }
+
+    public void setScope(String scope) {
+<span class="nc" id="L63">        this.scope = scope;</span>
+<span class="nc" id="L64">    }</span>
+
+    public String getOrgName() {
+<span class="nc" id="L67">        return orgName;</span>
+    }
+
+    public void setOrgName(String orgName) {
+<span class="nc" id="L71">        this.orgName = orgName;</span>
+<span class="nc" id="L72">    }</span>
+
+    public String getProductName() {
+<span class="nc" id="L75">        return productName;</span>
+    }
+
+    public void setProductName(String productName) {
+<span class="nc" id="L79">        this.productName = productName;</span>
+<span class="nc" id="L80">    }</span>
+
+    public String getProjectName() {
+<span class="nc" id="L83">        return projectName;</span>
+    }
+
+    public void setProjectName(String projectName) {
+<span class="nc" id="L87">        this.projectName = projectName;</span>
+<span class="nc" id="L88">    }</span>
+
+    public long getLastUpdated() {
+<span class="nc" id="L91">        return lastUpdated;</span>
+    }
+
+    public void setLastUpdated(long lastUpdated) {
+<span class="nc" id="L95">        this.lastUpdated = lastUpdated;</span>
+<span class="nc" id="L96">    }</span>
+
+    public String getScopeName() {
+<span class="nc" id="L99">        return scopeName;</span>
+    }
+
+    public void setScopeName(String scopeName) {
+<span class="nc" id="L103">        this.scopeName = scopeName;</span>
+<span class="nc" id="L104">    }</span>
+
+    public Long getChangeScopeId() {
+<span class="nc" id="L107">        return changeScopeId;</span>
+    }
+
+    public void setChangeScopeId(Long changeScopeId) {
+<span class="nc" id="L111">        this.changeScopeId = changeScopeId;</span>
+<span class="nc" id="L112">    }</span>
+
+    public String getOperator() {
+<span class="nc" id="L115">        return operator;</span>
+    }
+
+    public void setOperator(String operator) {
+<span class="nc" id="L119">        this.operator = operator;</span>
+<span class="nc" id="L120">    }</span>
+
+    public String getUserEmail() {
+<span class="nc" id="L123">        return userEmail;</span>
+    }
+
+    public void setUserEmail(String userEmail) {
+<span class="nc" id="L127">        this.userEmail = userEmail;</span>
+<span class="nc" id="L128">    }</span>
+
+    public String getOrgId() {
+<span class="nc" id="L131">        return orgId;</span>
+    }
+
+    public void setOrgId(String orgId) {
+<span class="nc" id="L135">        this.orgId = orgId;</span>
+<span class="nc" id="L136">    }</span>
+
+    public List&lt;String&gt; getBeforeChange() {
+<span class="nc" id="L139">        return beforeChange;</span>
+    }
+
+    public void setBeforeChange(List&lt;String&gt; beforeChange) {
+<span class="nc" id="L143">        this.beforeChange = beforeChange;</span>
+<span class="nc" id="L144">    }</span>
+
+    public List&lt;String&gt; getAfterChange() {
+<span class="nc" id="L147">        return afterChange;</span>
+    }
+
+    public void setAfterChange(List&lt;String&gt; afterChange) {
+<span class="nc" id="L151">        this.afterChange = afterChange;</span>
+<span class="nc" id="L152">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L157" title="All 4 branches missed.">        if (o == null || !(o instanceof WhiteSourceChangeRequest)) return false;</span>
+
+<span class="nc" id="L159">        WhiteSourceChangeRequest that = (WhiteSourceChangeRequest) o;</span>
+<span class="nc" id="L160">        return Objects.equals(getScopeName(), that.getScopeName());</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L165">        int result = 31 * getScopeName().hashCode();</span>
+<span class="nc" id="L166">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

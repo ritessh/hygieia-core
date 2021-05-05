@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">BaseModel.java</span></div><h1>BaseModel.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
+/**
+ * Base class for all Mongo model classes that has an id property.
+ */
+public class BaseModel {
+
+<span class="fc" id="L14">    public BaseModel() {</span>
+<span class="fc" id="L15">        upsertTime = new Date(System.currentTimeMillis());</span>
+<span class="fc" id="L16">    }</span>
+
+    @Id
+    private ObjectId id;
+
+    @DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME)
+    private Date upsertTime;
+
+    private String clientReference;
+
+    public ObjectId getId() {
+<span class="fc" id="L27">        return id;</span>
+    }
+
+    public void setId(ObjectId id) {
+<span class="fc" id="L31">        this.id = id;</span>
+<span class="fc" id="L32">    }</span>
+
+<span class="nc" id="L34">    public Date getUpsertTime() { return upsertTime; }</span>
+
+<span class="nc" id="L36">    public void setUpsertTime(Date upsertTime) { this.upsertTime = upsertTime; }</span>
+
+<span class="nc" id="L38">    public String getClientReference() { return clientReference; }</span>
+
+<span class="nc" id="L40">    public void setClientReference(String clientReference) { this.clientReference = clientReference; }</span>
+
+    /*
+     * Note:
+     * 
+     * Having hashcode + equals is more complicated than simply comparing ObjectIds since
+     * it does not provide a way to properly compare models that have not been saved yet.
+     */
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

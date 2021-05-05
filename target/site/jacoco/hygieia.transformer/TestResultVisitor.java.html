@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TestResultVisitor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">hygieia.transformer</a> &gt; <span class="el_source">TestResultVisitor.java</span></div><h1>TestResultVisitor.java</h1><pre class="source lang-java linenums">package hygieia.transformer;
+
+import com.capitalone.dashboard.model.TestCapability;
+import com.capitalone.dashboard.model.TestResult;
+import com.capitalone.dashboard.model.TestSuiteType;
+import com.capitalone.dashboard.model.quality.CheckstyleReport;
+import com.capitalone.dashboard.model.quality.CucumberJsonReport;
+import com.capitalone.dashboard.model.quality.FindBugsXmlReport;
+import com.capitalone.dashboard.model.quality.JacocoXmlReport;
+import com.capitalone.dashboard.model.quality.JunitXmlReport;
+import com.capitalone.dashboard.model.quality.JunitXmlReportV2;
+import com.capitalone.dashboard.model.quality.MochaJsSpecReport;
+import com.capitalone.dashboard.model.quality.PmdReport;
+import com.capitalone.dashboard.model.quality.QualityVisitor;
+import com.capitalone.dashboard.request.BuildDataCreateRequest;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by stevegal on 2019-03-25.
+ */
+public class TestResultVisitor implements QualityVisitor&lt;TestResult&gt; {
+
+<span class="fc" id="L25">    private List&lt;TestCapability&gt; capabilities = new ArrayList&lt;&gt;();</span>
+
+    private String testType;
+    private BuildDataCreateRequest buildDataCreateRequest;
+    private String capabilityDescription;
+
+<span class="fc" id="L31">    public TestResultVisitor(String testType, BuildDataCreateRequest buildDataCreateRequest) {</span>
+<span class="fc" id="L32">        this.testType = testType;</span>
+<span class="fc" id="L33">        this.buildDataCreateRequest = buildDataCreateRequest;</span>
+<span class="fc" id="L34">    }</span>
+
+    @Override
+    public TestResult produceResult() {
+<span class="fc" id="L38">        return this.buildTestResultObject(this.capabilities, this.buildDataCreateRequest, this.testType);</span>
+    }
+
+    @Override
+    public void visit(JunitXmlReport junitXmlReport) {
+        // no impl... could expand
+<span class="nc" id="L44">    }</span>
+
+    @Override
+    public void visit(JunitXmlReportV2 junitXmlReportV2) {
+        // no impl... could expand
+<span class="nc" id="L49">    }</span>
+    
+    @Override
+    public void visit(FindBugsXmlReport findBugsXmlReport) {
+        // no impl... could expand
+<span class="nc" id="L54">    }</span>
+
+    @Override
+    public void visit(JacocoXmlReport jacocoXmlReport) {
+        // no impl... could expand
+<span class="nc" id="L59">    }</span>
+
+    @Override
+    public void visit(PmdReport pmdReport) {
+        // no impl... could expand
+<span class="nc" id="L64">    }</span>
+
+    @Override
+    public void visit(CheckstyleReport checkstyleReport) {
+        // no impl... could expandÒ
+<span class="nc" id="L69">    }</span>
+
+    @Override
+    public void visit(MochaJsSpecReport mochaJsSpecReport) {
+<span class="fc" id="L73">        MochaSpecToTestCapabilityTransformer transformer = new MochaSpecToTestCapabilityTransformer(this.buildDataCreateRequest, this.capabilityDescription);</span>
+<span class="fc" id="L74">        TestCapability capability = transformer.convert(mochaJsSpecReport);</span>
+<span class="fc" id="L75">        this.capabilities.add(capability);</span>
+<span class="fc" id="L76">    }</span>
+
+    @Override
+    public void visit(CucumberJsonReport cucumberJsonReport) {
+<span class="fc" id="L80">        CucumberJsonToTestCapabilityTransformer transformer = new CucumberJsonToTestCapabilityTransformer(this.buildDataCreateRequest, this.capabilityDescription);</span>
+<span class="fc" id="L81">        TestCapability capability = transformer.convert(cucumberJsonReport);</span>
+<span class="fc" id="L82">        this.capabilities.add(capability);</span>
+<span class="fc" id="L83">    }</span>
+
+    private TestResult buildTestResultObject(List&lt;TestCapability&gt; capabilities, BuildDataCreateRequest buildDataCreateRequest, String testType) {
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        if (!capabilities.isEmpty()) {</span>
+            // There are test suites so let's construct a TestResult to encapsulate these results
+<span class="fc" id="L88">            TestResult testResult = new TestResult();</span>
+<span class="fc" id="L89">            testResult.setType(TestSuiteType.fromString(testType));</span>
+<span class="fc" id="L90">            testResult.setDescription(buildDataCreateRequest.getJobName());</span>
+<span class="fc" id="L91">            testResult.setExecutionId(String.valueOf(buildDataCreateRequest.getNumber()));</span>
+<span class="fc" id="L92">            testResult.setUrl(buildDataCreateRequest.getBuildUrl() + buildDataCreateRequest.getNumber() + &quot;/&quot;);</span>
+<span class="fc" id="L93">            testResult.setDuration(buildDataCreateRequest.getDuration());</span>
+<span class="fc" id="L94">            testResult.setEndTime(buildDataCreateRequest.getStartTime() + buildDataCreateRequest.getDuration());</span>
+<span class="fc" id="L95">            testResult.setStartTime(buildDataCreateRequest.getStartTime());</span>
+<span class="fc" id="L96">            testResult.getTestCapabilities().addAll(capabilities);  //add all capabilities</span>
+<span class="fc" id="L97">            testResult.setTotalCount(capabilities.size());</span>
+<span class="fc" id="L98">            testResult.setTimestamp(System.currentTimeMillis());</span>
+<span class="fc" id="L99">            int testCapabilitySkippedCount = 0, testCapabilitySuccessCount = 0, testCapabilityFailCount = 0;</span>
+<span class="fc" id="L100">            int testCapabilityUnknownCount = 0;</span>
+            // Calculate counts based on test suites
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            for (TestCapability cap : capabilities) {</span>
+<span class="pc bpc" id="L103" title="3 of 4 branches missed.">                switch (cap.getStatus()) {</span>
+                    case Success:
+<span class="nc" id="L105">                        testCapabilitySuccessCount++;</span>
+<span class="nc" id="L106">                        break;</span>
+                    case Failure:
+<span class="fc" id="L108">                        testCapabilityFailCount++;</span>
+<span class="fc" id="L109">                        break;</span>
+                    case Skipped:
+<span class="nc" id="L111">                        testCapabilitySkippedCount++;</span>
+<span class="nc" id="L112">                        break;</span>
+                    default:
+<span class="nc" id="L114">                        testCapabilityUnknownCount++;</span>
+                        break;
+                }
+<span class="fc" id="L117">            }</span>
+<span class="fc" id="L118">            testResult.setSuccessCount(testCapabilitySuccessCount);</span>
+<span class="fc" id="L119">            testResult.setFailureCount(testCapabilityFailCount);</span>
+<span class="fc" id="L120">            testResult.setSkippedCount(testCapabilitySkippedCount);</span>
+<span class="fc" id="L121">            testResult.setUnknownStatusCount(testCapabilityUnknownCount);</span>
+<span class="fc" id="L122">            return testResult;</span>
+        }
+<span class="nc" id="L124">        return null;</span>
+    }
+
+    public void setCurrentDescriprion(String capabilityDescription) {
+<span class="nc" id="L128">        this.capabilityDescription = capabilityDescription;</span>
+<span class="nc" id="L129">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

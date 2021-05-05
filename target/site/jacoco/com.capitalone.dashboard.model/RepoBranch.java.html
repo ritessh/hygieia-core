@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RepoBranch.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">RepoBranch.java</span></div><h1>RepoBranch.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import javax.validation.constraints.NotNull;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.util.Locale;
+
+public class RepoBranch {
+<span class="fc" id="L10">    private String url = &quot;&quot;;</span>
+<span class="fc" id="L11">    private String branch = &quot;&quot;;</span>
+<span class="fc" id="L12">    private RepoType type = RepoType.Unknown;</span>
+    private static final String GIT_EXTN = &quot;.git&quot;;
+    private static final String GIT_SCHEME = &quot;git@&quot;;
+    private static final String DEFAULT_SCHEME = &quot;https://&quot;;
+    private static final String GIT_SEPERATOR = &quot;:&quot;;
+    private static final String DEFAULT_SEPERATOR = &quot;/&quot;;
+
+<span class="fc" id="L19">    public enum RepoType {</span>
+<span class="fc" id="L20">        SVN,</span>
+<span class="fc" id="L21">        GIT,</span>
+<span class="fc" id="L22">        Unknown;</span>
+
+        public static com.capitalone.dashboard.model.RepoBranch.RepoType fromString(String value) {
+<span class="nc bnc" id="L25" title="All 2 branches missed.">            if (value ==  null) return RepoType.Unknown;</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">            for (com.capitalone.dashboard.model.RepoBranch.RepoType repoType : values()) {</span>
+<span class="nc bnc" id="L27" title="All 2 branches missed.">                if (repoType.toString().equalsIgnoreCase(value)) {</span>
+<span class="nc" id="L28">                    return repoType;</span>
+                }
+            }
+<span class="nc" id="L31">            throw new IllegalArgumentException(value + &quot; is not a valid RepoType.&quot;);</span>
+        }
+    }
+
+<span class="fc" id="L35">    public RepoBranch(String url, String branch, RepoType repoType) {</span>
+<span class="fc" id="L36">        this.url = url;</span>
+<span class="fc" id="L37">        this.branch = branch;</span>
+<span class="fc" id="L38">        this.type = repoType;</span>
+<span class="fc" id="L39">    }</span>
+
+<span class="fc" id="L41">    public RepoBranch() {</span>
+<span class="fc" id="L42">    }</span>
+
+    public String getUrl() {
+<span class="pc bpc" id="L45" title="1 of 3 branches missed.">        switch (this.type) {</span>
+            case GIT:
+<span class="fc" id="L47">                return getGITNormalizedURL(this.url);</span>
+            case SVN:
+<span class="nc" id="L49">                return this.url;</span>
+            default:
+<span class="fc" id="L51">                return this.url;</span>
+        }
+    }
+
+    public void setUrl(String url) {
+<span class="fc" id="L56">        this.url = url.toLowerCase(Locale.US);</span>
+<span class="fc" id="L57">    }</span>
+
+    public String getBranch() {
+<span class="pc bpc" id="L60" title="2 of 3 branches missed.">        switch (this.getType()) {</span>
+<span class="fc" id="L61">            case GIT: return getGITNormalizedBranch(branch);</span>
+<span class="nc" id="L62">            case SVN: return branch;</span>
+<span class="nc" id="L63">            default: return branch;</span>
+        }
+    }
+
+    public void setBranch(String branch) {
+<span class="nc bnc" id="L68" title="All 3 branches missed.">        switch (this.getType()) {</span>
+<span class="nc" id="L69">            case GIT: this.branch = getGITNormalizedBranch(branch); break;</span>
+<span class="nc" id="L70">            case SVN: this.branch = branch; break;</span>
+<span class="nc" id="L71">            default: this.branch = branch; break;</span>
+        }
+<span class="nc" id="L73">    }</span>
+
+    public RepoType getType() {
+<span class="fc" id="L76">        return type;</span>
+    }
+
+    public void setType(RepoType type) {
+<span class="nc" id="L80">        this.type = type;</span>
+<span class="nc" id="L81">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L86" title="2 of 4 branches missed.">        if (o == null || !(o instanceof RepoBranch)) return false;</span>
+
+<span class="fc" id="L88">        RepoBranch that = (RepoBranch) o;</span>
+
+<span class="pc bpc" id="L90" title="2 of 4 branches missed.">        return getRepoName().equals(that.getRepoName()) &amp;&amp; getBranch().equals(that.getBranch());</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L95">        int result = this.getUrl().hashCode();</span>
+<span class="nc" id="L96">        result = 31 * result + getBranch().hashCode();</span>
+<span class="nc" id="L97">        return result;</span>
+    }
+
+    private String getRepoName() {
+        try {
+<span class="fc" id="L102">            URL temp = new URL(getUrl());</span>
+<span class="fc" id="L103">            return temp.getHost() + temp.getPath();</span>
+<span class="nc" id="L104">        } catch (MalformedURLException e) {</span>
+<span class="nc" id="L105">            return getUrl();</span>
+        }
+
+    }
+
+    private String getGITNormalizedBranch (@NotNull String branch) {
+<span class="fc" id="L111">        String[] tokens = branch.split(&quot;/&quot;, -1);</span>
+<span class="fc" id="L112">        return tokens[tokens.length-1];</span>
+    }
+
+    private String getGITNormalizedURL(@NotNull String url) {
+        // check for http or https or ssh or git
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (url.endsWith(GIT_EXTN)) {</span>
+<span class="fc" id="L118">            url = url.substring(0, url.lastIndexOf(GIT_EXTN));</span>
+        }
+
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (url.contains(GIT_SCHEME)) {</span>
+<span class="fc" id="L122">            url = url.replace(GIT_SEPERATOR, DEFAULT_SEPERATOR);</span>
+<span class="fc" id="L123">            url = url.replace(GIT_SCHEME, DEFAULT_SCHEME);</span>
+        }
+
+        String host;
+        String path;
+        try {
+<span class="fc" id="L129">            URI processedURI = URI.create(url.replaceAll(&quot; &quot;, &quot;%20&quot;));</span>
+<span class="fc" id="L130">            host = processedURI.getHost();</span>
+<span class="fc" id="L131">            path = processedURI.getPath();</span>
+<span class="nc" id="L132">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L133">            return url;</span>
+<span class="fc" id="L134">        }</span>
+
+        /*
+         * Force the urls to use https just as a means of Normalization.
+         * */
+<span class="fc" id="L139">        return DEFAULT_SCHEME + host + path;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

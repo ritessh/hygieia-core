@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebMVCConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.config</a> &gt; <span class="el_source">WebMVCConfig.java</span></div><h1>WebMVCConfig.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.config;
+
+import com.capitalone.dashboard.mapper.CustomObjectMapper;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import java.util.List;
+
+@Configuration
+@EnableWebMvc
+@ComponentScan(basePackages = &quot;com.capitalone.dashboard.*&quot;)
+<span class="nc" id="L21">public class WebMVCConfig extends WebMvcConfigurerAdapter {</span>
+
+    @Override
+    public void configureMessageConverters(List&lt;HttpMessageConverter&lt;?&gt;&gt; converters) {
+<span class="nc" id="L25">        MappingJackson2HttpMessageConverter jackson = new MappingJackson2HttpMessageConverter();</span>
+
+<span class="nc" id="L27">        jackson.setObjectMapper(new CustomObjectMapper());</span>
+<span class="nc" id="L28">        jackson.getObjectMapper()</span>
+<span class="nc" id="L29">                .disable(SerializationFeature.WRITE_NULL_MAP_VALUES)</span>
+<span class="nc" id="L30">                .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)</span>
+<span class="nc" id="L31">                .setSerializationInclusion(JsonInclude.Include.NON_NULL);</span>
+
+<span class="nc" id="L33">        converters.add(jackson);</span>
+<span class="nc" id="L34">    }</span>
+
+    @Override
+    public void addArgumentResolvers(List&lt;HandlerMethodArgumentResolver&gt; argumentResolvers) {
+<span class="nc" id="L38">        PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();</span>
+<span class="nc" id="L39">        resolver.setMaxPageSize(Integer.MAX_VALUE);</span>
+<span class="nc" id="L40">        argumentResolvers.add(resolver);</span>
+<span class="nc" id="L41">    }</span>
+
+    /*
+    Added for Swagger
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+<span class="nc" id="L48">        String[] staticResourceMappingPath = {&quot;classpath:/static/&quot;};</span>
+
+<span class="nc" id="L50">        registry.addResourceHandler(&quot;/**&quot;).addResourceLocations(</span>
+                staticResourceMappingPath);
+<span class="nc" id="L52">    }</span>
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

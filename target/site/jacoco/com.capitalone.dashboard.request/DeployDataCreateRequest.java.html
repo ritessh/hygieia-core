@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeployDataCreateRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.request</a> &gt; <span class="el_source">DeployDataCreateRequest.java</span></div><h1>DeployDataCreateRequest.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.request;
+
+import javax.validation.constraints.NotNull;
+
+<span class="nc" id="L5">public class DeployDataCreateRequest extends BaseRequest {</span>
+    @NotNull
+    private String executionId;
+    @NotNull
+    private String jobUrl;
+    @NotNull
+    private String appName;
+    private String appServiceName;
+    @NotNull
+    private String envName;
+    @NotNull
+    private String artifactName;
+    @NotNull
+    private String artifactVersion;
+    private String artifactPath;
+    @NotNull
+    private String jobName;
+    @NotNull
+    private String instanceUrl;
+    @NotNull
+    private String deployStatus;
+    @NotNull
+    private long startTime;
+
+    private String artifactGroup;
+    private String hygieiaId;
+    private long endTime;
+    private long duration;
+    private String startedBy;
+    private String collectorName;
+    private String niceName;
+    private String stageName;
+    private String stageStatus;
+    private String jobNumber;
+    private String buildUrl;
+
+    public String getExecutionId() {
+<span class="nc" id="L42">        return executionId;</span>
+    }
+
+    public void setExecutionId(String executionId) {
+<span class="nc" id="L46">        this.executionId = executionId;</span>
+<span class="nc" id="L47">    }</span>
+
+    public String getJobUrl() {
+<span class="nc" id="L50">        return jobUrl;</span>
+    }
+
+    public void setJobUrl(String jobUrl) {
+<span class="nc" id="L54">        this.jobUrl = jobUrl;</span>
+<span class="nc" id="L55">    }</span>
+
+    public String getAppName() {
+<span class="nc" id="L58">        return appName;</span>
+    }
+
+    public void setAppName(String appName) {
+<span class="nc" id="L62">        this.appName = appName;</span>
+<span class="nc" id="L63">    }</span>
+
+    public String getEnvName() {
+<span class="nc" id="L66">        return envName;</span>
+    }
+
+    public void setEnvName(String envName) {
+<span class="nc" id="L70">        this.envName = envName;</span>
+<span class="nc" id="L71">    }</span>
+
+    public String getArtifactName() {
+<span class="nc" id="L74">        return artifactName;</span>
+    }
+
+    public void setArtifactName(String artifactName) {
+<span class="nc" id="L78">        this.artifactName = artifactName;</span>
+<span class="nc" id="L79">    }</span>
+
+    public String getArtifactVersion() {
+<span class="nc" id="L82">        return artifactVersion;</span>
+    }
+
+    public void setArtifactVersion(String artifactVersion) {
+<span class="nc" id="L86">        this.artifactVersion = artifactVersion;</span>
+<span class="nc" id="L87">    }</span>
+
+    public String getJobName() {
+<span class="nc" id="L90">        return jobName;</span>
+    }
+
+    public void setJobName(String jobName) {
+<span class="nc" id="L94">        this.jobName = jobName;</span>
+<span class="nc" id="L95">    }</span>
+
+    public String getInstanceUrl() {
+<span class="nc" id="L98">        return instanceUrl;</span>
+    }
+
+    public void setInstanceUrl(String instanceUrl) {
+<span class="nc" id="L102">        this.instanceUrl = instanceUrl;</span>
+<span class="nc" id="L103">    }</span>
+
+    public String getDeployStatus() {
+<span class="nc" id="L106">        return deployStatus;</span>
+    }
+
+    public void setDeployStatus(String deployStatus) {
+<span class="nc" id="L110">        this.deployStatus = deployStatus;</span>
+<span class="nc" id="L111">    }</span>
+
+    public long getStartTime() {
+<span class="nc" id="L114">        return startTime;</span>
+    }
+
+    public void setStartTime(long startTime) {
+<span class="nc" id="L118">        this.startTime = startTime;</span>
+<span class="nc" id="L119">    }</span>
+
+    public String getArtifactGroup() {
+<span class="nc" id="L122">        return artifactGroup;</span>
+    }
+
+    public void setArtifactGroup(String artifactGroup) {
+<span class="nc" id="L126">        this.artifactGroup = artifactGroup;</span>
+<span class="nc" id="L127">    }</span>
+
+    public long getEndTime() {
+<span class="nc" id="L130">        return endTime;</span>
+    }
+
+    public void setEndTime(long endTime) {
+<span class="nc" id="L134">        this.endTime = endTime;</span>
+<span class="nc" id="L135">    }</span>
+
+    public long getDuration() {
+<span class="nc" id="L138">        return duration;</span>
+    }
+
+    public void setDuration(long duration) {
+<span class="nc" id="L142">        this.duration = duration;</span>
+<span class="nc" id="L143">    }</span>
+
+    public String getStartedBy() {
+<span class="nc" id="L146">        return startedBy;</span>
+    }
+
+    public void setStartedBy(String startedBy) {
+<span class="nc" id="L150">        this.startedBy = startedBy;</span>
+<span class="nc" id="L151">    }</span>
+
+    public String getCollectorName() {
+<span class="nc" id="L154">        return collectorName;</span>
+    }
+
+    public void setCollectorName(String collectorName) {
+<span class="nc" id="L158">        this.collectorName = collectorName;</span>
+<span class="nc" id="L159">    }</span>
+
+    public String getHygieiaId() {
+<span class="nc" id="L162">        return hygieiaId;</span>
+    }
+
+    public void setHygieiaId(String hygieiaId) {
+<span class="nc" id="L166">        this.hygieiaId = hygieiaId;</span>
+<span class="nc" id="L167">    }</span>
+
+    public String getNiceName() {
+<span class="nc" id="L170">        return niceName;</span>
+    }
+
+    public void setNiceName(String niceName) {
+<span class="nc" id="L174">        this.niceName = niceName;</span>
+<span class="nc" id="L175">    }</span>
+
+<span class="nc" id="L177">    public String getStageName() { return stageName; }</span>
+
+<span class="nc" id="L179">    public void setStageName(String stageName) { this.stageName = stageName; }</span>
+
+<span class="nc" id="L181">    public String getStageStatus() { return stageStatus; }</span>
+
+<span class="nc" id="L183">    public void setStageStatus(String stageStatus) { this.stageStatus = stageStatus; }</span>
+
+<span class="nc" id="L185">    public String getJobNumber() { return jobNumber; }</span>
+
+<span class="nc" id="L187">    public void setJobNumber(String jobNumber) { this.jobNumber = jobNumber; }</span>
+
+<span class="nc" id="L189">    public String getAppServiceName() { return appServiceName; }</span>
+
+<span class="nc" id="L191">    public void setAppServiceName(String appServiceName) { this.appServiceName = appServiceName; }</span>
+
+<span class="nc" id="L193">    public String getArtifactPath() { return artifactPath; }</span>
+
+<span class="nc" id="L195">    public void setArtifactPath(String artifactPath) { this.artifactPath = artifactPath; }</span>
+
+<span class="nc" id="L197">    public String getBuildUrl() { return buildUrl; }</span>
+
+<span class="nc" id="L199">    public void setBuildUrl(String buildUrl) { this.buildUrl = buildUrl; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

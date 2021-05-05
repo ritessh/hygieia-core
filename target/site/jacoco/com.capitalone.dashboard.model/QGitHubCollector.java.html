@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QGitHubCollector.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">QGitHubCollector.java</span></div><h1>QGitHubCollector.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
+import com.querydsl.core.types.PathMetadata;
+import javax.annotation.Generated;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
+
+
+/**
+ * QGitHubCollector is a Querydsl query type for GitHubCollector
+ */
+@Generated(&quot;com.querydsl.codegen.EntitySerializer&quot;)
+public class QGitHubCollector extends EntityPathBase&lt;GitHubCollector&gt; {
+
+    private static final long serialVersionUID = -999951384L;
+
+<span class="nc" id="L21">    private static final PathInits INITS = PathInits.DIRECT2;</span>
+
+<span class="nc" id="L23">    public static final QGitHubCollector gitHubCollector = new QGitHubCollector(&quot;gitHubCollector&quot;);</span>
+
+    public final QCollector _super;
+
+    //inherited
+    public final MapPath&lt;String, Object, SimplePath&lt;Object&gt;&gt; allFields;
+
+    //inherited
+    public final StringPath clientReference;
+
+    //inherited
+    public final EnumPath&lt;CollectorType&gt; collectorType;
+
+    //inherited
+    public final BooleanPath enabled;
+
+    //inherited
+    public final ListPath&lt;CollectionError, QCollectionError&gt; errors;
+
+    // inherited
+    public final org.bson.types.QObjectId id;
+
+<span class="nc" id="L45">    public final NumberPath&lt;Long&gt; lastCleanUpTimestamp = createNumber(&quot;lastCleanUpTimestamp&quot;, Long.class);</span>
+
+    //inherited
+    public final NumberPath&lt;Long&gt; lastExecuted;
+
+    //inherited
+    public final NumberPath&lt;Long&gt; lastExecutedSeconds;
+
+    //inherited
+    public final DateTimePath&lt;java.util.Date&gt; lastExecutedTime;
+
+    //inherited
+    public final NumberPath&lt;Long&gt; lastExecutionRecordCount;
+
+<span class="nc" id="L59">    public final NumberPath&lt;Long&gt; lastPrivateRepoCollectionTimestamp = createNumber(&quot;lastPrivateRepoCollectionTimestamp&quot;, Long.class);</span>
+
+<span class="nc" id="L61">    public final NumberPath&lt;Long&gt; latestProcessedEventId = createNumber(&quot;latestProcessedEventId&quot;, Long.class);</span>
+
+<span class="nc" id="L63">    public final NumberPath&lt;Long&gt; latestProcessedEventTimestamp = createNumber(&quot;latestProcessedEventTimestamp&quot;, Long.class);</span>
+
+    //inherited
+    public final StringPath name;
+
+    //inherited
+    public final BooleanPath online;
+
+    //inherited
+    public final MapPath&lt;String, Object, SimplePath&lt;Object&gt;&gt; properties;
+
+    //inherited
+    public final ListPath&lt;String, StringPath&gt; searchFields;
+
+    //inherited
+    public final MapPath&lt;String, Object, SimplePath&lt;Object&gt;&gt; uniqueFields;
+
+    //inherited
+    public final DateTimePath&lt;java.util.Date&gt; upsertTime;
+
+    public QGitHubCollector(String variable) {
+<span class="nc" id="L84">        this(GitHubCollector.class, forVariable(variable), INITS);</span>
+<span class="nc" id="L85">    }</span>
+
+    public QGitHubCollector(Path&lt;? extends GitHubCollector&gt; path) {
+<span class="nc" id="L88">        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));</span>
+<span class="nc" id="L89">    }</span>
+
+    public QGitHubCollector(PathMetadata metadata) {
+<span class="nc" id="L92">        this(metadata, PathInits.getFor(metadata, INITS));</span>
+<span class="nc" id="L93">    }</span>
+
+    public QGitHubCollector(PathMetadata metadata, PathInits inits) {
+<span class="nc" id="L96">        this(GitHubCollector.class, metadata, inits);</span>
+<span class="nc" id="L97">    }</span>
+
+    public QGitHubCollector(Class&lt;? extends GitHubCollector&gt; type, PathMetadata metadata, PathInits inits) {
+<span class="nc" id="L100">        super(type, metadata, inits);</span>
+<span class="nc" id="L101">        this._super = new QCollector(type, metadata, inits);</span>
+<span class="nc" id="L102">        this.allFields = _super.allFields;</span>
+<span class="nc" id="L103">        this.clientReference = _super.clientReference;</span>
+<span class="nc" id="L104">        this.collectorType = _super.collectorType;</span>
+<span class="nc" id="L105">        this.enabled = _super.enabled;</span>
+<span class="nc" id="L106">        this.errors = _super.errors;</span>
+<span class="nc" id="L107">        this.id = _super.id;</span>
+<span class="nc" id="L108">        this.lastExecuted = _super.lastExecuted;</span>
+<span class="nc" id="L109">        this.lastExecutedSeconds = _super.lastExecutedSeconds;</span>
+<span class="nc" id="L110">        this.lastExecutedTime = _super.lastExecutedTime;</span>
+<span class="nc" id="L111">        this.lastExecutionRecordCount = _super.lastExecutionRecordCount;</span>
+<span class="nc" id="L112">        this.name = _super.name;</span>
+<span class="nc" id="L113">        this.online = _super.online;</span>
+<span class="nc" id="L114">        this.properties = _super.properties;</span>
+<span class="nc" id="L115">        this.searchFields = _super.searchFields;</span>
+<span class="nc" id="L116">        this.uniqueFields = _super.uniqueFields;</span>
+<span class="nc" id="L117">        this.upsertTime = _super.upsertTime;</span>
+<span class="nc" id="L118">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

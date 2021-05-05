@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SCM.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">SCM.java</span></div><h1>SCM.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Base class to represent the details of a change in a source code management
+ * system.
+ */
+public class SCM {
+    protected String scmUrl;
+    protected String scmBranch; // For SCM that don't have branch in the url
+    protected String scmRevisionNumber;
+    protected String scmCommitLog;
+    protected String scmAuthor;
+    protected String scmAuthorType;
+    protected String scmAuthorLogin;
+    protected String scmAuthorLDAPDN;
+    protected String scmCommitter;
+    protected String scmCommitterLogin;
+    protected List&lt;String&gt; scmParentRevisionNumbers;
+    protected long scmCommitTimestamp;
+    protected long numberOfChanges;
+    protected CommitType type;
+    protected String pullNumber;
+    protected List&lt;String&gt; filesAdded;
+    protected List&lt;String&gt; filesRemoved;
+    protected List&lt;String&gt; filesModified;
+    protected List&lt;RepoFile&gt; files;
+
+<span class="fc" id="L31">    public SCM(){</span>
+
+<span class="fc" id="L33">    }</span>
+
+<span class="fc" id="L35">    public SCM(SCM scm) {</span>
+<span class="fc" id="L36">        this.scmUrl = scm.scmUrl;</span>
+<span class="fc" id="L37">        this.scmBranch = scm.scmBranch;</span>
+<span class="fc" id="L38">        this.scmRevisionNumber = scm.scmRevisionNumber;</span>
+<span class="fc" id="L39">        this.scmCommitLog = scm.scmCommitLog;</span>
+<span class="fc" id="L40">        this.scmAuthor = scm.scmAuthor;</span>
+<span class="fc" id="L41">        this.scmAuthorType = scm.scmAuthorType;</span>
+<span class="fc" id="L42">        this.scmAuthorLogin = scm.scmAuthorLogin;</span>
+<span class="fc" id="L43">        this.scmParentRevisionNumbers = scm.scmParentRevisionNumbers;</span>
+<span class="fc" id="L44">        this.scmCommitTimestamp = scm.scmCommitTimestamp;</span>
+<span class="fc" id="L45">        this.numberOfChanges = scm.numberOfChanges;</span>
+<span class="fc" id="L46">        this.type = scm.type;</span>
+<span class="fc" id="L47">        this.filesAdded = scm.filesAdded;</span>
+<span class="fc" id="L48">        this.filesRemoved = scm.filesRemoved;</span>
+<span class="fc" id="L49">        this.filesModified = scm.filesModified;</span>
+<span class="fc" id="L50">        this.files = scm.files;</span>
+<span class="fc" id="L51">    }</span>
+
+    @SuppressWarnings({&quot;PMD.ExcessiveParameterList&quot;})
+    public SCM(String scmUrl,
+               String scmBranch,
+               String scmRevisionNumber,
+               String scmCommitLog,
+               String scmAuthor,
+               String scmAuthorType,
+               String scmAuthorLogin,
+               List&lt;String&gt; scmParentRevisionNumbers,
+               List&lt;RepoFile&gt; files,
+               long scmCommitTimestamp,
+               long numberOfChanges,
+<span class="nc" id="L65">               CommitType type) {</span>
+
+<span class="nc" id="L67">        this.scmUrl = scmUrl;</span>
+<span class="nc" id="L68">        this.scmBranch = scmBranch;</span>
+<span class="nc" id="L69">        this.scmRevisionNumber = scmRevisionNumber;</span>
+<span class="nc" id="L70">        this.scmCommitLog = scmCommitLog;</span>
+<span class="nc" id="L71">        this.scmAuthor = scmAuthor;</span>
+<span class="nc" id="L72">        this.scmAuthorType = scmAuthorType;</span>
+<span class="nc" id="L73">        this.scmAuthorLogin = scmAuthorLogin;</span>
+<span class="nc" id="L74">        this.scmParentRevisionNumbers = scmParentRevisionNumbers;</span>
+<span class="nc" id="L75">        this.scmCommitTimestamp = scmCommitTimestamp;</span>
+<span class="nc" id="L76">        this.numberOfChanges = numberOfChanges;</span>
+<span class="nc" id="L77">        this.type = type;</span>
+<span class="nc" id="L78">        this.files = files;</span>
+
+<span class="nc" id="L80">    }</span>
+
+<span class="fc" id="L82">    public String getScmUrl() { return scmUrl; }</span>
+
+<span class="fc" id="L84">    public void setScmUrl(String scmUrl) { this.scmUrl = scmUrl; }</span>
+
+<span class="nc" id="L86">    public String getScmBranch() { return scmBranch; }</span>
+
+<span class="nc" id="L88">    public void setScmBranch(String scmBranch) { this.scmBranch = scmBranch; }</span>
+
+<span class="fc" id="L90">    public String getScmRevisionNumber() { return scmRevisionNumber; }</span>
+
+<span class="fc" id="L92">    public void setScmRevisionNumber(String scmRevisionNumber) { this.scmRevisionNumber = scmRevisionNumber; }</span>
+
+<span class="nc" id="L94">    public String getScmCommitLog() { return scmCommitLog; }</span>
+
+<span class="nc" id="L96">    public void setScmCommitLog(String scmCommitLog) { this.scmCommitLog = scmCommitLog; }</span>
+
+<span class="nc" id="L98">    public String getScmAuthor() { return scmAuthor; }</span>
+
+<span class="nc" id="L100">    public void setScmAuthor(String scmAuthor) { this.scmAuthor = scmAuthor; }</span>
+
+<span class="nc" id="L102">    public String getScmAuthorType() { return scmAuthorType; }</span>
+
+<span class="nc" id="L104">    public void setScmAuthorType(String scmAuthorType) { this.scmAuthorType = scmAuthorType; }</span>
+
+<span class="nc" id="L106">    public String getScmAuthorLogin() { return scmAuthorLogin; }</span>
+
+<span class="nc" id="L108">    public void setScmAuthorLogin(String scmAuthorLogin) { this.scmAuthorLogin = scmAuthorLogin; }</span>
+
+    // can return null
+<span class="nc" id="L111">    public List&lt;String&gt; getScmParentRevisionNumbers() { return scmParentRevisionNumbers; }</span>
+
+<span class="nc" id="L113">    public void setScmParentRevisionNumbers(List&lt;String&gt; scmParentRevisionNumbers) { this.scmParentRevisionNumbers = scmParentRevisionNumbers; }</span>
+
+<span class="fc" id="L115">    public long getScmCommitTimestamp() { return scmCommitTimestamp; }</span>
+
+<span class="fc" id="L117">    public void setScmCommitTimestamp(long scmCommitTimestamp) { this.scmCommitTimestamp = scmCommitTimestamp; }</span>
+
+<span class="nc" id="L119">    public long getNumberOfChanges() { return numberOfChanges; }</span>
+
+<span class="nc" id="L121">    public void setNumberOfChanges(long numberOfChanges) { this.numberOfChanges = numberOfChanges; }</span>
+
+<span class="fc" id="L123">    public CommitType getType() { return type; }</span>
+
+<span class="fc" id="L125">    public void setType(CommitType type) { this.type = type; }</span>
+
+<span class="nc" id="L127">    public String getPullNumber() { return pullNumber; }</span>
+
+<span class="nc" id="L129">    public void setPullNumber(String pullNumber) { this.pullNumber = pullNumber; }</span>
+
+<span class="nc" id="L131">    public String getScmAuthorLDAPDN() { return scmAuthorLDAPDN; }</span>
+
+<span class="nc" id="L133">    public void setScmAuthorLDAPDN(String scmAuthorLDAPDN) { this.scmAuthorLDAPDN = scmAuthorLDAPDN; }</span>
+
+<span class="nc" id="L135">    public String getScmCommitter() { return scmCommitter; }</span>
+
+<span class="nc" id="L137">    public void setScmCommitter(String scmCommitter) { this.scmCommitter = scmCommitter; }</span>
+
+<span class="nc" id="L139">    public String getScmCommitterLogin() { return scmCommitterLogin; }</span>
+
+<span class="nc" id="L141">    public void setScmCommitterLogin(String scmCommitterLogin) { this.scmCommitterLogin = scmCommitterLogin; }</span>
+
+    public List&lt;String&gt; getFilesAdded() {
+<span class="nc" id="L144">        return filesAdded;</span>
+    }
+
+    public void setFilesAdded(List&lt;String&gt; filesAdded) {
+<span class="nc" id="L148">        this.filesAdded = filesAdded;</span>
+<span class="nc" id="L149">    }</span>
+
+    public List&lt;String&gt; getFilesRemoved() {
+<span class="nc" id="L152">        return filesRemoved;</span>
+    }
+
+    public void setFilesRemoved(List&lt;String&gt; filesRemoved) {
+<span class="nc" id="L156">        this.filesRemoved = filesRemoved;</span>
+<span class="nc" id="L157">    }</span>
+
+    public List&lt;String&gt; getFilesModified() {
+<span class="nc" id="L160">        return filesModified;</span>
+    }
+
+    public void setFilesModified(List&lt;String&gt; filesModified) {
+<span class="nc" id="L164">        this.filesModified = filesModified;</span>
+<span class="nc" id="L165">    }</span>
+
+<span class="nc" id="L167">    public List&lt;RepoFile&gt; getFiles() { return files; }</span>
+
+<span class="nc" id="L169">    public void setFiles(List&lt;RepoFile&gt; files) { this.files = files; }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (!(o instanceof SCM)) return false;</span>
+<span class="nc" id="L175">        SCM scm = (SCM) o;</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        return getScmCommitTimestamp() == scm.getScmCommitTimestamp() &amp;&amp;</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">                Objects.equals(getScmUrl(), scm.getScmUrl()) &amp;&amp;</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">                Objects.equals(getScmBranch(), scm.getScmBranch()) &amp;&amp;</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                Objects.equals(getScmRevisionNumber(), scm.getScmRevisionNumber()) &amp;&amp;</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">                Objects.equals(getScmCommitLog(), scm.getScmCommitLog()) &amp;&amp;</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">                Objects.equals(getScmAuthor(), scm.getScmAuthor()) &amp;&amp;</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">                Objects.equals(getScmAuthorLogin(), scm.getScmAuthorLogin());</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L187">        return Objects.hash(getScmUrl(), getScmBranch(), getScmRevisionNumber(), getScmCommitLog(), getScmAuthor(), getScmAuthorLogin(), getScmCommitTimestamp());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

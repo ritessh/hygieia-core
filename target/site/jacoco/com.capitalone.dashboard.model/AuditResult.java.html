@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuditResult.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">AuditResult.java</span></div><h1>AuditResult.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Document(collection = &quot;audit_results&quot;)
+public class AuditResult extends BaseModel {
+
+    private ObjectId dashboardId;
+    private String dashboardTitle;
+    private String lineOfBusiness;
+    private String configItemBusServName;
+    private String configItemBusAppName;
+    private String configItemBusServOwner;
+    private String configItemBusAppOwner;
+    private ObjectId collectorItemId;
+    private AuditType auditType;
+    private String auditTypeStatus;
+    private String auditStatus;
+    private String url;
+    private String auditDetails;
+    private Map traceability;
+    private long timestamp;
+<span class="nc" id="L27">    private Map&lt;String, Object&gt; options = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L29">    public AuditResult() { }</span>
+
+    @SuppressWarnings(&quot;PMD.ExcessiveParameterList&quot;)
+    public AuditResult(ObjectId dashboardId, String dashboardTitle, String lineOfBusiness, String configItemBusServName,
+                       String configItemBusAppName, String configItemBusServOwner, String configItemBusAppOwner, AuditType auditType,
+<span class="nc" id="L34">                       String auditTypeStatus, String auditStatus, String auditDetails, String url, Map traceability, long timestamp) {</span>
+<span class="nc" id="L35">        this.dashboardId = dashboardId;</span>
+<span class="nc" id="L36">        this.dashboardTitle = dashboardTitle;</span>
+<span class="nc" id="L37">        this.lineOfBusiness = lineOfBusiness;</span>
+<span class="nc" id="L38">        this.configItemBusServName = configItemBusServName;</span>
+<span class="nc" id="L39">        this.configItemBusAppName = configItemBusAppName;</span>
+<span class="nc" id="L40">        this.configItemBusServOwner = configItemBusServOwner;</span>
+<span class="nc" id="L41">        this.configItemBusAppOwner = configItemBusAppOwner;</span>
+<span class="nc" id="L42">        this.auditType = auditType;</span>
+<span class="nc" id="L43">        this.auditTypeStatus = auditTypeStatus;</span>
+<span class="nc" id="L44">        this.auditStatus = auditStatus;</span>
+<span class="nc" id="L45">        this.url = url;</span>
+<span class="nc" id="L46">        this.auditDetails = auditDetails;</span>
+<span class="nc" id="L47">        this.traceability = traceability;</span>
+<span class="nc" id="L48">        this.timestamp = timestamp;</span>
+<span class="nc" id="L49">    }</span>
+
+    @SuppressWarnings(&quot;PMD.ExcessiveParameterList&quot;)
+    public AuditResult(ObjectId dashboardId, String dashboardTitle, String lineOfBusiness, String configItemBusServName,
+                       String configItemBusAppName, String configItemBusServOwner, String configItemBusAppOwner, AuditType auditType,
+<span class="nc" id="L54">                       String auditTypeStatus, String auditStatus, String auditDetails, String url, long timestamp) {</span>
+<span class="nc" id="L55">        this.dashboardId = dashboardId;</span>
+<span class="nc" id="L56">        this.dashboardTitle = dashboardTitle;</span>
+<span class="nc" id="L57">        this.lineOfBusiness = lineOfBusiness;</span>
+<span class="nc" id="L58">        this.configItemBusServName = configItemBusServName;</span>
+<span class="nc" id="L59">        this.configItemBusAppName = configItemBusAppName;</span>
+<span class="nc" id="L60">        this.configItemBusServOwner = configItemBusServOwner;</span>
+<span class="nc" id="L61">        this.configItemBusAppOwner = configItemBusAppOwner;</span>
+<span class="nc" id="L62">        this.auditType = auditType;</span>
+<span class="nc" id="L63">        this.auditTypeStatus = auditTypeStatus;</span>
+<span class="nc" id="L64">        this.auditStatus = auditStatus;</span>
+<span class="nc" id="L65">        this.url = url;</span>
+<span class="nc" id="L66">        this.auditDetails = auditDetails;</span>
+<span class="nc" id="L67">        this.timestamp = timestamp;</span>
+<span class="nc" id="L68">    }</span>
+
+    public ObjectId getDashboardId() {
+<span class="nc" id="L71">        return dashboardId;</span>
+    }
+
+    public void setDashboardId(ObjectId dashboardId) {
+<span class="nc" id="L75">        this.dashboardId = dashboardId;</span>
+<span class="nc" id="L76">    }</span>
+
+    public String getDashboardTitle() {
+<span class="nc" id="L79">        return dashboardTitle;</span>
+    }
+
+    public void setDashboardTitle(String dashboardTitle) {
+<span class="nc" id="L83">        this.dashboardTitle = dashboardTitle;</span>
+<span class="nc" id="L84">    }</span>
+
+    public String getLineOfBusiness() {
+<span class="nc" id="L87">        return lineOfBusiness;</span>
+    }
+
+    public void setLineOfBusiness(String lineOfBusiness) {
+<span class="nc" id="L91">        this.lineOfBusiness = lineOfBusiness;</span>
+<span class="nc" id="L92">    }</span>
+
+    public String getConfigItemBusServName() {
+<span class="nc" id="L95">        return configItemBusServName;</span>
+    }
+
+    public void setConfigItemBusServName(String configItemBusServName) {
+<span class="nc" id="L99">        this.configItemBusServName = configItemBusServName;</span>
+<span class="nc" id="L100">    }</span>
+
+    public String getConfigItemBusAppName() {
+<span class="nc" id="L103">        return configItemBusAppName;</span>
+    }
+
+    public void setConfigItemBusAppName(String configItemBusAppName) {
+<span class="nc" id="L107">        this.configItemBusAppName = configItemBusAppName;</span>
+<span class="nc" id="L108">    }</span>
+
+    public String getConfigItemBusServOwner() {
+<span class="nc" id="L111">        return configItemBusServOwner;</span>
+    }
+
+    public void setConfigItemBusServOwner(String configItemBusServOwner) {
+<span class="nc" id="L115">        this.configItemBusServOwner = configItemBusServOwner;</span>
+<span class="nc" id="L116">    }</span>
+
+    public String getConfigItemBusAppOwner() {
+<span class="nc" id="L119">        return configItemBusAppOwner;</span>
+    }
+
+    public void setConfigItemBusAppOwner(String configItemBusAppOwner) {
+<span class="nc" id="L123">        this.configItemBusAppOwner = configItemBusAppOwner;</span>
+<span class="nc" id="L124">    }</span>
+
+    public AuditType getAuditType() {
+<span class="nc" id="L127">        return auditType;</span>
+    }
+
+    public void setAuditType(AuditType auditType) {
+<span class="nc" id="L131">        this.auditType = auditType;</span>
+<span class="nc" id="L132">    }</span>
+
+    public String getAuditTypeStatus() {
+<span class="nc" id="L135">        return auditTypeStatus;</span>
+    }
+
+    public void setAuditTypeStatus(String auditTypeStatus) {
+<span class="nc" id="L139">        this.auditTypeStatus = auditTypeStatus;</span>
+<span class="nc" id="L140">    }</span>
+
+    public String getAuditStatus() {
+<span class="nc" id="L143">        return auditStatus;</span>
+    }
+
+    public void setAuditStatus(String auditStatus) {
+<span class="nc" id="L147">        this.auditStatus = auditStatus;</span>
+<span class="nc" id="L148">    }</span>
+
+    public String getUrl() {
+<span class="nc" id="L151">        return url;</span>
+    }
+
+    public void setUrl(String url) {
+<span class="nc" id="L155">        this.url = url;</span>
+<span class="nc" id="L156">    }</span>
+
+    public String getAuditDetails() {
+<span class="nc" id="L159">        return auditDetails;</span>
+    }
+
+    public void setAuditDetails(String auditDetails) {
+<span class="nc" id="L163">        this.auditDetails = auditDetails;</span>
+<span class="nc" id="L164">    }</span>
+
+<span class="nc" id="L166">    public Map getTraceability() { return traceability; }</span>
+
+<span class="nc" id="L168">    public void setTraceability(Map traceability) { this.traceability = traceability; }</span>
+
+    public long getTimestamp() {
+<span class="nc" id="L171">        return timestamp;</span>
+    }
+
+    public void setTimestamp(long timestamp) {
+<span class="nc" id="L175">        this.timestamp = timestamp;</span>
+<span class="nc" id="L176">    }</span>
+
+    public ObjectId getCollectorItemId() {
+<span class="nc" id="L179">        return collectorItemId;</span>
+    }
+
+    public void setCollectorItemId(ObjectId collectorItemId) {
+<span class="nc" id="L183">        this.collectorItemId = collectorItemId;</span>
+<span class="nc" id="L184">    }</span>
+
+    public Map&lt;String, Object&gt; getOptions() {
+<span class="nc" id="L187">        return options;</span>
+    }
+
+    public void setOptions(Map&lt;String, Object&gt; options) {
+<span class="nc" id="L191">        this.options = options;</span>
+<span class="nc" id="L192">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

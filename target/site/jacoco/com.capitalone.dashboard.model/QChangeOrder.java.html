@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QChangeOrder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">QChangeOrder.java</span></div><h1>QChangeOrder.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
+import com.querydsl.core.types.PathMetadata;
+import javax.annotation.Generated;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
+
+
+/**
+ * QChangeOrder is a Querydsl query type for ChangeOrder
+ */
+@Generated(&quot;com.querydsl.codegen.EntitySerializer&quot;)
+public class QChangeOrder extends EntityPathBase&lt;ChangeOrder&gt; {
+
+    private static final long serialVersionUID = 1968115804L;
+
+<span class="nc" id="L21">    private static final PathInits INITS = PathInits.DIRECT2;</span>
+
+<span class="nc" id="L23">    public static final QChangeOrder changeOrder = new QChangeOrder(&quot;changeOrder&quot;);</span>
+
+    public final QBaseModel _super;
+
+<span class="nc" id="L27">    public final StringPath approvalStatus = createString(&quot;approvalStatus&quot;);</span>
+
+<span class="nc" id="L29">    public final StringPath assignedTo = createString(&quot;assignedTo&quot;);</span>
+
+<span class="nc" id="L31">    public final StringPath assignmentGroup = createString(&quot;assignmentGroup&quot;);</span>
+
+<span class="nc" id="L33">    public final StringPath backoutDuration = createString(&quot;backoutDuration&quot;);</span>
+
+<span class="nc" id="L35">    public final StringPath category = createString(&quot;category&quot;);</span>
+
+<span class="nc" id="L37">    public final StringPath changeCoordinator = createString(&quot;changeCoordinator&quot;);</span>
+
+<span class="nc" id="L39">    public final StringPath changeID = createString(&quot;changeID&quot;);</span>
+
+<span class="nc" id="L41">    public final StringPath changeModel = createString(&quot;changeModel&quot;);</span>
+
+<span class="nc" id="L43">    public final StringPath changeOrderItem = createString(&quot;changeOrderItem&quot;);</span>
+
+    //inherited
+    public final StringPath clientReference;
+
+<span class="nc" id="L48">    public final NumberPath&lt;Long&gt; closeTime = createNumber(&quot;closeTime&quot;, Long.class);</span>
+
+    public final org.bson.types.QObjectId collectorItemId;
+
+<span class="nc" id="L52">    public final StringPath company = createString(&quot;company&quot;);</span>
+
+<span class="nc" id="L54">    public final StringPath coordinatorPhone = createString(&quot;coordinatorPhone&quot;);</span>
+
+<span class="nc" id="L56">    public final NumberPath&lt;Long&gt; dateEntered = createNumber(&quot;dateEntered&quot;, Long.class);</span>
+
+<span class="nc" id="L58">    public final StringPath extProjectRef = createString(&quot;extProjectRef&quot;);</span>
+
+    // inherited
+    public final org.bson.types.QObjectId id;
+
+<span class="nc" id="L63">    public final StringPath initiatedBy = createString(&quot;initiatedBy&quot;);</span>
+
+<span class="nc" id="L65">    public final BooleanPath open = createBoolean(&quot;open&quot;);</span>
+
+<span class="nc" id="L67">    public final StringPath phase = createString(&quot;phase&quot;);</span>
+
+<span class="nc" id="L69">    public final NumberPath&lt;Long&gt; plannedEnd = createNumber(&quot;plannedEnd&quot;, Long.class);</span>
+
+<span class="nc" id="L71">    public final NumberPath&lt;Long&gt; plannedStart = createNumber(&quot;plannedStart&quot;, Long.class);</span>
+
+<span class="nc" id="L73">    public final StringPath priority = createString(&quot;priority&quot;);</span>
+
+<span class="nc" id="L75">    public final StringPath reason = createString(&quot;reason&quot;);</span>
+
+<span class="nc" id="L77">    public final StringPath rFCType2 = createString(&quot;rFCType2&quot;);</span>
+
+<span class="nc" id="L79">    public final StringPath riskAssessment = createString(&quot;riskAssessment&quot;);</span>
+
+<span class="nc" id="L81">    public final StringPath service = createString(&quot;service&quot;);</span>
+
+<span class="nc" id="L83">    public final StringPath sLAAgreementID = createString(&quot;sLAAgreementID&quot;);</span>
+
+<span class="nc" id="L85">    public final StringPath status = createString(&quot;status&quot;);</span>
+
+<span class="nc" id="L87">    public final StringPath subcategory = createString(&quot;subcategory&quot;);</span>
+
+<span class="nc" id="L89">    public final NumberPath&lt;Long&gt; timestamp = createNumber(&quot;timestamp&quot;, Long.class);</span>
+
+<span class="nc" id="L91">    public final StringPath title = createString(&quot;title&quot;);</span>
+
+    //inherited
+    public final DateTimePath&lt;java.util.Date&gt; upsertTime;
+
+    public QChangeOrder(String variable) {
+<span class="nc" id="L97">        this(ChangeOrder.class, forVariable(variable), INITS);</span>
+<span class="nc" id="L98">    }</span>
+
+    public QChangeOrder(Path&lt;? extends ChangeOrder&gt; path) {
+<span class="nc" id="L101">        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));</span>
+<span class="nc" id="L102">    }</span>
+
+    public QChangeOrder(PathMetadata metadata) {
+<span class="nc" id="L105">        this(metadata, PathInits.getFor(metadata, INITS));</span>
+<span class="nc" id="L106">    }</span>
+
+    public QChangeOrder(PathMetadata metadata, PathInits inits) {
+<span class="nc" id="L109">        this(ChangeOrder.class, metadata, inits);</span>
+<span class="nc" id="L110">    }</span>
+
+    public QChangeOrder(Class&lt;? extends ChangeOrder&gt; type, PathMetadata metadata, PathInits inits) {
+<span class="nc" id="L113">        super(type, metadata, inits);</span>
+<span class="nc" id="L114">        this._super = new QBaseModel(type, metadata, inits);</span>
+<span class="nc" id="L115">        this.clientReference = _super.clientReference;</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        this.collectorItemId = inits.isInitialized(&quot;collectorItemId&quot;) ? new org.bson.types.QObjectId(forProperty(&quot;collectorItemId&quot;)) : null;</span>
+<span class="nc" id="L117">        this.id = _super.id;</span>
+<span class="nc" id="L118">        this.upsertTime = _super.upsertTime;</span>
+<span class="nc" id="L119">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

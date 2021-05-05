@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LibraryPolicyResult.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">LibraryPolicyResult.java</span></div><h1>LibraryPolicyResult.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
+
+@Document(collection = &quot;library_policy&quot;)
+<span class="fc" id="L18">public class LibraryPolicyResult extends BaseModel {</span>
+    private ObjectId collectorItemId;
+    private long timestamp;
+    private long evaluationTimestamp;
+<span class="fc" id="L22">    private Map&lt;LibraryPolicyType, Set&lt;Threat&gt;&gt; threats = new HashMap&lt;&gt;();</span>
+    private String reportUrl;
+    private Integer totalComponentCount;
+    private Integer knownComponentCount;
+<span class="fc" id="L26">    private List&lt;PolicyScanMetric&gt; policyAlert = new ArrayList&lt;&gt;();</span>
+    private ObjectId buildId;
+    private String scanState;
+    private String projectName;
+    private String productName;
+    private String buildUrl;
+
+    public static class Threat {
+        LibraryPolicyThreatLevel level;
+<span class="fc" id="L35">        List&lt;String&gt; components = new ArrayList&lt;&gt;();</span>
+        int count;
+<span class="fc" id="L37">        private Map&lt;LibraryPolicyThreatDisposition, Integer&gt; dispositionCounts = new HashMap&lt;&gt;();</span>
+        int maxAge;
+        double maxScore;
+
+<span class="fc" id="L41">        public Threat(LibraryPolicyThreatLevel level, int count) {</span>
+<span class="fc" id="L42">            this.level = level;</span>
+<span class="fc" id="L43">            this.count = count;</span>
+<span class="fc" id="L44">        }</span>
+
+
+
+
+
+        public LibraryPolicyThreatLevel getLevel() {
+<span class="fc" id="L51">            return level;</span>
+        }
+
+        public void setLevel(LibraryPolicyThreatLevel level) {
+<span class="nc" id="L55">            this.level = level;</span>
+<span class="nc" id="L56">        }</span>
+
+        public int getCount() {
+<span class="fc" id="L59">            return count;</span>
+        }
+
+        public void setCount(int count) {
+<span class="fc" id="L63">            this.count = count;</span>
+<span class="fc" id="L64">        }</span>
+
+        public List&lt;String&gt; getComponents() {
+<span class="fc" id="L67">            return components;</span>
+        }
+
+        public void setComponents(List&lt;String&gt; components) {
+<span class="nc" id="L71">            this.components = components;</span>
+<span class="nc" id="L72">        }</span>
+
+        public void addDispositionCount(LibraryPolicyThreatDisposition disposition) {
+<span class="fc" id="L75">            dispositionCounts.merge(disposition, 1, (a, b) -&gt; a + b);</span>
+<span class="fc" id="L76">        }</span>
+
+        public int getMaxAge() {
+<span class="fc" id="L79">            return maxAge;</span>
+        }
+
+        public void setMaxAge(int maxAge) {
+<span class="fc" id="L83">            this.maxAge = maxAge;</span>
+<span class="fc" id="L84">        }</span>
+
+        public double getMaxScore() {
+<span class="fc" id="L87">            return maxScore;</span>
+        }
+
+        public void setMaxScore(double maxScore) {
+<span class="fc" id="L91">            this.maxScore = maxScore;</span>
+<span class="fc" id="L92">        }</span>
+
+        public Map&lt;LibraryPolicyThreatDisposition, Integer&gt; getDispositionCounts() {
+<span class="fc" id="L95">            return dispositionCounts;</span>
+        }
+    }
+
+<span class="nc" id="L99">    public static class ThreatComponent {</span>
+        String name;
+
+    }
+
+    public ObjectId getCollectorItemId() {
+<span class="nc" id="L105">        return collectorItemId;</span>
+    }
+
+    public void setCollectorItemId(ObjectId collectorItemId) {
+<span class="nc" id="L109">        this.collectorItemId = collectorItemId;</span>
+<span class="nc" id="L110">    }</span>
+
+    public long getTimestamp() {
+<span class="nc" id="L113">        return timestamp;</span>
+    }
+
+    public void setTimestamp(long timestamp) {
+<span class="nc" id="L117">        this.timestamp = timestamp;</span>
+<span class="nc" id="L118">    }</span>
+
+    public Map&lt;LibraryPolicyType, Set&lt;Threat&gt;&gt; getThreats() {
+<span class="fc" id="L121">        return threats;</span>
+    }
+
+
+    @Deprecated
+    public void addThreat(LibraryPolicyType type, LibraryPolicyThreatLevel level, String component) {
+<span class="nc" id="L127">        Set&lt;Threat&gt; threatSet = threats.get(type);</span>
+
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (CollectionUtils.isEmpty(threatSet)) {</span>
+<span class="nc" id="L130">            Threat threat = new Threat(level, 1);</span>
+<span class="nc" id="L131">            threat.getComponents().add(component);</span>
+<span class="nc" id="L132">            Set&lt;Threat&gt; set = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L133">            set.add(threat);</span>
+<span class="nc" id="L134">            threats.put(type, set);</span>
+<span class="nc" id="L135">        } else {</span>
+<span class="nc" id="L136">            boolean found = false;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">            for (Threat t : threatSet) {</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                if (t.getLevel().equals(level)) {</span>
+<span class="nc" id="L139">                    t.setCount(t.getCount() + 1);</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">                    if (!t.getComponents().contains(component)) {</span>
+<span class="nc" id="L141">                        t.getComponents().add(component);</span>
+                    }
+<span class="nc" id="L143">                    threatSet.add(t);</span>
+<span class="nc" id="L144">                    threats.put(type, threatSet);</span>
+<span class="nc" id="L145">                    found = true;</span>
+<span class="nc" id="L146">                    break;</span>
+                }
+<span class="nc" id="L148">            }</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (!found) {</span>
+<span class="nc" id="L150">                Threat t = new Threat(level, 1);</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                if (!t.getComponents().contains(component)) {</span>
+<span class="nc" id="L152">                    t.getComponents().add(component);</span>
+                }
+<span class="nc" id="L154">                threatSet.add(t);</span>
+<span class="nc" id="L155">                threats.put(type, threatSet);</span>
+            }
+        }
+<span class="nc" id="L158">    }</span>
+
+    public void addThreat(LibraryPolicyType type, LibraryPolicyThreatLevel level, LibraryPolicyThreatDisposition disposition, String dispositionStatus, String component,String age,String score) {
+<span class="fc" id="L161">        Set&lt;Threat&gt; threatSet = threats.get(type);</span>
+
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (CollectionUtils.isEmpty(threatSet)) {</span>
+<span class="fc" id="L164">            Threat threat = new Threat(level, 1);</span>
+<span class="fc" id="L165">            threat.getComponents().add(getComponentPlusDispositionPlusAge(component,disposition,dispositionStatus,age,score));</span>
+<span class="fc" id="L166">            threat.addDispositionCount(disposition);</span>
+<span class="fc" id="L167">            setCriticalAndHighVulAge(age, threat,disposition);</span>
+<span class="fc" id="L168">            setCriticalAndHighVulScore(score,threat,disposition);</span>
+<span class="fc" id="L169">            Set&lt;Threat&gt; set = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L170">            set.add(threat);</span>
+<span class="fc" id="L171">            threats.put(type, set);</span>
+<span class="fc" id="L172">        } else {</span>
+<span class="fc" id="L173">            boolean found = false;</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">            for (Threat t : threatSet) {</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">                if (Objects.equals(t.getLevel(), level)) {</span>
+<span class="fc" id="L176">                    t.setCount(t.getCount() + 1);</span>
+<span class="fc" id="L177">                    t.addDispositionCount(disposition);</span>
+<span class="fc" id="L178">                    setCriticalAndHighVulAge(age, t,disposition);</span>
+<span class="fc" id="L179">                    setCriticalAndHighVulScore(score,t,disposition);</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">                    if (!t.getComponents().contains(getComponentPlusDispositionPlusAge(component,disposition,dispositionStatus,age,score))) {</span>
+<span class="fc" id="L181">                        t.getComponents().add(getComponentPlusDispositionPlusAge(component,disposition,dispositionStatus,age,score));</span>
+                    }
+<span class="fc" id="L183">                    threatSet.add(t);</span>
+<span class="fc" id="L184">                    threats.put(type, threatSet);</span>
+<span class="fc" id="L185">                    found = true;</span>
+<span class="fc" id="L186">                    break;</span>
+                }
+<span class="fc" id="L188">            }</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">            if (!found) {</span>
+<span class="fc" id="L190">                Threat t = new Threat(level, 1);</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">                if (!t.getComponents().contains(getComponentPlusDispositionPlusAge(component,disposition,dispositionStatus,age,score))) {</span>
+<span class="fc" id="L192">                    t.getComponents().add(getComponentPlusDispositionPlusAge(component,disposition,dispositionStatus,age,score));</span>
+                }
+<span class="fc" id="L194">                t.addDispositionCount(disposition);</span>
+<span class="fc" id="L195">                setCriticalAndHighVulAge(age, t,disposition);</span>
+<span class="fc" id="L196">                setCriticalAndHighVulScore(score,t,disposition);</span>
+<span class="fc" id="L197">                threatSet.add(t);</span>
+<span class="fc" id="L198">                threats.put(type, threatSet);</span>
+            }
+        }
+
+<span class="fc" id="L202">    }</span>
+
+    public void addThreat(LibraryPolicyType type, LibraryPolicyThreatLevel level, LibraryPolicyThreatDisposition disposition, String dispositionStatus, String component,String age,String score, String policyName) {
+<span class="nc" id="L205">        Set&lt;Threat&gt; threatSet = threats.get(type);</span>
+
+<span class="nc bnc" id="L207" title="All 2 branches missed.">        if (CollectionUtils.isEmpty(threatSet)) {</span>
+<span class="nc" id="L208">            Threat threat = new Threat(level, 1);</span>
+<span class="nc" id="L209">            threat.getComponents().add(getComponentPlusDispositionPlusAgePlusPolicyName(component,disposition,dispositionStatus,age,score,policyName));</span>
+<span class="nc" id="L210">            threat.addDispositionCount(disposition);</span>
+<span class="nc" id="L211">            setCriticalAndHighVulAge(age, threat,disposition);</span>
+<span class="nc" id="L212">            setCriticalAndHighVulScore(score,threat,disposition);</span>
+<span class="nc" id="L213">            Set&lt;Threat&gt; set = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L214">            set.add(threat);</span>
+<span class="nc" id="L215">            threats.put(type, set);</span>
+<span class="nc" id="L216">        } else {</span>
+<span class="nc" id="L217">            boolean found = false;</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">            for (Threat t : threatSet) {</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">                if (Objects.equals(t.getLevel(), level)) {</span>
+<span class="nc" id="L220">                    t.setCount(t.getCount() + 1);</span>
+<span class="nc" id="L221">                    t.addDispositionCount(disposition);</span>
+<span class="nc" id="L222">                    setCriticalAndHighVulAge(age, t,disposition);</span>
+<span class="nc" id="L223">                    setCriticalAndHighVulScore(score,t,disposition);</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">                    if (!t.getComponents().contains(getComponentPlusDispositionPlusAgePlusPolicyName(component,disposition,dispositionStatus,age,score,policyName))) {</span>
+<span class="nc" id="L225">                        t.getComponents().add(getComponentPlusDispositionPlusAgePlusPolicyName(component,disposition,dispositionStatus,age,score,policyName));</span>
+                    }
+<span class="nc" id="L227">                    threatSet.add(t);</span>
+<span class="nc" id="L228">                    threats.put(type, threatSet);</span>
+<span class="nc" id="L229">                    found = true;</span>
+<span class="nc" id="L230">                    break;</span>
+                }
+<span class="nc" id="L232">            }</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">            if (!found) {</span>
+<span class="nc" id="L234">                Threat t = new Threat(level, 1);</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">                if (!t.getComponents().contains(getComponentPlusDispositionPlusAgePlusPolicyName(component,disposition,dispositionStatus,age,score,policyName))) {</span>
+<span class="nc" id="L236">                    t.getComponents().add(getComponentPlusDispositionPlusAgePlusPolicyName(component,disposition,dispositionStatus,age,score,policyName));</span>
+                }
+<span class="nc" id="L238">                t.addDispositionCount(disposition);</span>
+<span class="nc" id="L239">                setCriticalAndHighVulAge(age, t,disposition);</span>
+<span class="nc" id="L240">                setCriticalAndHighVulScore(score,t,disposition);</span>
+<span class="nc" id="L241">                threatSet.add(t);</span>
+<span class="nc" id="L242">                threats.put(type, threatSet);</span>
+            }
+        }
+
+<span class="nc" id="L246">    }</span>
+
+    private void setCriticalAndHighVulAge(String age, Threat threat, LibraryPolicyThreatDisposition disposition) {
+<span class="fc bfc" id="L249" title="All 2 branches covered.">        if (disposition.equals(LibraryPolicyThreatDisposition.Open)) {</span>
+<span class="fc" id="L250">            int currentValue = NumberUtils.toInt(age);</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">            threat.setMaxAge(threat.getMaxAge() &lt;= currentValue ? currentValue : threat.getMaxAge());</span>
+        }
+<span class="fc" id="L253">    }</span>
+
+    private void setCriticalAndHighVulScore(String score, Threat threat, LibraryPolicyThreatDisposition disposition) {
+<span class="fc bfc" id="L256" title="All 2 branches covered.">        if (disposition.equals(LibraryPolicyThreatDisposition.Open)) {</span>
+<span class="fc" id="L257">            double currentScore = Double.parseDouble(score);</span>
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">            threat.setMaxScore(threat.getMaxScore() &lt;= currentScore ? currentScore : threat.getMaxScore());</span>
+        }
+<span class="fc" id="L260">    }</span>
+
+    public void setThreats(Map&lt;LibraryPolicyType, Set&lt;Threat&gt;&gt; threats) {
+<span class="nc" id="L263">        this.threats = threats;</span>
+<span class="nc" id="L264">    }</span>
+
+    public String getReportUrl() {
+<span class="nc" id="L267">        return reportUrl;</span>
+    }
+
+    public void setReportUrl(String reportUrl) {
+<span class="nc" id="L271">        this.reportUrl = reportUrl;</span>
+<span class="nc" id="L272">    }</span>
+
+    public long getEvaluationTimestamp() {
+<span class="nc" id="L275">        return evaluationTimestamp;</span>
+    }
+
+    public void setEvaluationTimestamp(long evaluationTimestamp) {
+<span class="nc" id="L279">        this.evaluationTimestamp = evaluationTimestamp;</span>
+<span class="nc" id="L280">    }</span>
+
+    public Integer getTotalComponentCount() {
+<span class="nc" id="L283">        return totalComponentCount;</span>
+    }
+
+    public void setTotalComponentCount(Integer totalComponentCount) {
+<span class="nc" id="L287">        this.totalComponentCount = totalComponentCount;</span>
+<span class="nc" id="L288">    }</span>
+
+    public Integer getKnownComponentCount() {
+<span class="nc" id="L291">        return knownComponentCount;</span>
+    }
+
+    public void setKnownComponentCount(Integer knownComponentCount) {
+<span class="nc" id="L295">        this.knownComponentCount = knownComponentCount;</span>
+<span class="nc" id="L296">    }</span>
+
+    public List&lt;PolicyScanMetric&gt; getPolicyAlert() {
+<span class="nc" id="L299">        return policyAlert;</span>
+    }
+
+    public void setPolicyAlert(List&lt;PolicyScanMetric&gt; policyAlert) {
+<span class="nc" id="L303">        this.policyAlert = policyAlert;</span>
+<span class="nc" id="L304">    }</span>
+
+    private String getComponentPlusDispositionPlusAge (String component, LibraryPolicyThreatDisposition disposition, String dispositionStatus,String age, String score) {
+<span class="fc" id="L307">        return String.format(&quot;%s##%s##%s##%s##%s&quot;, component, disposition.toString(), age, dispositionStatus,score);</span>
+    }
+
+    private String getComponentPlusDispositionPlusAgePlusPolicyName (String component, LibraryPolicyThreatDisposition disposition, String dispositionStatus,String age, String score, String policyName) {
+<span class="nc" id="L311">        return String.format(&quot;%s##%s##%s##%s##%s##%s&quot;, component, disposition.toString(), age, dispositionStatus,score,policyName);</span>
+    }
+
+<span class="nc" id="L314">    public ObjectId getBuildId() { return buildId; }</span>
+
+<span class="nc" id="L316">    public void setBuildId(ObjectId buildId) { this.buildId = buildId; }</span>
+
+<span class="nc" id="L318">    public void setScanState(String scanState) { this.scanState = scanState; }</span>
+
+<span class="nc" id="L320">    public String getScanState() { return this.scanState; }</span>
+
+    public String getProjectName() {
+<span class="nc" id="L323">        return projectName;</span>
+    }
+
+    public void setProjectName(String projectName) {
+<span class="nc" id="L327">        this.projectName = projectName;</span>
+<span class="nc" id="L328">    }</span>
+
+    public String getProductName() {
+<span class="nc" id="L331">        return productName;</span>
+    }
+
+    public void setProductName(String productName) {
+<span class="nc" id="L335">        this.productName = productName;</span>
+<span class="nc" id="L336">    }</span>
+
+    public String getBuildUrl() {
+<span class="nc" id="L339">        return buildUrl;</span>
+    }
+
+    public void setBuildUrl(String buildUrl) {
+<span class="nc" id="L343">        this.buildUrl = buildUrl;</span>
+<span class="nc" id="L344">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

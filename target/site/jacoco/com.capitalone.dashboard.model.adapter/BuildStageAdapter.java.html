@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BuildStageAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model.adapter</a> &gt; <span class="el_source">BuildStageAdapter.java</span></div><h1>BuildStageAdapter.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model.adapter;
+
+import com.capitalone.dashboard.model.BuildStage;
+import com.capitalone.dashboard.model.Error;
+import com.google.gson.Gson;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+
+import java.lang.reflect.Type;
+import java.util.Map;
+
+<span class="nc" id="L15">public class BuildStageAdapter implements JsonDeserializer&lt;BuildStage&gt; {</span>
+
+
+    @Override
+    public BuildStage deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+<span class="nc" id="L20">        BuildStage buildStage = new BuildStage();</span>
+<span class="nc" id="L21">        JsonObject jsonObject = jsonElement.getAsJsonObject();</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">        if (jsonObject == null) return null;</span>
+<span class="nc" id="L23">        buildStage.setStageId(getStringValue(jsonObject, &quot;id&quot;));</span>
+<span class="nc" id="L24">        buildStage.setName(getStringValue(jsonObject, &quot;name&quot;));</span>
+<span class="nc" id="L25">        buildStage.setStatus(getStringValue(jsonObject, &quot;status&quot;));</span>
+<span class="nc" id="L26">        buildStage.setStartTimeMillis(getStringValue(jsonObject, &quot;startTimeMillis&quot;));</span>
+<span class="nc" id="L27">        buildStage.setEndTime(getStringValue(jsonObject, &quot;endTime&quot;));</span>
+<span class="nc" id="L28">        buildStage.setLog(getStringValue(jsonObject, &quot;log&quot;));</span>
+<span class="nc" id="L29">        buildStage.setParentId(getStringValue(jsonObject, &quot;parentId&quot;));</span>
+<span class="nc" id="L30">        buildStage.setError(new Gson().fromJson(jsonObject.get(&quot;error&quot;),Error.class));</span>
+<span class="nc" id="L31">        buildStage.setDurationMillis(getStringValue(jsonObject, &quot;durationMillis&quot;));</span>
+<span class="nc" id="L32">        JsonElement linksElement = jsonObject.get(&quot;_links&quot;);</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (linksElement != null) {</span>
+<span class="nc" id="L34">            buildStage.set_links(new Gson().fromJson(linksElement, Map.class));</span>
+        }
+<span class="nc" id="L36">        buildStage.setExec_node_logUrl(getStringValue(jsonObject, &quot;exec_node_logUrl&quot;));</span>
+<span class="nc" id="L37">        return buildStage;</span>
+    }
+
+    private String getStringValue(JsonObject jsonObject, String key) {
+<span class="nc bnc" id="L41" title="All 4 branches missed.">        if (jsonObject == null || jsonObject.get(key) == null) return null;</span>
+<span class="nc" id="L42">        return jsonObject.get(key).getAsString();</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

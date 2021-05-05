@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AutoDiscoveredEntry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">AutoDiscoveredEntry.java</span></div><h1>AutoDiscoveredEntry.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import com.capitalone.dashboard.misc.HygieiaException;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Entry class to hold the Auto Discovered entries: Jira project, github project, build job etc.
+ */
+<span class="nc" id="L15">public class AutoDiscoveredEntry {</span>
+    @NotNull
+    private AutoDiscoveryStatusType status;
+
+    @NotNull
+    private String toolName;
+
+    @NotNull
+    private String description;
+
+    private String niceName;
+
+<span class="nc" id="L27">    private boolean pushed = false;</span>
+
+<span class="nc" id="L29">    private boolean enabled = false;</span>
+
+<span class="nc" id="L31">    @NotEmpty</span>
+    private Map&lt;String, Object&gt; options = new HashMap&lt;&gt;();
+
+    public String getToolName() {
+<span class="nc" id="L35">        return toolName;</span>
+    }
+
+    public void setToolName(String toolName) {
+<span class="nc" id="L39">        this.toolName = toolName;</span>
+<span class="nc" id="L40">    }</span>
+
+    public String getDescription() {
+<span class="nc" id="L43">        return description;</span>
+    }
+
+    public void setDescription(String description) {
+<span class="nc" id="L47">        this.description = description;</span>
+<span class="nc" id="L48">    }</span>
+
+    public String getNiceName() {
+<span class="nc" id="L51">        return niceName;</span>
+    }
+
+    public void setNiceName(String niceName) {
+<span class="nc" id="L55">        this.niceName = niceName;</span>
+<span class="nc" id="L56">    }</span>
+
+    public Map&lt;String, Object&gt; getOptions() {
+<span class="nc" id="L59">        return options;</span>
+    }
+
+    public void setOptions(Map&lt;String, Object&gt; options) {
+<span class="nc" id="L63">        this.options = options;</span>
+<span class="nc" id="L64">    }</span>
+
+    public AutoDiscoveryStatusType getStatus() {
+<span class="nc" id="L67">        return status;</span>
+    }
+
+
+    public boolean isPushed() {
+<span class="nc" id="L72">        return pushed;</span>
+    }
+
+    public void setPushed(boolean pushed) {
+<span class="nc" id="L76">        this.pushed = pushed;</span>
+<span class="nc" id="L77">    }</span>
+
+    public boolean isEnabled() {
+<span class="nc" id="L80">        return enabled;</span>
+    }
+
+    public void setEnabled(boolean enabled) {
+<span class="nc" id="L84">        this.enabled = enabled;</span>
+<span class="nc" id="L85">    }</span>
+
+
+    public void setStatus(AutoDiscoveryStatusType status) {
+<span class="nc" id="L89">        this.status = status;</span>
+<span class="nc" id="L90">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (this == o) return true;</span>
+
+<span class="nc bnc" id="L96" title="All 4 branches missed.">        if (o == null || !(o instanceof AutoDiscoveredEntry)) return false;</span>
+
+<span class="nc" id="L98">        AutoDiscoveredEntry that = (AutoDiscoveredEntry) o;</span>
+
+<span class="nc" id="L100">        return new EqualsBuilder()</span>
+<span class="nc" id="L101">                .append(status, that.status)</span>
+<span class="nc" id="L102">                .append(description, that.description)</span>
+<span class="nc" id="L103">                .append(options, that.options)</span>
+<span class="nc" id="L104">                .isEquals();</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L109">        return new HashCodeBuilder(17, 37)</span>
+<span class="nc" id="L110">                .append(status)</span>
+<span class="nc" id="L111">                .append(description)</span>
+<span class="nc" id="L112">                .append(options)</span>
+<span class="nc" id="L113">                .toHashCode();</span>
+    }
+
+    public AutoDiscoverCollectorItem toAutoDiscoverCollectorItem(Collector collector) throws HygieiaException {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (options.keySet().containsAll(collector.getUniqueFields().keySet())) {</span>
+<span class="nc" id="L118">            AutoDiscoverCollectorItem collectorItem = new AutoDiscoverCollectorItem();</span>
+<span class="nc" id="L119">            collectorItem.setEnabled(true);</span>
+<span class="nc" id="L120">            collectorItem.setPushed(isPushed());</span>
+<span class="nc" id="L121">            collectorItem.setDescription(description);</span>
+<span class="nc" id="L122">            collectorItem.setNiceName(niceName);</span>
+<span class="nc" id="L123">            collectorItem.setCollectorId(collector.getId());</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            for (String key : options.keySet()) {</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                if (collector.getAllFields().keySet().contains(key)) {</span>
+<span class="nc" id="L126">                    collectorItem.getOptions().put(key, options.get(key));</span>
+                }
+<span class="nc" id="L128">            }</span>
+<span class="nc" id="L129">            collectorItem.setAutoDiscoverStatus(status);</span>
+<span class="nc" id="L130">            return collectorItem;</span>
+        } else {
+<span class="nc" id="L132">            throw new HygieiaException(&quot;Missing required fields. &quot; + toolName + &quot; collector required fields are: &quot; + String.join(&quot;, &quot;, collector.getUniqueFields().keySet()), HygieiaException.COLLECTOR_ITEM_CREATE_ERROR);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

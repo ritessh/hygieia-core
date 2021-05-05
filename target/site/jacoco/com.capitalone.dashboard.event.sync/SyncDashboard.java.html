@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SyncDashboard.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.event.sync</a> &gt; <span class="el_source">SyncDashboard.java</span></div><h1>SyncDashboard.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.event.sync;
+
+import com.capitalone.dashboard.event.constants.sync.Reason;
+import com.capitalone.dashboard.model.BaseModel;
+import com.capitalone.dashboard.model.Build;
+import com.capitalone.dashboard.model.CodeQuality;
+import com.capitalone.dashboard.model.Collector;
+import com.capitalone.dashboard.model.CollectorItem;
+import com.capitalone.dashboard.model.CollectorType;
+import com.capitalone.dashboard.model.Component;
+import com.capitalone.dashboard.model.Dashboard;
+import com.capitalone.dashboard.model.FeatureFlag;
+import com.capitalone.dashboard.model.RepoBranch;
+import com.capitalone.dashboard.model.StandardWidget;
+import com.capitalone.dashboard.model.Widget;
+import com.capitalone.dashboard.model.relation.RelatedCollectorItem;
+import com.capitalone.dashboard.repository.BuildRepository;
+import com.capitalone.dashboard.repository.CodeQualityRepository;
+import com.capitalone.dashboard.repository.CollectorItemRepository;
+import com.capitalone.dashboard.repository.CollectorRepository;
+import com.capitalone.dashboard.repository.ComponentRepository;
+import com.capitalone.dashboard.repository.DashboardRepository;
+import com.capitalone.dashboard.repository.FeatureFlagRepository;
+import com.capitalone.dashboard.repository.RelatedCollectorItemRepository;
+import com.capitalone.dashboard.util.FeatureFlagsEnum;
+import com.capitalone.dashboard.util.HygieiaUtils;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.PredicateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@org.springframework.stereotype.Component
+public class SyncDashboard {
+    private final DashboardRepository dashboardRepository;
+    private final ComponentRepository componentRepository;
+    private final CollectorRepository collectorRepository;
+    private final CollectorItemRepository collectorItemRepository;
+    private final BuildRepository buildRepository;
+    private final RelatedCollectorItemRepository relatedCollectorItemRepository;
+    private final CodeQualityRepository codeQualityRepository;
+    private final FeatureFlagRepository featureFlagRepository;
+
+
+    @Autowired
+    public SyncDashboard(DashboardRepository dashboardRepository, ComponentRepository componentRepository,
+                         CollectorRepository collectorRepository, CollectorItemRepository collectorItemRepository,
+                         BuildRepository buildRepository, RelatedCollectorItemRepository relatedCollectorItemRepository,
+                         CodeQualityRepository codeQualityRepository,
+<span class="fc" id="L62">                         FeatureFlagRepository featureFlagRepository) {</span>
+<span class="fc" id="L63">        this.dashboardRepository = dashboardRepository;</span>
+<span class="fc" id="L64">        this.componentRepository = componentRepository;</span>
+<span class="fc" id="L65">        this.collectorRepository = collectorRepository;</span>
+<span class="fc" id="L66">        this.collectorItemRepository = collectorItemRepository;</span>
+<span class="fc" id="L67">        this.buildRepository = buildRepository;</span>
+<span class="fc" id="L68">        this.relatedCollectorItemRepository = relatedCollectorItemRepository;</span>
+<span class="fc" id="L69">        this.codeQualityRepository = codeQualityRepository;</span>
+<span class="fc" id="L70">        this.featureFlagRepository = featureFlagRepository;</span>
+<span class="fc" id="L71">    }</span>
+
+
+    /**
+     * Get the widget by name from a dashboard
+     *
+     * @param name name of the widget
+     * @param dashboard Dashboard
+     * @return widget Widget
+     */
+    public Widget getWidget(String name, Dashboard dashboard) {
+<span class="fc" id="L82">        List&lt;Widget&gt; widgets = dashboard.getWidgets();</span>
+<span class="fc" id="L83">        return widgets.stream().filter(widget -&gt; widget.getName().equalsIgnoreCase(name)).findFirst().orElse(null);</span>
+    }
+
+    /**
+     * @param existingDashboards List of dashboards to which the item should be added
+     * @param collectorItem      The collector item to add
+     * @param collectorType      The collector type of the item
+     * @param addWidget          add a corresponding widget or not
+     */
+    private void addCollectorItemToDashboard(List&lt;Dashboard&gt; existingDashboards, CollectorItem collectorItem, CollectorType collectorType, boolean addWidget) {
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (CollectionUtils.isEmpty(existingDashboards)) return;</span>
+
+        /*
+         * Add feature flag capability to toggle between automatic association vs manual association
+         * if auto_discover record exists then it is considered manual association and the association
+         * will be handled by the hygieia-relateditems-collector.
+         */
+<span class="nc" id="L100">        FeatureFlag featureFlag = featureFlagRepository.findByName(FeatureFlagsEnum.auto_discover.toString());</span>
+
+        /*
+         * The assumption is the dashboard already has a SCM widget and the sync process should not add SCM widgets.
+         */
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if(CollectorType.SCM.equals(collectorType)) return;</span>
+
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        for(Dashboard dashboard : existingDashboards) {</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            if (CollectionUtils.isEmpty(dashboard.getApplication().getComponents())) continue;</span>
+<span class="nc" id="L109">            ObjectId componentId = dashboard.getApplication().getComponents().get(0).getId();</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">            if (componentId == null) continue;</span>
+<span class="nc" id="L111">            StandardWidget standardWidget = new StandardWidget(collectorType, componentId);</span>
+<span class="nc" id="L112">            Component component = componentRepository.findOne(componentId);</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            if (component == null) continue;</span>
+
+            // if the additional association logic does not comply do not associate
+<span class="nc bnc" id="L116" title="All 2 branches missed.">            if(!associateByType(collectorType, component, collectorItem, featureFlag)) continue;</span>
+
+<span class="nc" id="L118">            component.addCollectorItem(collectorType, collectorItem);</span>
+<span class="nc" id="L119">            componentRepository.save(component);</span>
+<span class="nc" id="L120">            collectorItem.setEnabled(true);</span>
+<span class="nc" id="L121">            collectorItemRepository.save(collectorItem);</span>
+
+<span class="nc bnc" id="L123" title="All 4 branches missed.">            if (addWidget &amp;&amp; (getWidget(standardWidget.getName(), dashboard) == null)) {</span>
+<span class="nc" id="L124">                Widget widget = standardWidget.getWidget();</span>
+<span class="nc" id="L125">                dashboard.getWidgets().add(widget);</span>
+<span class="nc" id="L126">                dashboardRepository.save(dashboard);</span>
+            }
+<span class="nc" id="L128">        }</span>
+<span class="nc" id="L129">    }</span>
+
+
+    /*
+    * Additional logic for association by Collector Type
+    * */
+    private boolean associateByType(CollectorType collectorType, Component component, CollectorItem collectorItem, FeatureFlag featureFlag) {
+<span class="nc bnc" id="L136" title="All 3 branches missed.">        switch (collectorType) {</span>
+            // if auto_discover feature flag is turned on then do not sync
+<span class="nc bnc" id="L138" title="All 4 branches missed.">            case Build: return HygieiaUtils.allowSync(featureFlag, collectorType) &amp;&amp; associateBuild(component,collectorItem);</span>
+<span class="nc bnc" id="L139" title="All 4 branches missed.">            case CodeQuality: return HygieiaUtils.allowSync(featureFlag, collectorType) &amp;&amp; associateCodeQuality(component,collectorItem);</span>
+<span class="nc" id="L140">            default: return HygieiaUtils.allowSync(featureFlag, collectorType);</span>
+        }
+    }
+
+    /*
+    * Association logic for Build Collector Type
+    * */
+    private boolean associateBuild(Component component, CollectorItem collectorItem) {
+<span class="nc" id="L148">        List&lt;CollectorItem&gt; scmCollectorItems = Lists.newArrayList(component.getCollectorItems(CollectorType.SCM));</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        if(CollectionUtils.isEmpty(scmCollectorItems)) return false;</span>
+
+        // get the last build and compare the codeRepos to be subset of validRepoBranchSet if not then do not associate dashboard.
+<span class="nc" id="L152">        Build build = buildRepository.findTop1ByCollectorItemIdOrderByTimestampDesc(collectorItem.getId());</span>
+<span class="nc bnc" id="L153" title="All 4 branches missed.">        if(build == null || CollectionUtils.isEmpty(build.getCodeRepos())) return false;</span>
+
+<span class="nc" id="L155">        Set&lt;RepoBranch&gt; validRepoBranchSet = buildValidRepoBranches(component, getRepoType(build));</span>
+<span class="nc" id="L156">        Set&lt;RepoBranch&gt; repoBranchesBuild = Sets.newConcurrentHashSet(build.getCodeRepos());</span>
+
+<span class="nc" id="L158">        return CollectionUtils.isSubCollection(repoBranchesBuild, validRepoBranchSet);</span>
+    }
+
+    /*
+     * Association logic for CodeQuality Collector Type
+     * */
+    private boolean associateCodeQuality (@NotNull Component component,@NotNull CollectorItem collectorItem) {
+<span class="nc" id="L165">        List&lt;CollectorItem&gt; scmCollectorItems = Lists.newArrayList(component.getCollectorItems(CollectorType.SCM));</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        if(CollectionUtils.isEmpty(scmCollectorItems)) return false;</span>
+
+<span class="nc" id="L168">        CodeQuality entity = codeQualityRepository.findTop1ByCollectorItemIdOrderByTimestampDesc(collectorItem.getId());</span>
+<span class="nc bnc" id="L169" title="All 4 branches missed.">        if(entity == null || entity.getBuildId() == null) return false;</span>
+
+<span class="nc" id="L171">        Build build = buildRepository.findOne(entity.getBuildId());</span>
+<span class="nc bnc" id="L172" title="All 4 branches missed.">        if(build == null || CollectionUtils.isEmpty(build.getCodeRepos())) return false;</span>
+
+<span class="nc" id="L174">        Set&lt;RepoBranch&gt; validRepoBranchSet = buildValidRepoBranches(component, getRepoType(build));</span>
+<span class="nc" id="L175">        Set&lt;RepoBranch&gt; repoBranchesBuild = Sets.newConcurrentHashSet(build.getCodeRepos());</span>
+
+<span class="nc" id="L177">        return CollectionUtils.isSubCollection(repoBranchesBuild, validRepoBranchSet);</span>
+    }
+
+    /*
+     * Build a unique set of Valid RepoBranches by checking all SCM CollectorItems.
+     * */
+    private Set&lt;RepoBranch&gt; buildValidRepoBranches (@NotNull Component component, @NotNull RepoBranch.RepoType repoType) {
+<span class="nc" id="L184">        List&lt;CollectorItem&gt; scmCollectorItems = Lists.newArrayList(component.getCollectorItems(CollectorType.SCM));</span>
+<span class="nc" id="L185">        return Sets.newConcurrentHashSet(scmCollectorItems.stream()</span>
+<span class="nc" id="L186">                .map(item -&gt; new RepoBranch(String.valueOf(item.getOptions().get(&quot;url&quot;)),</span>
+<span class="nc" id="L187">                        String.valueOf(item.getOptions().get(&quot;branch&quot;)),</span>
+<span class="nc" id="L188">                        repoType)).collect(Collectors.toSet()));</span>
+    }
+
+    /*
+    * Retrieve Repository type from Build.
+    * */
+    private RepoBranch.RepoType getRepoType(@NotNull Build build) {
+<span class="nc bnc" id="L195" title="All 2 branches missed.">        if(CollectionUtils.isEmpty(build.getCodeRepos())) return RepoBranch.RepoType.Unknown;</span>
+<span class="nc" id="L196">        return build.getCodeRepos().get(0).getType();</span>
+    }
+
+    /**
+     * Get all the dashboards that have the collector items
+     *
+     * @param collectorItems collector items
+     * @param collectorType  type of the collector
+     * @return a list of dashboards
+     */
+    public List&lt;Dashboard&gt; getDashboardsByCollectorItems(Set&lt;CollectorItem&gt; collectorItems, CollectorType collectorType) {
+<span class="fc bfc" id="L207" title="All 2 branches covered.">        if (CollectionUtils.isEmpty(collectorItems)) {</span>
+<span class="fc" id="L208">            return new ArrayList&lt;&gt;();</span>
+        }
+<span class="fc" id="L210">        List&lt;ObjectId&gt; collectorItemIds = collectorItems.stream().map(BaseModel::getId).collect(Collectors.toList());</span>
+        // Find the components that have these collector items
+<span class="fc" id="L212">        List&lt;com.capitalone.dashboard.model.Component&gt; components = componentRepository.findByCollectorTypeAndItemIdIn(collectorType, collectorItemIds);</span>
+<span class="fc" id="L213">        List&lt;ObjectId&gt; componentIds = components.stream().map(BaseModel::getId).collect(Collectors.toList());</span>
+<span class="fc" id="L214">        return dashboardRepository.findByApplicationComponentIdsIn(componentIds);</span>
+    }
+
+
+    /**
+     * Sync builds with dashboards
+     *
+     * @param build
+     */
+    public void sync(Build build) {
+
+        // if feature flags for build and codequality are set to false, do not auto sync with dashboard.
+<span class="fc" id="L226">        FeatureFlag featureFlag = featureFlagRepository.findByName(FeatureFlagsEnum.auto_discover.toString());</span>
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">        if(!HygieiaUtils.allowSync(featureFlag, CollectorType.Build)) return;</span>
+
+        // Find the collectorItem of build
+<span class="nc" id="L230">        CollectorItem buildCollectorItem = collectorItemRepository.findOne(build.getCollectorItemId());</span>
+
+        //Find possible collectors and then the collector ids for SCM
+<span class="nc" id="L233">        List&lt;Collector&gt; scmCollectors = collectorRepository.findAllByCollectorType(CollectorType.SCM);</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">        if (CollectionUtils.isEmpty(scmCollectors)) {</span>
+<span class="nc" id="L235">            return;</span>
+        }
+<span class="nc" id="L237">        List&lt;ObjectId&gt; scmCollectorIds = scmCollectors.stream().map(BaseModel::getId).collect(Collectors.toList());</span>
+
+        // Get the repos that are being built
+<span class="nc" id="L240">        List&lt;RepoBranch&gt; repos = build.getCodeRepos();</span>
+<span class="nc" id="L241">        Set&lt;CollectorItem&gt; repoCollectorItemsInBuild = new HashSet&lt;&gt;();</span>
+
+        //create a list of the repo collector items that are being built, most cases have only 1
+<span class="nc bnc" id="L244" title="All 2 branches missed.">        if (CollectionUtils.isEmpty(repos)) return;</span>
+<span class="nc" id="L245">        CollectionUtils.filter(repos, PredicateUtils.notNullPredicate());</span>
+<span class="nc" id="L246">        repos.forEach(</span>
+                repoBranch -&gt; {
+<span class="nc" id="L248">                    Map&lt;String, Object&gt; options = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L249">                    options.put(&quot;url&quot;, repoBranch.getUrl());</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">                    if (StringUtils.isNotEmpty(repoBranch.getBranch())) {</span>
+<span class="nc" id="L251">                        options.put(&quot;branch&quot;, repoBranch.getBranch());</span>
+                    }
+<span class="nc" id="L253">                    repoCollectorItemsInBuild.addAll(IterableUtils.toList(collectorItemRepository.findAllByOptionMapAndCollectorIdsIn(options, scmCollectorIds)));</span>
+
+<span class="nc" id="L255">                });</span>
+
+<span class="nc" id="L257">        repoCollectorItemsInBuild.forEach(rci-&gt;{</span>
+<span class="nc" id="L258">            rci.setEnabled(true);</span>
+<span class="nc" id="L259">            collectorItemRepository.save(rci);</span>
+<span class="nc" id="L260">        });</span>
+        // For each repo collector item, add the item to the referenced dashboards
+<span class="nc" id="L262">        repoCollectorItemsInBuild.forEach(</span>
+<span class="nc" id="L263">                ci -&gt; relatedCollectorItemRepository.saveRelatedItems(buildCollectorItem.getId(), ci.getId(), this.getClass().toString(), Reason.BUILD_REPO_REASON.getAction())</span>
+        );
+<span class="nc" id="L265">    }</span>
+
+    /**
+     * Sync code quality with dashboards
+     *
+     * @param codeQuality
+     */
+    public void sync(CodeQuality codeQuality) {
+
+        // if feature flags for build and codequality are set to false, do not auto sync with dashboard.
+<span class="fc" id="L275">        FeatureFlag featureFlag = featureFlagRepository.findByName(FeatureFlagsEnum.auto_discover.toString());</span>
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">        if(!HygieiaUtils.allowSync(featureFlag, CollectorType.CodeQuality)) return;</span>
+<span class="nc" id="L277">        ObjectId buildId = codeQuality.getBuildId();</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">        if (buildId == null) return;</span>
+<span class="nc" id="L279">        Build build = buildRepository.findOne(buildId);</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">        if (build == null) return;</span>
+<span class="nc" id="L281">        relatedCollectorItemRepository.saveRelatedItems(build.getCollectorItemId(), codeQuality.getCollectorItemId(), this.getClass().toString(), Reason.CODEQUALITY_TRIGGERED_REASON.getAction());</span>
+<span class="nc" id="L282">    }</span>
+
+
+    /**
+     * Sync up dashboards based on related collector item
+     *
+     * @param relatedCollectorItem
+     * @throws SyncException
+     */
+    public void sync(RelatedCollectorItem relatedCollectorItem,boolean addWidget) throws SyncException{
+<span class="nc" id="L292">        ObjectId left = relatedCollectorItem.getLeft();</span>
+<span class="nc" id="L293">        ObjectId right = relatedCollectorItem.getRight();</span>
+<span class="nc" id="L294">        CollectorItem leftItem = collectorItemRepository.findOne(left);</span>
+<span class="nc" id="L295">        CollectorItem rightItem = collectorItemRepository.findOne(right);</span>
+
+<span class="nc bnc" id="L297" title="All 2 branches missed.">        if (leftItem == null) throw new SyncException(&quot;Missing left collector item&quot;);</span>
+<span class="nc bnc" id="L298" title="All 2 branches missed.">        if (rightItem == null) throw new SyncException(&quot;Missing right collector item&quot;);</span>
+
+<span class="nc" id="L300">        Collector leftCollector = collectorRepository.findOne(leftItem.getCollectorId());</span>
+<span class="nc" id="L301">        Collector rightCollector = collectorRepository.findOne(rightItem.getCollectorId());</span>
+
+<span class="nc bnc" id="L303" title="All 2 branches missed.">        if (leftCollector == null) throw new SyncException(&quot;Missing left collector&quot;);</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">        if (rightCollector == null) throw new SyncException(&quot;Missing right collector&quot;);</span>
+
+<span class="nc" id="L306">        List&lt;Dashboard&gt; dashboardsWithLeft = getDashboardsByCollectorItems(Sets.newHashSet(leftItem), leftCollector.getCollectorType());</span>
+<span class="nc" id="L307">        List&lt;Dashboard&gt; dashboardsWithRight = getDashboardsByCollectorItems(Sets.newHashSet(rightItem), rightCollector.getCollectorType());</span>
+
+<span class="nc" id="L309">        addCollectorItemToDashboard(dashboardsWithLeft, rightItem, rightCollector.getCollectorType(), addWidget);</span>
+<span class="nc" id="L310">        addCollectorItemToDashboard(dashboardsWithRight, leftItem, leftCollector.getCollectorType(), addWidget);</span>
+<span class="nc" id="L311">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AutoDiscoveryRepositoryImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.repository</a> &gt; <span class="el_source">AutoDiscoveryRepositoryImpl.java</span></div><h1>AutoDiscoveryRepositoryImpl.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.repository;
+
+
+import com.capitalone.dashboard.model.AutoDiscovery;
+import com.capitalone.dashboard.model.AutoDiscoveryStatusType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class AutoDiscoveryRepositoryImpl {
+
+    private final MongoTemplate template;
+
+    @Autowired
+<span class="fc" id="L20">    public AutoDiscoveryRepositoryImpl(MongoTemplate template) {</span>
+<span class="fc" id="L21">        this.template = template;</span>
+<span class="fc" id="L22">    }</span>
+
+    public List&lt;AutoDiscovery&gt; findAllAutoDiscoveriesWithStatusNew(){
+<span class="nc" id="L25">        Criteria cd = new Criteria();</span>
+<span class="nc" id="L26">        cd.orOperator(Criteria.where(&quot;codeRepoEntries.status&quot;).is(AutoDiscoveryStatusType.NEW),</span>
+<span class="nc" id="L27">                Criteria.where(&quot;buildEntries.status&quot;).is(AutoDiscoveryStatusType.NEW),</span>
+<span class="nc" id="L28">                Criteria.where(&quot;staticCodeEntries.status&quot;).is(AutoDiscoveryStatusType.NEW),</span>
+<span class="nc" id="L29">                Criteria.where(&quot;libraryScanEntries.status&quot;).is(AutoDiscoveryStatusType.NEW),</span>
+<span class="nc" id="L30">                Criteria.where(&quot;artifactEntries.status&quot;).is(AutoDiscoveryStatusType.NEW),</span>
+<span class="nc" id="L31">                Criteria.where(&quot;securityScanEntries.status&quot;).is(AutoDiscoveryStatusType.NEW),</span>
+<span class="nc" id="L32">                Criteria.where(&quot;functionalTestEntries.status&quot;).is(AutoDiscoveryStatusType.NEW),</span>
+<span class="nc" id="L33">                Criteria.where(&quot;featureEntries.status&quot;).is(AutoDiscoveryStatusType.NEW),</span>
+<span class="nc" id="L34">                Criteria.where(&quot;deploymentEntries.status&quot;).is(AutoDiscoveryStatusType.NEW),</span>
+<span class="nc" id="L35">                Criteria.where(&quot;infraStructureScanEntries.status&quot;).is(AutoDiscoveryStatusType.NEW));</span>
+<span class="nc" id="L36">        List&lt;AutoDiscovery&gt; items =  template.find(new Query(cd), AutoDiscovery.class);</span>
+<span class="nc" id="L37">        return items;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

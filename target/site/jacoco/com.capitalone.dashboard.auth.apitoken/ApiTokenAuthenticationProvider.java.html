@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApiTokenAuthenticationProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.auth.apitoken</a> &gt; <span class="el_source">ApiTokenAuthenticationProvider.java</span></div><h1>ApiTokenAuthenticationProvider.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.auth.apitoken;
+
+import com.capitalone.dashboard.service.ApiTokenService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ApiTokenAuthenticationProvider implements AuthenticationProvider {
+
+	private final ApiTokenService apiTokenService;
+
+	@Autowired
+<span class="nc" id="L16">	public ApiTokenAuthenticationProvider(ApiTokenService apiTokenService) {</span>
+<span class="nc" id="L17">		this.apiTokenService = apiTokenService;</span>
+<span class="nc" id="L18">	}</span>
+
+	@Override
+	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+<span class="nc" id="L22">		return apiTokenService.authenticate(authentication.getName(), (String)authentication.getCredentials());</span>
+	}
+
+	@Override
+	public boolean supports(Class&lt;?&gt; authentication) {
+<span class="nc" id="L27">		return ApiTokenAuthenticationToken.class.isAssignableFrom(authentication);</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

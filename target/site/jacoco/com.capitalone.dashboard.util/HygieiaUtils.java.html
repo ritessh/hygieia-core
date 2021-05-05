@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HygieiaUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.util</a> &gt; <span class="el_source">HygieiaUtils.java</span></div><h1>HygieiaUtils.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.util;
+
+
+import com.capitalone.dashboard.model.CollectorType;
+import com.capitalone.dashboard.model.FeatureFlag;
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jboss.logging.Logger;
+
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.util.Objects;
+import java.util.regex.Pattern;
+
+<span class="nc" id="L17">public class HygieiaUtils {</span>
+<span class="fc" id="L18">	private static final Logger LOGGER = Logger.getLogger(HygieiaUtils.class);</span>
+	public static final String NUMERIC_REGEX= &quot;-?\\d+(\\.\\d+)?&quot;;
+	public static final String SLASH = &quot;/&quot;;
+
+	public static void mergeObjects(Object dest, Object source) throws IllegalAccessException, InvocationTargetException {
+<span class="nc" id="L23">        new BeanUtilsBean() {</span>
+            @Override
+            public void copyProperty(Object dest, String name, Object value)
+                    throws IllegalAccessException, InvocationTargetException {
+<span class="nc bnc" id="L27" title="All 2 branches missed.">                if (value != null) {</span>
+<span class="nc" id="L28">                    super.copyProperty(dest, name, value);</span>
+                }
+<span class="nc" id="L30">            }</span>
+<span class="nc" id="L31">        }.copyProperties(dest, source);</span>
+<span class="nc" id="L32">    }</span>
+    
+    /**
+     * Determines if two urls are equal accounting for load balancers and variations in schemes.
+     * &lt;p&gt;
+     * Two urls are equal if:
+     * &lt;ul&gt;
+     * &lt;li&gt;the root domain is the same&lt;/li&gt;
+     * &lt;li&gt;the path is the same (ignoring .git at the end)&lt;/li&gt;
+     * &lt;li&gt;the query is the same&lt;/li&gt;
+     * &lt;/ul&gt;
+     * &lt;p&gt;
+     * It is assumed that load balancers use a distinct subdomain in a url.
+     * 
+     * @param url1
+     * @param url2
+     * @return		if the two urls are equal ignoring load balancers, url schemes, and path endings.
+     */
+    @SuppressWarnings(&quot;PMD.NPathComplexity&quot;)
+    public static boolean smartUrlEquals(String url1, String url2) {
+<span class="nc" id="L52">    	String u1 = nullSafe(url1);</span>
+<span class="nc" id="L53">    	String u2 = nullSafe(url2);</span>
+    	
+<span class="nc" id="L55">    	String u1Host = null;</span>
+<span class="nc" id="L56">    	String u1Path = null;</span>
+<span class="nc" id="L57">    	String u1Query = null;</span>
+    	
+<span class="nc" id="L59">    	String u2Host = null;</span>
+<span class="nc" id="L60">    	String u2Path = null;</span>
+<span class="nc" id="L61">    	String u2Query = null;</span>
+    	try {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">    		if (u1.length() &gt; 0) {</span>
+    			// use URI since java URL doesn't understand some protocols like ssh
+<span class="nc" id="L65">    			URI uri = URI.create(u1);</span>
+<span class="nc" id="L66">    			u1Host = uri.getHost();</span>
+<span class="nc" id="L67">    			u1Path = uri.getPath();</span>
+<span class="nc" id="L68">    			u1Query = uri.getQuery();</span>
+    		}
+<span class="nc" id="L70">    	} catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L71">    		LOGGER.warn(&quot;Invalid Url &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L72">    	}</span>
+<span class="nc" id="L73">    	u1Host = nullSafe(u1Host);</span>
+<span class="nc" id="L74">    	u1Path = nullSafe(u1Path);</span>
+<span class="nc" id="L75">    	u1Query = nullSafe(u1Query);</span>
+    	
+    	try {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">    		if (u2.length() &gt; 0) {</span>
+<span class="nc" id="L79">    			URI uri = URI.create(u2);</span>
+<span class="nc" id="L80">    			u2Host = uri.getHost();</span>
+<span class="nc" id="L81">    			u2Path = uri.getPath();</span>
+<span class="nc" id="L82">    			u2Query = uri.getQuery();</span>
+    		}
+<span class="nc" id="L84">    	} catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L85">    		LOGGER.warn(&quot;Invalid Url &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L86">    	}</span>
+    	
+<span class="nc" id="L88">    	u2Host = nullSafe(u2Host);</span>
+<span class="nc" id="L89">    	u2Path = nullSafe(u2Path);</span>
+<span class="nc" id="L90">    	u2Query = nullSafe(u2Query);</span>
+    	
+<span class="nc bnc" id="L92" title="All 2 branches missed.">    	if (u1Path.endsWith(&quot;.git&quot;)) {</span>
+<span class="nc" id="L93">    		u1Path = u1Path.substring(0, u1Path.length() - 4);</span>
+    	}
+    	
+<span class="nc bnc" id="L96" title="All 2 branches missed.">    	if (u2Path.endsWith(&quot;.git&quot;)) {</span>
+<span class="nc" id="L97">    		u2Path = u2Path.substring(0, u2Path.length() - 4);</span>
+    	}
+    	
+    	// TODO find a better way to handle load balancers
+<span class="nc" id="L101">    	String u1PrimaryDomain = u1Host;</span>
+<span class="nc" id="L102">    	String u2PrimaryDomain = u2Host;</span>
+    	
+    	int idx;
+<span class="nc" id="L105">    	idx = u1Host.lastIndexOf('.');</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">    	if (idx &gt; 0) {</span>
+<span class="nc" id="L107">    		idx = u1Host.lastIndexOf('.', idx - 1);</span>
+    	}
+<span class="nc bnc" id="L109" title="All 2 branches missed.">    	if (idx &gt;= 0) {</span>
+<span class="nc" id="L110">    		u1PrimaryDomain = u1Host.substring(idx + 1);</span>
+    	}
+    	
+<span class="nc" id="L113">    	idx = u2Host.lastIndexOf('.');</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">    	if (idx &gt; 0) {</span>
+<span class="nc" id="L115">    		idx = u2Host.lastIndexOf('.', idx - 1);</span>
+    	}
+<span class="nc bnc" id="L117" title="All 2 branches missed.">    	if (idx &gt;= 0) {</span>
+<span class="nc" id="L118">    		u2PrimaryDomain = u2Host.substring(idx + 1);</span>
+    	}
+    	
+<span class="nc bnc" id="L121" title="All 2 branches missed.">    	return safeEquals(u1PrimaryDomain, u2PrimaryDomain)</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">    			&amp;&amp; safeEquals(u1Path, u2Path)</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">    			&amp;&amp; safeEquals(u1Query, u2Query);</span>
+    }
+    
+    private static String nullSafe(String str) {
+<span class="nc bnc" id="L127" title="All 2 branches missed.">    	return str == null? &quot;&quot; : str;</span>
+    }
+    
+    private static boolean safeEquals(Object o1, Object o2) {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (o1 == o2) {</span>
+<span class="nc" id="L132">            return true;</span>
+        }
+<span class="nc bnc" id="L134" title="All 4 branches missed.">        if (o1 == null || o2 == null) {</span>
+<span class="nc" id="L135">            return false;</span>
+        }
+<span class="nc" id="L137">        return o1.equals(o2);</span>
+    }
+
+    /*
+    * Returns true if any of the input String parameters is empty.
+    * Else, returns false.
+     */
+    public static boolean checkForEmptyStringValues(String ... values) {
+<span class="fc bfc" id="L145" title="All 2 branches covered.">		for (String value: values) {</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">			if (StringUtils.isEmpty(value)) { return true; }</span>
+		}
+<span class="fc" id="L148">		return false;</span>
+	}
+
+	/*
+	 * If Feature flag is present then do not sync else allow to sync.
+	 */
+	public static boolean allowSync(FeatureFlag featureFlag, CollectorType collectorType){
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">		if(featureFlag == null) return true;</span>
+<span class="fc" id="L156">		String key = StringUtils.lowerCase(collectorType.toString());</span>
+<span class="pc bpc" id="L157" title="2 of 4 branches missed.">		if(MapUtils.isEmpty(featureFlag.getFlags()) || Objects.isNull(featureFlag.getFlags().get(key)) ) return true;</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">		return !BooleanUtils.toBoolean(featureFlag.getFlags().get(StringUtils.lowerCase(collectorType.toString())));</span>
+	}
+
+	/*
+	 * If Feature flag is present then check for the collectortype and see if its enabled for AutoDiscover.
+	 */
+	public static boolean allowAutoDiscover(FeatureFlag featureFlag, CollectorType collectorType) {
+<span class="nc bnc" id="L165" title="All 2 branches missed.">		if(featureFlag == null) return false;</span>
+<span class="nc" id="L166">		String key = StringUtils.lowerCase(collectorType.toString());</span>
+<span class="nc bnc" id="L167" title="All 4 branches missed.">		if(MapUtils.isEmpty(featureFlag.getFlags()) || Objects.isNull(featureFlag.getFlags().get(key))) return false;</span>
+<span class="nc" id="L168">		return BooleanUtils.toBoolean(featureFlag.getFlags().get(StringUtils.lowerCase(collectorType.toString())));</span>
+	}
+
+	/*
+	 * normalize build url by removing build number
+	 * Eg: Input : https://jenkins.com/job/test/job/youseeme/job/Reference/job/master/228/
+	 * Output : https://jenkins.com/job/test/job/youseeme/job/Reference/job/master/
+	 *
+	 */
+	public static String normalizeJobUrl(String buildUrl) {
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">		if (Objects.isNull(buildUrl)) return null;</span>
+<span class="fc" id="L179">		int endIndex = buildUrl.lastIndexOf(SLASH);</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">		if (endIndex != -1) {</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">			if (endIndex == buildUrl.length() - 1) {</span>
+<span class="fc" id="L182">				String trailedUrl = buildUrl.substring(0, endIndex);</span>
+<span class="fc" id="L183">				String last = trailedUrl.substring(trailedUrl.lastIndexOf(SLASH)+1);</span>
+<span class="fc" id="L184">				int tempIndex = trailedUrl.lastIndexOf(SLASH);</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">				if(isNumeric(last)){</span>
+<span class="fc" id="L186">					return trailedUrl.substring(0, tempIndex+1);</span>
+				}else{
+<span class="fc" id="L188">					return buildUrl;</span>
+				}
+			}
+		}
+<span class="fc" id="L192">		return buildUrl;</span>
+	}
+
+
+	public static  boolean isNumeric(String strNum) {
+<span class="fc" id="L197">		Pattern pattern = Pattern.compile(NUMERIC_REGEX);</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">		if (strNum == null) {</span>
+<span class="nc" id="L199">			return false;</span>
+		}
+<span class="fc" id="L201">		return pattern.matcher(strNum).matches();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

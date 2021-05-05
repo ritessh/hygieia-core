@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BuildDataCreateRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.request</a> &gt; <span class="el_source">BuildDataCreateRequest.java</span></div><h1>BuildDataCreateRequest.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.request;
+
+import com.capitalone.dashboard.model.BuildStage;
+import com.capitalone.dashboard.model.RepoBranch;
+import com.capitalone.dashboard.model.SCM;
+
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+
+<span class="nc" id="L13">public class BuildDataCreateRequest extends BaseRequest {</span>
+
+    @NotNull
+    private String number;
+    @NotNull
+    private String buildUrl;
+    @NotNull
+    private String jobName;
+    @NotNull
+    private String buildStatus;
+    @NotNull
+    private long startTime;
+    @NotNull
+    private String jobUrl;
+    @NotNull
+    private String instanceUrl;
+
+    private String niceName;
+
+    private long endTime;
+    private long duration;
+    private String startedBy;
+    private String log;
+<span class="nc" id="L36">    private List&lt;RepoBranch&gt; codeRepos = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L37">    private List&lt;SCM&gt; sourceChangeSet = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L39">    private List&lt;BuildStage&gt; stages = new LinkedList&lt;&gt;();</span>
+
+    public String getNumber() {
+<span class="nc" id="L42">        return number;</span>
+    }
+
+    public void setNumber(String number) {
+<span class="nc" id="L46">        this.number = number;</span>
+<span class="nc" id="L47">    }</span>
+
+    public String getBuildUrl() {
+<span class="nc" id="L50">        return buildUrl;</span>
+    }
+
+    public void setBuildUrl(String buildUrl) {
+<span class="nc" id="L54">        this.buildUrl = buildUrl;</span>
+<span class="nc" id="L55">    }</span>
+
+    public long getStartTime() {
+<span class="nc" id="L58">        return startTime;</span>
+    }
+
+    public void setStartTime(long startTime) {
+<span class="nc" id="L62">        this.startTime = startTime;</span>
+<span class="nc" id="L63">    }</span>
+
+    public long getEndTime() {
+<span class="nc" id="L66">        return endTime;</span>
+    }
+
+    public void setEndTime(long endTime) {
+<span class="nc" id="L70">        this.endTime = endTime;</span>
+<span class="nc" id="L71">    }</span>
+
+    public long getDuration() {
+<span class="nc" id="L74">        return duration;</span>
+    }
+
+    public void setDuration(long duration) {
+<span class="nc" id="L78">        this.duration = duration;</span>
+<span class="nc" id="L79">    }</span>
+
+    public String getBuildStatus() {
+<span class="nc" id="L82">        return buildStatus;</span>
+    }
+
+    public void setBuildStatus(String buildStatus) {
+<span class="nc" id="L86">        this.buildStatus = buildStatus;</span>
+<span class="nc" id="L87">    }</span>
+
+    public String getStartedBy() {
+<span class="nc" id="L90">        return startedBy;</span>
+    }
+
+    public void setStartedBy(String startedBy) {
+<span class="nc" id="L94">        this.startedBy = startedBy;</span>
+<span class="nc" id="L95">    }</span>
+
+    public String getLog() {
+<span class="nc" id="L98">        return log;</span>
+    }
+
+    public void setLog(String log) {
+<span class="nc" id="L102">        this.log = log;</span>
+<span class="nc" id="L103">    }</span>
+
+    public List&lt;SCM&gt; getSourceChangeSet() {
+<span class="nc" id="L106">        return sourceChangeSet;</span>
+    }
+
+    public void setSourceChangeSet(List&lt;SCM&gt; sourceChangeSet) {
+<span class="nc" id="L110">        this.sourceChangeSet = sourceChangeSet;</span>
+<span class="nc" id="L111">    }</span>
+
+
+    public String getJobName() {
+<span class="nc" id="L115">        return jobName;</span>
+    }
+
+    public void setJobName(String jobName) {
+<span class="nc" id="L119">        this.jobName = jobName;</span>
+<span class="nc" id="L120">    }</span>
+
+    public String getJobUrl() {
+<span class="nc" id="L123">        return jobUrl;</span>
+    }
+
+    public void setJobUrl(String jobUrl) {
+<span class="nc" id="L127">        this.jobUrl = jobUrl;</span>
+<span class="nc" id="L128">    }</span>
+
+    public String getInstanceUrl() {
+<span class="nc" id="L131">        return instanceUrl;</span>
+    }
+
+    public void setInstanceUrl(String instanceUrl) {
+<span class="nc" id="L135">        this.instanceUrl = instanceUrl;</span>
+<span class="nc" id="L136">    }</span>
+
+    public String getNiceName() {
+<span class="nc" id="L139">        return niceName;</span>
+    }
+
+    public void setNiceName(String niceName) {
+<span class="nc" id="L143">        this.niceName = niceName;</span>
+<span class="nc" id="L144">    }</span>
+
+    public void setCodeRepos(List&lt;RepoBranch&gt; codeRepos) {
+<span class="nc" id="L147">        this.codeRepos = codeRepos;</span>
+<span class="nc" id="L148">    }</span>
+
+    public List&lt;RepoBranch&gt; getCodeRepos() {
+<span class="nc" id="L151">        return codeRepos;</span>
+    }
+
+    public List&lt;BuildStage&gt; getStages() {
+<span class="nc" id="L155">        return stages;</span>
+    }
+
+    public void setStages(List&lt;BuildStage&gt; stages) {
+<span class="nc" id="L159">        this.stages = stages;</span>
+<span class="nc" id="L160">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Cmdb.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">Cmdb.java</span></div><h1>Cmdb.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Objects;
+
+@Document(collection=&quot;cmdb&quot;)
+<span class="fc" id="L13">public class Cmdb extends BaseModel{</span>
+
+    private ObjectId collectorItemId;
+    private long timestamp;
+
+    /**
+     * configurationItem unique system generated id
+     */
+    @Indexed
+    @NotNull
+    private String configurationItem;
+    /**
+     * configurationItem unique key name
+     */
+    @Indexed
+    private String configurationKey;
+    /**
+     * configurationItemSubType SubType of the CI
+     */
+    private String configurationItemSubType;
+    /**
+     * configurationItemType Type of the CI
+     */
+    private String configurationItemType;
+    /**
+     * configurationItem legacy hpsm name
+     */
+    @Indexed
+    private String legacyServiceManagerName;
+    private String assignmentGroup;
+    /**
+     * A owner assigned to the CI usually the id associated with the owner when provided
+     */
+    private String appServiceOwner;
+    /**
+     * A owner assigned to the CI usually the id associated with the owner when provided
+     */
+    private String businessOwner;
+    /**
+     * A owner assigned to the CI usually the id associated with the owner when provided
+     */
+    private String supportOwner;
+    /**
+     * A owner assigned to the CI usually the id associated with the owner when provided
+     */
+    private String developmentOwner;
+    /**
+     * A owner assigned to the CI usually the fullName of the owner when provided
+     */
+    private String appServiceOwnerUserName;
+    /**
+     * A owner assigned to the CI usually the fullName of the owner when provided
+     */
+    private String businessOwnerUserName;
+    /**
+     * A owner assigned to the CI usually the fullName of the owner when provided
+     */
+    private String supportOwnerUserName;
+    /**
+     * A owner assigned to the CI usually the fullName of the owner when provided
+     */
+    private String developmentOwnerUserName;
+    /**
+     * ownerDept is the upper level department associated with the CI
+     */
+    private String ownerDept;
+    /**
+     * ownerSubDept is used in correlation with the ownerDept as a sub department of the ownerDept
+     */
+    private String ownerSubDept;
+    /**
+     * commonName Human readable value of the configurationItem
+     */
+    @Indexed
+    @NotNull
+    private String commonName;
+    /**
+     * itemType Hygieia specific value for determining if the is an APP or a COMP
+     */
+    private String itemType;
+    /**
+     * validConfigItem used to set the validity of the CI
+     */
+    private boolean validConfigItem;
+    /**
+     * components used as a way to type relationships to a CI
+     */
+    private List&lt;String&gt; components;
+    private List&lt;String&gt; environments;
+
+    public ObjectId getCollectorItemId() {
+<span class="nc" id="L104">        return collectorItemId;</span>
+    }
+
+    public void setCollectorItemId(ObjectId collectorItemId) {
+<span class="nc" id="L108">        this.collectorItemId = collectorItemId;</span>
+<span class="nc" id="L109">    }</span>
+
+    public long getTimestamp() {
+<span class="nc" id="L112">        return timestamp;</span>
+    }
+
+    public void setTimestamp(long timestamp) {
+<span class="nc" id="L116">        this.timestamp = timestamp;</span>
+<span class="nc" id="L117">    }</span>
+
+    public void setTimestamp(String timestamp) {
+<span class="nc" id="L120">        this.timestamp = Long.parseLong(timestamp);</span>
+<span class="nc" id="L121">    }</span>
+
+    public String getConfigurationItem() {
+<span class="fc" id="L124">        return configurationItem;</span>
+    }
+
+    public void setConfigurationItem(String configurationItem) {
+<span class="fc" id="L128">        this.configurationItem = configurationItem;</span>
+<span class="fc" id="L129">    }</span>
+
+    public String getConfigurationKey() {
+<span class="nc" id="L132">        return configurationKey;</span>
+    }
+
+    public void setConfigurationKey(String configurationKey) {
+<span class="nc" id="L136">        this.configurationKey = configurationKey;</span>
+<span class="nc" id="L137">    }</span>
+
+    public String getConfigurationItemSubType() {
+<span class="nc" id="L140">        return configurationItemSubType;</span>
+    }
+
+    public void setConfigurationItemSubType(String configurationItemSubType) {
+<span class="nc" id="L144">        this.configurationItemSubType = configurationItemSubType;</span>
+<span class="nc" id="L145">    }</span>
+
+    public String getConfigurationItemType() {
+<span class="nc" id="L148">        return configurationItemType;</span>
+    }
+
+    public void setConfigurationItemType(String configurationItemType) {
+<span class="nc" id="L152">        this.configurationItemType = configurationItemType;</span>
+<span class="nc" id="L153">    }</span>
+
+    public String getAssignmentGroup() {
+<span class="nc" id="L156">        return assignmentGroup;</span>
+    }
+
+    public void setAssignmentGroup(String assignmentGroup) {
+<span class="nc" id="L160">        this.assignmentGroup = assignmentGroup;</span>
+<span class="nc" id="L161">    }</span>
+
+    public String getAppServiceOwner() {
+<span class="nc" id="L164">        return appServiceOwner;</span>
+    }
+
+    public void setAppServiceOwner(String appServiceOwner) {
+<span class="nc" id="L168">        this.appServiceOwner = appServiceOwner;</span>
+<span class="nc" id="L169">    }</span>
+
+    public String getBusinessOwner() {
+<span class="nc" id="L172">        return businessOwner;</span>
+    }
+
+    public void setBusinessOwner(String businessOwner) {
+<span class="nc" id="L176">        this.businessOwner = businessOwner;</span>
+<span class="nc" id="L177">    }</span>
+
+    public String getSupportOwner() {
+<span class="nc" id="L180">        return supportOwner;</span>
+    }
+
+    public void setSupportOwner(String supportOwner) {
+<span class="nc" id="L184">        this.supportOwner = supportOwner;</span>
+<span class="nc" id="L185">    }</span>
+
+    public String getDevelopmentOwner() {
+<span class="nc" id="L188">        return developmentOwner;</span>
+    }
+
+    public void setDevelopmentOwner(String developmentOwner) {
+<span class="nc" id="L192">        this.developmentOwner = developmentOwner;</span>
+<span class="nc" id="L193">    }</span>
+
+    public String getOwnerDept() {
+<span class="nc" id="L196">        return ownerDept;</span>
+    }
+
+    public void setOwnerDept(String ownerDept) {
+<span class="nc" id="L200">        this.ownerDept = ownerDept;</span>
+<span class="nc" id="L201">    }</span>
+
+    public String getCommonName() {
+<span class="nc" id="L204">        return commonName;</span>
+    }
+
+    public void setCommonName(String commonName) {
+<span class="nc" id="L208">        this.commonName = commonName;</span>
+<span class="nc" id="L209">    }</span>
+
+    public String getItemType() {
+<span class="nc" id="L212">        return itemType;</span>
+    }
+
+    public void setItemType(String itemType) {
+<span class="nc" id="L216">        this.itemType = itemType;</span>
+<span class="nc" id="L217">    }</span>
+
+    public String getAppServiceOwnerUserName() {
+<span class="nc" id="L220">        return appServiceOwnerUserName;</span>
+    }
+
+    public void setAppServiceOwnerUserName(String appServiceOwnerUserName) {
+<span class="nc" id="L224">        this.appServiceOwnerUserName = appServiceOwnerUserName;</span>
+<span class="nc" id="L225">    }</span>
+
+    public String getBusinessOwnerUserName() {
+<span class="nc" id="L228">        return businessOwnerUserName;</span>
+    }
+
+    public void setBusinessOwnerUserName(String businessOwnerUserName) {
+<span class="nc" id="L232">        this.businessOwnerUserName = businessOwnerUserName;</span>
+<span class="nc" id="L233">    }</span>
+
+    public String getSupportOwnerUserName() {
+<span class="nc" id="L236">        return supportOwnerUserName;</span>
+    }
+
+    public void setSupportOwnerUserName(String supportOwnerUserName) {
+<span class="nc" id="L240">        this.supportOwnerUserName = supportOwnerUserName;</span>
+<span class="nc" id="L241">    }</span>
+
+    public String getDevelopmentOwnerUserName() {
+<span class="nc" id="L244">        return developmentOwnerUserName;</span>
+    }
+
+    public void setDevelopmentOwnerUserName(String developmentOwnerUserName) {
+<span class="nc" id="L248">        this.developmentOwnerUserName = developmentOwnerUserName;</span>
+<span class="nc" id="L249">    }</span>
+
+
+    public boolean isValidConfigItem() {
+<span class="nc" id="L253">        return validConfigItem;</span>
+    }
+
+    public void setValidConfigItem(boolean validConfigItem) {
+<span class="nc" id="L257">        this.validConfigItem = validConfigItem;</span>
+<span class="nc" id="L258">    }</span>
+
+<span class="nc" id="L260">    public void setComponents(List&lt;String&gt; components) { this.components = components; }</span>
+
+<span class="nc" id="L262">    public List&lt;String&gt; getComponents(){ return components; }</span>
+
+    public List&lt;String&gt; getEnvironments() {
+<span class="nc" id="L265">        return environments;</span>
+    }
+
+    public void setEnvironments(List&lt;String&gt; environments) {
+<span class="nc" id="L269">        this.environments = environments;</span>
+<span class="nc" id="L270">    }</span>
+
+    public String getOwnerSubDept() {
+<span class="nc" id="L273">        return ownerSubDept;</span>
+    }
+
+    public void setOwnerSubDept(String ownerSubDept) {
+<span class="nc" id="L277">        this.ownerSubDept = ownerSubDept;</span>
+<span class="nc" id="L278">    }</span>
+
+    public String getLegacyServiceManagerName() {
+<span class="nc" id="L281">        return legacyServiceManagerName;</span>
+    }
+
+    public void setLegacyServiceManagerName(String legacyServiceManagerName) {
+<span class="nc" id="L285">        this.legacyServiceManagerName = legacyServiceManagerName;</span>
+<span class="nc" id="L286">    }</span>
+
+    @Override
+    public int hashCode()
+    {
+<span class="nc" id="L291">        return Objects.hash(</span>
+                this.configurationItem,
+                this.configurationKey,
+                this.assignmentGroup,
+                this.appServiceOwner,
+                this.businessOwner,
+                this.supportOwner,
+                this.developmentOwner,
+                this.ownerDept,
+                this.ownerSubDept,
+                this.itemType,
+                this.configurationItemSubType,
+                this.configurationItemType,
+                this.legacyServiceManagerName,
+                this.commonName);
+    }
+    @Override
+    public boolean equals(Object obj)
+    {
+<span class="nc bnc" id="L310" title="All 2 branches missed.">        if (obj == null) {</span>
+<span class="nc" id="L311">            return false;</span>
+        }
+<span class="nc bnc" id="L313" title="All 2 branches missed.">        if (!(obj instanceof Cmdb)) {</span>
+<span class="nc" id="L314">            return false;</span>
+        }
+<span class="nc" id="L316">        final Cmdb other = (Cmdb) obj;</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">        return    Objects.equals(this.configurationItem, other.configurationItem)</span>
+<span class="nc bnc" id="L318" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.configurationKey, other.configurationKey)</span>
+<span class="nc bnc" id="L319" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.itemType, other.itemType)</span>
+<span class="nc bnc" id="L320" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.assignmentGroup, other.assignmentGroup)</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.appServiceOwner, other.appServiceOwner)</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.businessOwner, other.businessOwner)</span>
+<span class="nc bnc" id="L323" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.supportOwner, other.supportOwner)</span>
+<span class="nc bnc" id="L324" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.developmentOwner, other.developmentOwner)</span>
+<span class="nc bnc" id="L325" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.ownerDept, other.ownerDept)</span>
+<span class="nc bnc" id="L326" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.configurationItemSubType, other.configurationItemSubType)</span>
+<span class="nc bnc" id="L327" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.configurationItemType, other.configurationItemType)</span>
+<span class="nc bnc" id="L328" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.legacyServiceManagerName, other.legacyServiceManagerName)</span>
+<span class="nc bnc" id="L329" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.validConfigItem, other.validConfigItem)</span>
+<span class="nc bnc" id="L330" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.ownerSubDept, other.ownerSubDept)</span>
+<span class="nc bnc" id="L331" title="All 2 branches missed.">                &amp;&amp; Objects.equals(this.commonName, other.commonName);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

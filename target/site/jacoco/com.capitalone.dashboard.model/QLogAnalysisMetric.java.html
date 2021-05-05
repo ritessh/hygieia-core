@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QLogAnalysisMetric.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">QLogAnalysisMetric.java</span></div><h1>QLogAnalysisMetric.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
+import com.querydsl.core.types.PathMetadata;
+import javax.annotation.Generated;
+import com.querydsl.core.types.Path;
+
+
+/**
+ * QLogAnalysisMetric is a Querydsl query type for LogAnalysisMetric
+ */
+@Generated(&quot;com.querydsl.codegen.EmbeddableSerializer&quot;)
+public class QLogAnalysisMetric extends BeanPath&lt;LogAnalysisMetric&gt; {
+
+    private static final long serialVersionUID = -856717202L;
+
+<span class="nc" id="L20">    public static final QLogAnalysisMetric logAnalysisMetric = new QLogAnalysisMetric(&quot;logAnalysisMetric&quot;);</span>
+
+<span class="nc" id="L22">    public final StringPath name = createString(&quot;name&quot;);</span>
+
+<span class="nc" id="L24">    public final NumberPath&lt;Integer&gt; value = createNumber(&quot;value&quot;, Integer.class);</span>
+
+    public QLogAnalysisMetric(String variable) {
+<span class="nc" id="L27">        super(LogAnalysisMetric.class, forVariable(variable));</span>
+<span class="nc" id="L28">    }</span>
+
+    public QLogAnalysisMetric(Path&lt;? extends LogAnalysisMetric&gt; path) {
+<span class="nc" id="L31">        super(path.getType(), path.getMetadata());</span>
+<span class="nc" id="L32">    }</span>
+
+    public QLogAnalysisMetric(PathMetadata metadata) {
+<span class="nc" id="L35">        super(LogAnalysisMetric.class, metadata);</span>
+<span class="nc" id="L36">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

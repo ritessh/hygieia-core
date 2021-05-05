@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApiTokenRequestFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.auth.apitoken</a> &gt; <span class="el_source">ApiTokenRequestFilter.java</span></div><h1>ApiTokenRequestFilter.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.auth.apitoken;
+
+import com.capitalone.dashboard.auth.AuthenticationResultHandler;
+import com.capitalone.dashboard.model.AuthType;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+public class ApiTokenRequestFilter extends AbstractAuthenticationProcessingFilter {
+
+  public ApiTokenRequestFilter() {
+<span class="nc" id="L30">    super(new AntPathRequestMatcher(&quot;/**&quot;, &quot;POST&quot;));</span>
+<span class="nc" id="L31">  }</span>
+
+  public ApiTokenRequestFilter(String path, AuthenticationManager authManager, AuthenticationResultHandler authenticationResultHandler) {
+<span class="nc" id="L34">    this();</span>
+<span class="nc" id="L35">    setAuthenticationManager(authManager);</span>
+<span class="nc" id="L36">    setAuthenticationSuccessHandler(authenticationResultHandler);</span>
+<span class="nc" id="L37">    setFilterProcessesUrl(path);</span>
+<span class="nc" id="L38">  }</span>
+
+  @Override
+  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+
+<span class="nc" id="L43">    HttpServletRequest request = (HttpServletRequest) req;</span>
+<span class="nc" id="L44">    HttpServletResponse response = (HttpServletResponse) res;</span>
+
+<span class="nc" id="L46">    String apiUser = request.getHeader(&quot;apiUser&quot;);</span>
+<span class="nc" id="L47">    String authHeader = request.getHeader(&quot;Authorization&quot;);</span>
+
+<span class="nc bnc" id="L49" title="All 4 branches missed.">    if (StringUtils.isEmpty(apiUser) || StringUtils.isEmpty(authHeader)) {</span>
+<span class="nc" id="L50">      chain.doFilter(request, response);</span>
+    } else {
+<span class="nc" id="L52">      super.doFilter(req, res, chain);</span>
+    }
+<span class="nc" id="L54">  }</span>
+
+  @Override
+  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+
+<span class="nc" id="L59">    String apiUser = request.getHeader(&quot;apiUser&quot;);</span>
+<span class="nc" id="L60">    String apikey = &quot;&quot;;</span>
+
+<span class="nc" id="L62">    String authHeader = request.getHeader(&quot;Authorization&quot;);</span>
+
+<span class="nc" id="L64">    String encodedAuthStr = authHeader.substring(authHeader.indexOf(&quot; &quot;));</span>
+<span class="nc" id="L65">    byte[] encodedAuthbytes = encodedAuthStr.getBytes(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L66">    String decodedAuthStr = new String(Base64.decodeBase64(encodedAuthbytes), StandardCharsets.UTF_8);</span>
+<span class="nc" id="L67">    String decodedAuthJson = decodedAuthStr.substring(decodedAuthStr.indexOf(&quot;:&quot;) + 1);</span>
+
+<span class="nc" id="L69">    JSONParser jsonParser = new JSONParser();</span>
+    try {
+<span class="nc" id="L71">      JSONObject jsonObject = (JSONObject) jsonParser.parse(decodedAuthJson);</span>
+<span class="nc" id="L72">      apikey = (String) jsonObject.get(&quot;apiKey&quot;);</span>
+<span class="nc" id="L73">    } catch (ParseException e) {</span>
+<span class="nc" id="L74">      throw new AuthenticationServiceException(&quot;Unable to parse apikey token.&quot;);</span>
+<span class="nc" id="L75">    }</span>
+
+<span class="nc" id="L77">    ApiTokenAuthenticationToken authRequest = new ApiTokenAuthenticationToken(apiUser, apikey);</span>
+
+<span class="nc" id="L79">    authRequest.setDetails(AuthType.APIKEY);</span>
+
+<span class="nc" id="L81">    Authentication authentication = this.getAuthenticationManager().authenticate(authRequest);</span>
+
+<span class="nc" id="L83">    SecurityContextHolder.getContext().setAuthentication(authentication);</span>
+
+<span class="nc" id="L85">    return authentication;</span>
+  }
+
+  @Override
+  protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                          Authentication authResult) throws IOException, ServletException {
+<span class="nc" id="L91">    SecurityContextHolder.getContext().setAuthentication(authResult);</span>
+<span class="nc" id="L92">    chain.doFilter(request, response);</span>
+<span class="nc" id="L93">  }</span>
+
+  @Override
+  protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                            AuthenticationException failed) throws IOException, ServletException {
+
+<span class="nc" id="L99">    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, &quot;ApiToken Authentication Failed&quot;);</span>
+<span class="nc" id="L100">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

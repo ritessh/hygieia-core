@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApiTokenServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.service</a> &gt; <span class="el_source">ApiTokenServiceImpl.java</span></div><h1>ApiTokenServiceImpl.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.service;
+
+import com.capitalone.dashboard.misc.HygieiaException;
+import com.capitalone.dashboard.model.ApiToken;
+import com.capitalone.dashboard.model.UserInfo;
+import com.capitalone.dashboard.model.UserRole;
+import com.capitalone.dashboard.repository.ApiTokenRepository;
+import com.capitalone.dashboard.repository.UserInfoRepository;
+import com.capitalone.dashboard.util.Encryption;
+import com.capitalone.dashboard.util.EncryptionException;
+import com.capitalone.dashboard.util.UnsafeDeleteException;
+import com.google.common.collect.Sets;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+
+@Component
+public class ApiTokenServiceImpl implements ApiTokenService {
+
+<span class="nc" id="L34">    private static final Logger LOGGER = Logger.getLogger(ApiTokenServiceImpl.class);</span>
+
+    private ApiTokenRepository apiTokenRepository;
+
+    private UserInfoRepository userInfoRepository;
+
+    @Autowired
+<span class="nc" id="L41">    public ApiTokenServiceImpl(ApiTokenRepository apiTokenRepository,UserInfoRepository userInfoRepository) {</span>
+<span class="nc" id="L42">        this.apiTokenRepository = apiTokenRepository;</span>
+<span class="nc" id="L43">        this.userInfoRepository = userInfoRepository;</span>
+<span class="nc" id="L44">    }</span>
+
+    public Collection&lt;ApiToken&gt; getApiTokens() {
+<span class="nc" id="L47">        return Sets.newHashSet(apiTokenRepository.findAll());</span>
+    }
+
+    @Override
+    public String getApiToken(String apiUser, Long expirationDt) throws EncryptionException, HygieiaException {
+<span class="nc" id="L52">        ApiToken apiToken = apiTokenRepository.findByApiUserAndExpirationDt(apiUser, expirationDt);</span>
+<span class="nc" id="L53">        String apiKey = &quot;&quot;;</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if(apiToken == null) {</span>
+<span class="nc" id="L55">            apiKey = Encryption.getStringKey();</span>
+<span class="nc" id="L56">            apiToken = new ApiToken(apiUser, apiKey, expirationDt);</span>
+<span class="nc" id="L57">            apiTokenRepository.save(apiToken);</span>
+        } else {
+<span class="nc" id="L59">            SimpleDateFormat sdf = new SimpleDateFormat(&quot;MM/dd/yyyy HH:mm:ss&quot;);</span>
+<span class="nc" id="L60">            throw new HygieiaException(&quot;Token already exists for &quot; + apiUser</span>
+<span class="nc" id="L61">                    + &quot; expiring &quot; + sdf.format(new Date(apiToken.getExpirationDt())),</span>
+                    HygieiaException.DUPLICATE_DATA);
+        }
+<span class="nc" id="L64">        return apiKey;</span>
+    }
+
+    @Override
+    public org.springframework.security.core.Authentication authenticate(String username, String password) {
+<span class="nc" id="L69">        List&lt;ApiToken&gt; apiTokens = apiTokenRepository.findByApiUser(username);</span>
+<span class="nc" id="L70">        UserInfo user = userInfoRepository.findByUsername(username);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        for(ApiToken apiToken : apiTokens) {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (username.equalsIgnoreCase(apiToken.getApiUser())) {</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">                if (apiToken.checkApiKey(password)) {</span>
+<span class="nc" id="L74">                    Date sysdate = Calendar.getInstance().getTime();</span>
+<span class="nc" id="L75">                    Date expDt = new Date(apiToken.getExpirationDt());</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">                    if (compareDates(sysdate, expDt) &lt;= 0) {</span>
+
+<span class="nc" id="L78">                        Collection&lt;UserRole&gt; roles = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L79">                        roles.add(UserRole.ROLE_API);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                        if(isUserAdmin(user))</span>
+<span class="nc" id="L81">                            roles.add(UserRole.ROLE_ADMIN);</span>
+<span class="nc" id="L82">                        return new UsernamePasswordAuthenticationToken(username,</span>
+<span class="nc" id="L83">                                password, createAuthorities(roles));</span>
+                    }
+                }
+            }
+<span class="nc" id="L87">        }</span>
+
+<span class="nc" id="L89">        throw new BadCredentialsException(&quot;Login Failed: Invalid credentials for user &quot; + username);</span>
+    }
+
+    private boolean isUserAdmin(UserInfo user) {
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if(user==null) return false;</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if(CollectionUtils.isEmpty(user.getAuthorities())) return false;</span>
+<span class="nc" id="L95">        return user.getAuthorities().stream().anyMatch(userRole -&gt; userRole.equals(UserRole.ROLE_ADMIN));</span>
+    }
+
+    @Override
+    public void deleteToken(ObjectId id) {
+<span class="nc" id="L100">        ApiToken apiToken = apiTokenRepository.findOne(id);</span>
+
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        if(apiToken == null) {</span>
+<span class="nc" id="L103">            throw new UnsafeDeleteException(&quot;Cannot delete token &quot;);</span>
+        }else{
+<span class="nc" id="L105">            apiTokenRepository .delete(apiToken);</span>
+        }
+<span class="nc" id="L107">    }</span>
+    @Override
+    public String updateToken(Long expirationDt, ObjectId id) throws HygieiaException{
+<span class="nc" id="L110">        ApiToken apiToken = apiTokenRepository.findOne(id);</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if(apiToken == null) {</span>
+<span class="nc" id="L112">            throw new HygieiaException(&quot;Cannot find token &quot;, HygieiaException.BAD_DATA);</span>
+        }else{
+
+<span class="nc" id="L115">            apiToken.setExpirationDt(expirationDt);</span>
+<span class="nc" id="L116">            apiTokenRepository.save(apiToken);</span>
+        }
+
+<span class="nc" id="L119">        return apiToken.getId().toString();</span>
+    }
+    private Collection&lt;? extends GrantedAuthority&gt; createAuthorities(Collection&lt;UserRole&gt; authorities) {
+<span class="nc" id="L122">        Collection&lt;GrantedAuthority&gt; grantedAuthorities = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L123">        authorities.forEach(authority -&gt; grantedAuthorities.add(new SimpleGrantedAuthority(authority.name())));</span>
+<span class="nc" id="L124">        return grantedAuthorities;</span>
+    }
+
+    /**
+     *
+     * @param argA firstDate
+     * @param argB secondDate
+     * @return 0 = equal, -1 = firstDate is before secondDate, 1 = firstDate is after secondDate
+     */
+    private static int compareDates(Date argA, Date argB) {
+
+<span class="nc bnc" id="L135" title="All 4 branches missed.">        if (argA == null || argB == null) {</span>
+<span class="nc" id="L136">            return -1;</span>
+        }
+
+<span class="nc" id="L139">        int retVal = -1;</span>
+        try {
+<span class="nc" id="L141">            retVal = argA.compareTo(argB);</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (retVal == 0) { //if dates are equal.</span>
+<span class="nc" id="L143">                return 0;</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">            } else if (retVal &lt; 0) { //if argA is before argument.</span>
+<span class="nc" id="L145">                return -1;</span>
+            } else { //if argA is after argument.
+<span class="nc" id="L147">                return 1;</span>
+            }
+<span class="nc" id="L149">        } catch (Exception e) {</span>
+<span class="nc" id="L150">            LOGGER.warn(&quot;Unable to compare dates&quot;, e);</span>
+        }
+
+<span class="nc" id="L153">        return retVal;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

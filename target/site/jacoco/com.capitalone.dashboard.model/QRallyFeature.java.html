@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QRallyFeature.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">QRallyFeature.java</span></div><h1>QRallyFeature.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
+import com.querydsl.core.types.PathMetadata;
+import javax.annotation.Generated;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
+
+
+/**
+ * QRallyFeature is a Querydsl query type for RallyFeature
+ */
+@Generated(&quot;com.querydsl.codegen.EntitySerializer&quot;)
+public class QRallyFeature extends EntityPathBase&lt;RallyFeature&gt; {
+
+    private static final long serialVersionUID = -152022514L;
+
+<span class="fc" id="L21">    private static final PathInits INITS = PathInits.DIRECT2;</span>
+
+<span class="fc" id="L23">    public static final QRallyFeature rallyFeature = new QRallyFeature(&quot;rallyFeature&quot;);</span>
+
+    public final QBaseModel _super;
+
+    //inherited
+    public final StringPath clientReference;
+
+    public final org.bson.types.QObjectId collectorItemId;
+
+<span class="fc" id="L32">    public final SimplePath&lt;Object&gt; endDate = createSimple(&quot;endDate&quot;, Object.class);</span>
+
+    // inherited
+    public final org.bson.types.QObjectId id;
+
+<span class="fc" id="L37">    public final StringPath instanceUrl = createString(&quot;instanceUrl&quot;);</span>
+
+<span class="fc" id="L39">    public final StringPath iterationId = createString(&quot;iterationId&quot;);</span>
+
+<span class="fc" id="L41">    public final StringPath iterationName = createString(&quot;iterationName&quot;);</span>
+
+<span class="fc" id="L43">    public final StringPath lastExecuted = createString(&quot;lastExecuted&quot;);</span>
+
+<span class="fc" id="L45">    public final NumberPath&lt;Long&gt; lastUpdated = createNumber(&quot;lastUpdated&quot;, Long.class);</span>
+
+<span class="fc" id="L47">    public final MapPath&lt;String, Object, SimplePath&lt;Object&gt;&gt; options = this.&lt;String, Object, SimplePath&lt;Object&gt;&gt;createMap(&quot;options&quot;, String.class, Object.class, SimplePath.class);</span>
+
+<span class="fc" id="L49">    public final StringPath planEstimate = createString(&quot;planEstimate&quot;);</span>
+
+<span class="fc" id="L51">    public final StringPath plannedVelocity = createString(&quot;plannedVelocity&quot;);</span>
+
+<span class="fc" id="L53">    public final StringPath projectId = createString(&quot;projectId&quot;);</span>
+
+<span class="fc" id="L55">    public final StringPath projectName = createString(&quot;projectName&quot;);</span>
+
+<span class="fc" id="L57">    public final NumberPath&lt;Integer&gt; remainingDays = createNumber(&quot;remainingDays&quot;, Integer.class);</span>
+
+<span class="fc" id="L59">    public final SimplePath&lt;Object&gt; startDate = createSimple(&quot;startDate&quot;, Object.class);</span>
+
+<span class="fc" id="L61">    public final StringPath state = createString(&quot;state&quot;);</span>
+
+<span class="fc" id="L63">    public final SetPath&lt;RallyStoryStages, QRallyStoryStages&gt; storyStages = this.&lt;RallyStoryStages, QRallyStoryStages&gt;createSet(&quot;storyStages&quot;, RallyStoryStages.class, QRallyStoryStages.class, PathInits.DIRECT2);</span>
+
+<span class="fc" id="L65">    public final StringPath taskActualTotal = createString(&quot;taskActualTotal&quot;);</span>
+
+<span class="fc" id="L67">    public final StringPath taskEstimateTotal = createString(&quot;taskEstimateTotal&quot;);</span>
+
+<span class="fc" id="L69">    public final StringPath taskRemainingTotal = createString(&quot;taskRemainingTotal&quot;);</span>
+
+<span class="fc" id="L71">    public final NumberPath&lt;Long&gt; timestamp = createNumber(&quot;timestamp&quot;, Long.class);</span>
+
+    //inherited
+    public final DateTimePath&lt;java.util.Date&gt; upsertTime;
+
+<span class="fc" id="L76">    public final StringPath userListCount = createString(&quot;userListCount&quot;);</span>
+
+    public QRallyFeature(String variable) {
+<span class="fc" id="L79">        this(RallyFeature.class, forVariable(variable), INITS);</span>
+<span class="fc" id="L80">    }</span>
+
+    public QRallyFeature(Path&lt;? extends RallyFeature&gt; path) {
+<span class="nc" id="L83">        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));</span>
+<span class="nc" id="L84">    }</span>
+
+    public QRallyFeature(PathMetadata metadata) {
+<span class="nc" id="L87">        this(metadata, PathInits.getFor(metadata, INITS));</span>
+<span class="nc" id="L88">    }</span>
+
+    public QRallyFeature(PathMetadata metadata, PathInits inits) {
+<span class="nc" id="L91">        this(RallyFeature.class, metadata, inits);</span>
+<span class="nc" id="L92">    }</span>
+
+    public QRallyFeature(Class&lt;? extends RallyFeature&gt; type, PathMetadata metadata, PathInits inits) {
+<span class="fc" id="L95">        super(type, metadata, inits);</span>
+<span class="fc" id="L96">        this._super = new QBaseModel(type, metadata, inits);</span>
+<span class="fc" id="L97">        this.clientReference = _super.clientReference;</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        this.collectorItemId = inits.isInitialized(&quot;collectorItemId&quot;) ? new org.bson.types.QObjectId(forProperty(&quot;collectorItemId&quot;)) : null;</span>
+<span class="fc" id="L99">        this.id = _super.id;</span>
+<span class="fc" id="L100">        this.upsertTime = _super.upsertTime;</span>
+<span class="fc" id="L101">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

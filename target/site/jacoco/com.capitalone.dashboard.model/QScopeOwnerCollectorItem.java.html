@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QScopeOwnerCollectorItem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">QScopeOwnerCollectorItem.java</span></div><h1>QScopeOwnerCollectorItem.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
+import com.querydsl.core.types.PathMetadata;
+import javax.annotation.Generated;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
+
+
+/**
+ * QScopeOwnerCollectorItem is a Querydsl query type for ScopeOwnerCollectorItem
+ */
+@Generated(&quot;com.querydsl.codegen.EntitySerializer&quot;)
+public class QScopeOwnerCollectorItem extends EntityPathBase&lt;ScopeOwnerCollectorItem&gt; {
+
+    private static final long serialVersionUID = -1718020961L;
+
+<span class="nc" id="L21">    private static final PathInits INITS = PathInits.DIRECT2;</span>
+
+<span class="nc" id="L23">    public static final QScopeOwnerCollectorItem scopeOwnerCollectorItem = new QScopeOwnerCollectorItem(&quot;scopeOwnerCollectorItem&quot;);</span>
+
+    public final QCollectorItem _super;
+
+<span class="nc" id="L27">    public final StringPath assetState = createString(&quot;assetState&quot;);</span>
+
+<span class="nc" id="L29">    public final StringPath changeDate = createString(&quot;changeDate&quot;);</span>
+
+    //inherited
+    public final StringPath clientReference;
+
+    // inherited
+    public final QCollector collector;
+
+    // inherited
+    public final org.bson.types.QObjectId collectorId;
+
+    //inherited
+    public final StringPath description;
+
+    //inherited
+    public final BooleanPath enabled;
+
+    //inherited
+    public final StringPath environment;
+
+    //inherited
+    public final NumberPath&lt;Integer&gt; errorCount;
+
+    //inherited
+    public final ListPath&lt;CollectionError, QCollectionError&gt; errors;
+
+    // inherited
+    public final org.bson.types.QObjectId id;
+
+<span class="nc" id="L58">    public final StringPath isDeleted = createString(&quot;isDeleted&quot;);</span>
+
+    //inherited
+    public final NumberPath&lt;Long&gt; lastUpdated;
+
+<span class="nc" id="L63">    public final StringPath name = createString(&quot;name&quot;);</span>
+
+    //inherited
+    public final StringPath niceName;
+
+    //inherited
+    public final MapPath&lt;String, Object, SimplePath&lt;Object&gt;&gt; options;
+
+<span class="nc" id="L71">    public final StringPath projectId = createString(&quot;projectId&quot;);</span>
+
+    //inherited
+    public final BooleanPath pushed;
+
+    //inherited
+    public final StringPath refreshLink;
+
+<span class="nc" id="L79">    public final StringPath teamId = createString(&quot;teamId&quot;);</span>
+
+    //inherited
+    public final DateTimePath&lt;java.util.Date&gt; upsertTime;
+
+    public QScopeOwnerCollectorItem(String variable) {
+<span class="nc" id="L85">        this(ScopeOwnerCollectorItem.class, forVariable(variable), INITS);</span>
+<span class="nc" id="L86">    }</span>
+
+    public QScopeOwnerCollectorItem(Path&lt;? extends ScopeOwnerCollectorItem&gt; path) {
+<span class="nc" id="L89">        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));</span>
+<span class="nc" id="L90">    }</span>
+
+    public QScopeOwnerCollectorItem(PathMetadata metadata) {
+<span class="nc" id="L93">        this(metadata, PathInits.getFor(metadata, INITS));</span>
+<span class="nc" id="L94">    }</span>
+
+    public QScopeOwnerCollectorItem(PathMetadata metadata, PathInits inits) {
+<span class="nc" id="L97">        this(ScopeOwnerCollectorItem.class, metadata, inits);</span>
+<span class="nc" id="L98">    }</span>
+
+    public QScopeOwnerCollectorItem(Class&lt;? extends ScopeOwnerCollectorItem&gt; type, PathMetadata metadata, PathInits inits) {
+<span class="nc" id="L101">        super(type, metadata, inits);</span>
+<span class="nc" id="L102">        this._super = new QCollectorItem(type, metadata, inits);</span>
+<span class="nc" id="L103">        this.clientReference = _super.clientReference;</span>
+<span class="nc" id="L104">        this.collector = _super.collector;</span>
+<span class="nc" id="L105">        this.collectorId = _super.collectorId;</span>
+<span class="nc" id="L106">        this.description = _super.description;</span>
+<span class="nc" id="L107">        this.enabled = _super.enabled;</span>
+<span class="nc" id="L108">        this.environment = _super.environment;</span>
+<span class="nc" id="L109">        this.errorCount = _super.errorCount;</span>
+<span class="nc" id="L110">        this.errors = _super.errors;</span>
+<span class="nc" id="L111">        this.id = _super.id;</span>
+<span class="nc" id="L112">        this.lastUpdated = _super.lastUpdated;</span>
+<span class="nc" id="L113">        this.niceName = _super.niceName;</span>
+<span class="nc" id="L114">        this.options = _super.options;</span>
+<span class="nc" id="L115">        this.pushed = _super.pushed;</span>
+<span class="nc" id="L116">        this.refreshLink = _super.refreshLink;</span>
+<span class="nc" id="L117">        this.upsertTime = _super.upsertTime;</span>
+<span class="nc" id="L118">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

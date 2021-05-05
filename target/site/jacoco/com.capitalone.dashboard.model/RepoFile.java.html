@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RepoFile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">RepoFile.java</span></div><h1>RepoFile.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+public class RepoFile {
+    private String filename;
+    private String patch;
+    private String sha;
+    private String status;
+    private int additions;
+    private int deletions;
+    private int changes;
+    private String blob_url;
+    private String raw_url;
+    private String contents_url;
+
+<span class="nc" id="L15">    public RepoFile () {</span>
+
+<span class="nc" id="L17">    }</span>
+
+    public RepoFile (String filename, String patch, String sha, String status, int additions, int deletions, int changes,
+<span class="nc" id="L20">                    String blob_url, String raw_url, String contents_url) {</span>
+<span class="nc" id="L21">        this.filename = filename;</span>
+<span class="nc" id="L22">        this. patch = patch;</span>
+<span class="nc" id="L23">        this.sha = sha;</span>
+<span class="nc" id="L24">        this.status = status;</span>
+<span class="nc" id="L25">        this.additions = additions;</span>
+<span class="nc" id="L26">        this.deletions = deletions;</span>
+<span class="nc" id="L27">        this.changes = changes;</span>
+<span class="nc" id="L28">        this.blob_url = blob_url;</span>
+<span class="nc" id="L29">        this.raw_url = raw_url;</span>
+<span class="nc" id="L30">        this.contents_url = contents_url;</span>
+<span class="nc" id="L31">    }</span>
+
+    public String getFilename() {
+<span class="nc" id="L34">        return this.filename;</span>
+    }
+
+    public void setFilename(String filename) {
+<span class="nc" id="L38">        this.filename = filename;</span>
+<span class="nc" id="L39">    }</span>
+
+    public String getPatch() {
+<span class="nc" id="L42">        return this.patch;</span>
+    }
+
+    public void setPatch(String patch) {
+<span class="nc" id="L46">        this.patch = patch;</span>
+<span class="nc" id="L47">    }</span>
+
+    public String getSha() {
+<span class="nc" id="L50">        return this.sha;</span>
+    }
+
+    public void setSha(String sha) {
+<span class="nc" id="L54">        this.sha = sha;</span>
+<span class="nc" id="L55">    }</span>
+
+    public String getStatus() {
+<span class="nc" id="L58">        return this.status;</span>
+    }
+
+    public void setStatus(String status) {
+<span class="nc" id="L62">        this.status = status;</span>
+<span class="nc" id="L63">    }</span>
+
+    public int getAdditions() {
+<span class="nc" id="L66">        return this.additions;</span>
+    }
+
+    public void setAdditions(int additions) {
+<span class="nc" id="L70">        this.additions = additions;</span>
+<span class="nc" id="L71">    }</span>
+
+    public int getDeletions() {
+<span class="nc" id="L74">        return this.deletions;</span>
+    }
+
+    public void setDeletions(int deletions) {
+<span class="nc" id="L78">        this.deletions = deletions;</span>
+<span class="nc" id="L79">    }</span>
+
+    public int getChanges() {
+<span class="nc" id="L82">        return this.changes;</span>
+    }
+
+    public void setChanges(int changes) {
+<span class="nc" id="L86">        this.changes = changes;</span>
+<span class="nc" id="L87">    }</span>
+
+    public String getBlob_url() {
+<span class="nc" id="L90">        return this.blob_url;</span>
+    }
+
+    public void setBlob_url(String blob_url) {
+<span class="nc" id="L94">        this.blob_url = blob_url;</span>
+<span class="nc" id="L95">    }</span>
+
+    public String getRaw_url() {
+<span class="nc" id="L98">        return this.raw_url;</span>
+    }
+
+    public void setRaw_url(String raw_url) {
+<span class="nc" id="L102">        this.raw_url = raw_url;</span>
+<span class="nc" id="L103">    }</span>
+
+    public String getContents_url() {
+<span class="nc" id="L106">        return this.contents_url;</span>
+    }
+
+    public void setContents_url(String contents_url) {
+<span class="nc" id="L110">        this.contents_url = contents_url;</span>
+<span class="nc" id="L111">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

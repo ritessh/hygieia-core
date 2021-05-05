@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Encryption.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.util</a> &gt; <span class="el_source">Encryption.java</span></div><h1>Encryption.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.util;
+
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+@SuppressWarnings(&quot;PMD.AvoidCatchingNPE&quot;) // TODO: Avoid catching NullPointerException; consider removing the cause of the NPE
+public final class Encryption {
+
+    private static final String ALGO = &quot;AES&quot;;
+    private static final String CIPHER_ALGO = &quot;AES&quot;;
+<span class="fc" id="L23">    private static final Logger LOGGER = LoggerFactory.getLogger(Encryption.class);</span>
+
+    private Encryption() {
+        // util class.
+    }
+
+    public static String getStringKey() throws EncryptionException {
+<span class="fc" id="L30">        SecretKey key = null;</span>
+        try {
+<span class="fc" id="L32">            key = KeyGenerator.getInstance(ALGO).generateKey();</span>
+<span class="nc" id="L33">        } catch (NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L34">            throw new EncryptionException(&quot;Cannot generate a secret key&quot; + '\n' + e.getMessage());</span>
+<span class="fc" id="L35">        }</span>
+<span class="fc" id="L36">        return Base64.encodeBase64String(key.getEncoded());</span>
+    }
+
+    public static SecretKey getSecretKey() throws EncryptionException {
+<span class="fc" id="L40">        SecretKey key = null;</span>
+        try {
+<span class="fc" id="L42">            key = KeyGenerator.getInstance(ALGO).generateKey();</span>
+<span class="nc" id="L43">        } catch (NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L44">            throw new EncryptionException(&quot;Cannot generate a secret key&quot; + '\n' + e.getMessage());</span>
+<span class="fc" id="L45">        }</span>
+<span class="fc" id="L46">        return key;</span>
+    }
+
+    public static String encryptString(String message, SecretKey key)
+            throws EncryptionException {
+<span class="fc" id="L51">        String encryptedMessage = &quot;&quot;;</span>
+        try {
+<span class="fc" id="L53">            Cipher cipher = Cipher.getInstance(CIPHER_ALGO);</span>
+<span class="fc" id="L54">            cipher.init(Cipher.ENCRYPT_MODE, key);</span>
+<span class="fc" id="L55">            byte[] encryptedBytes = cipher.doFinal(message.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L56">            encryptedMessage = Base64.encodeBase64String(encryptedBytes);</span>
+
+<span class="fc" id="L58">        } catch (IllegalBlockSizeException | BadPaddingException</span>
+                | InvalidKeyException | NoSuchAlgorithmException
+                | NoSuchPaddingException | NullPointerException e) {
+<span class="fc" id="L61">            throw new EncryptionException(&quot;Cannot encrypt this message&quot; + '\n'</span>
+<span class="fc" id="L62">                    + e.getMessage());</span>
+<span class="fc" id="L63">        }</span>
+<span class="fc" id="L64">        return encryptedMessage;</span>
+    }
+
+    public static String decryptString(String encryptedMessage, SecretKey key)
+            throws EncryptionException {
+<span class="fc" id="L69">        String decryptedMessage = &quot;&quot;;</span>
+        try {
+<span class="fc" id="L71">            Cipher decipher = Cipher.getInstance(CIPHER_ALGO);</span>
+<span class="fc" id="L72">            decipher.init(Cipher.DECRYPT_MODE, key);</span>
+<span class="fc" id="L73">            byte[] messageToDecrypt = Base64.decodeBase64(encryptedMessage);</span>
+<span class="fc" id="L74">            byte[] decryptedBytes = decipher.doFinal(messageToDecrypt);</span>
+<span class="fc" id="L75">            decryptedMessage = new String(decryptedBytes, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L77">        } catch (NoSuchAlgorithmException | NoSuchPaddingException</span>
+                | InvalidKeyException | IllegalBlockSizeException
+                | BadPaddingException | NullPointerException
+                | IllegalArgumentException e) {
+<span class="fc" id="L81">            throw new EncryptionException(&quot;Cannot decrypt this message&quot; + '\n'</span>
+<span class="fc" id="L82">                    + e.getMessage());</span>
+<span class="fc" id="L83">        }</span>
+<span class="fc" id="L84">        return decryptedMessage;</span>
+    }
+
+    public static String encryptString(String message, String aKey)
+            throws EncryptionException {
+<span class="fc" id="L89">        String encryptedMessage = &quot;&quot;;</span>
+        try {
+<span class="fc" id="L91">            byte[] encodedKey = Base64.decodeBase64(aKey);</span>
+<span class="fc" id="L92">            SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length,</span>
+                    ALGO);
+<span class="fc" id="L94">            Cipher cipher = Cipher.getInstance(CIPHER_ALGO);</span>
+<span class="fc" id="L95">            cipher.init(Cipher.ENCRYPT_MODE, key);</span>
+<span class="fc" id="L96">            byte[] encryptedBytes = cipher.doFinal(message.getBytes());</span>
+<span class="fc" id="L97">            encryptedMessage = Base64.encodeBase64String(encryptedBytes);</span>
+<span class="fc" id="L98">        } catch (IllegalBlockSizeException | BadPaddingException</span>
+                | InvalidKeyException | NoSuchAlgorithmException
+                | NoSuchPaddingException | NullPointerException e) {
+<span class="fc" id="L101">            throw new EncryptionException(&quot;Cannot encrypt this message&quot; + '\n'</span>
+<span class="fc" id="L102">                    + e.getMessage());</span>
+<span class="fc" id="L103">        }</span>
+<span class="fc" id="L104">        return encryptedMessage;</span>
+    }
+
+    public static String decryptString(String encryptedMessage, String aKey)
+            throws EncryptionException {
+<span class="fc" id="L109">        String decryptedMessage = &quot;&quot;;</span>
+        try {
+<span class="fc" id="L111">            byte[] encodedKey = Base64.decodeBase64(aKey);</span>
+<span class="fc" id="L112">            SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length,</span>
+                    ALGO);
+<span class="fc" id="L114">            Cipher decipher = Cipher.getInstance(CIPHER_ALGO);</span>
+<span class="fc" id="L115">            decipher.init(Cipher.DECRYPT_MODE, key);</span>
+<span class="fc" id="L116">            byte[] messageToDecrypt = Base64.decodeBase64(encryptedMessage);</span>
+<span class="fc" id="L117">            byte[] decryptedBytes = decipher.doFinal(messageToDecrypt);</span>
+<span class="fc" id="L118">            decryptedMessage = new String(decryptedBytes);</span>
+
+<span class="fc" id="L120">        } catch (NoSuchAlgorithmException | NoSuchPaddingException</span>
+                | InvalidKeyException | IllegalBlockSizeException
+                | BadPaddingException | NullPointerException
+                | IllegalArgumentException e) {
+<span class="fc" id="L124">            throw new EncryptionException(&quot;Cannot decrypt this message&quot; + '\n'</span>
+<span class="fc" id="L125">                    + e.getMessage());</span>
+<span class="fc" id="L126">        }</span>
+<span class="fc" id="L127">        return decryptedMessage;</span>
+    }
+
+
+    public static void main(String[] args) {
+        try {
+<span class="nc" id="L133">            String k = Encryption.getStringKey();</span>
+<span class="nc" id="L134">            System.out.println(&quot;Your secret key is:&quot;);</span>
+<span class="nc" id="L135">            System.out.println(k);</span>
+<span class="nc" id="L136">            System.out.println(&quot;Sample encrypted string with the above key for 'thisIsMyPassword' is:&quot;);</span>
+<span class="nc" id="L137">            System.out.println(Encryption.encryptString(&quot;thisIsMyPassword&quot;, k));</span>
+<span class="nc" id="L138">        } catch (EncryptionException e) {</span>
+<span class="nc" id="L139">            LOGGER.error(&quot;Encryption error: &quot;, e);</span>
+<span class="nc" id="L140">        }</span>
+<span class="nc" id="L141">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

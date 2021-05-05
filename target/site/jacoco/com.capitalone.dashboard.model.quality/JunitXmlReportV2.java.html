@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JunitXmlReportV2.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model.quality</a> &gt; <span class="el_source">JunitXmlReportV2.java</span></div><h1>JunitXmlReportV2.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model.quality;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = &quot;testsuites&quot;)
+<span class="nc" id="L20">public class JunitXmlReportV2 implements QualityVisitee {</span>
+
+    @XmlElement(required = true)
+    protected List&lt;TestSuite&gt; testsuite;
+
+    public List&lt;TestSuite&gt; getTestsuite() {
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        if (testsuite == null) {</span>
+<span class="nc" id="L27">            testsuite = new ArrayList&lt;&gt;();</span>
+        }
+<span class="nc" id="L29">        return this.testsuite;</span>
+    }
+
+    @Override
+    public void accept(QualityVisitor visitor) {
+<span class="nc" id="L34">        visitor.visit(this);</span>
+<span class="nc" id="L35">    }</span>
+
+    // TESTSUITE
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = &quot;&quot;)
+<span class="nc" id="L40">    public static class TestSuite {</span>
+
+        @XmlElement(required = true)
+        protected Properties properties;
+        protected List&lt;Testcase&gt; testcase;
+        @XmlElement(name = &quot;system-out&quot;, required = true)
+        protected String systemOut;
+        @XmlElement(name = &quot;system-err&quot;, required = true)
+        protected String systemErr;
+        @XmlAttribute(name = &quot;name&quot;, required = true)
+        @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+        protected String name;
+        @XmlAttribute(name = &quot;timestamp&quot;, required = true)
+        protected XMLGregorianCalendar timestamp;
+        @XmlAttribute(name = &quot;hostname&quot;, required = true)
+        @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+        protected String hostname;
+        @XmlAttribute(name = &quot;tests&quot;, required = true)
+        protected int tests;
+        @XmlAttribute(name = &quot;failures&quot;, required = true)
+        protected int failures;
+        @XmlAttribute(name = &quot;errors&quot;, required = true)
+        protected int errors;
+        @XmlAttribute(name = &quot;time&quot;, required = true)
+        protected BigDecimal time;
+        @XmlAttribute(name = &quot;skipped&quot;)
+        protected String skipped;
+
+        @XmlAttribute(name = &quot;skips&quot;)
+        protected String skips;
+
+        /**
+         * Gets the value of the properties property.
+         *
+         * @return possible object is
+         * {@link TestSuite.Properties }
+         */
+        public TestSuite.Properties getProperties() {
+<span class="nc" id="L78">            return properties;</span>
+        }
+
+        /**
+         * Sets the value of the properties property.
+         *
+         * @param value allowed object is
+         *              {@link TestSuite.Properties }
+         */
+        public void setProperties(TestSuite.Properties value) {
+<span class="nc" id="L88">            this.properties = value;</span>
+<span class="nc" id="L89">        }</span>
+
+        /**
+         * Gets the value of the testcase property.
+         * &lt;p&gt;
+         * &lt;p&gt;
+         * This accessor method returns a reference to the live list,
+         * not a snapshot. Therefore any modification you make to the
+         * returned list will be present inside the JAXB object.
+         * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the testcase property.
+         * &lt;p&gt;
+         * &lt;p&gt;
+         * For example, to add a new item, do as follows:
+         * &lt;pre&gt;
+         *    getTestcase().add(newItem);
+         * &lt;/pre&gt;
+         * &lt;p&gt;
+         * &lt;p&gt;
+         * &lt;p&gt;
+         * Objects of the following type(s) are allowed in the list
+         * {@link TestSuite.Testcase }
+         */
+        public List&lt;TestSuite.Testcase&gt; getTestcase() {
+<span class="nc bnc" id="L112" title="All 2 branches missed.">            if (testcase == null) {</span>
+<span class="nc" id="L113">                testcase = new ArrayList&lt;&gt;();</span>
+            }
+<span class="nc" id="L115">            return this.testcase;</span>
+        }
+
+        /**
+         * Gets the value of the systemOut property.
+         *
+         * @return possible object is
+         * {@link String }
+         */
+        public String getSystemOut() {
+<span class="nc" id="L125">            return systemOut;</span>
+        }
+
+        /**
+         * Sets the value of the systemOut property.
+         *
+         * @param value allowed object is
+         *              {@link String }
+         */
+        public void setSystemOut(String value) {
+<span class="nc" id="L135">            this.systemOut = value;</span>
+<span class="nc" id="L136">        }</span>
+
+        /**
+         * Gets the value of the systemErr property.
+         *
+         * @return possible object is
+         * {@link String }
+         */
+        public String getSystemErr() {
+<span class="nc" id="L145">            return systemErr;</span>
+        }
+
+        /**
+         * Sets the value of the systemErr property.
+         *
+         * @param value allowed object is
+         *              {@link String }
+         */
+        public void setSystemErr(String value) {
+<span class="nc" id="L155">            this.systemErr = value;</span>
+<span class="nc" id="L156">        }</span>
+
+        /**
+         * Gets the value of the name property.
+         *
+         * @return possible object is
+         * {@link String }
+         */
+        public String getName() {
+<span class="nc" id="L165">            return name;</span>
+        }
+
+        /**
+         * Sets the value of the name property.
+         *
+         * @param value allowed object is
+         *              {@link String }
+         */
+        public void setName(String value) {
+<span class="nc" id="L175">            this.name = value;</span>
+<span class="nc" id="L176">        }</span>
+
+        /**
+         * Gets the value of the timestamp property.
+         *
+         * @return possible object is
+         * {@link XMLGregorianCalendar }
+         */
+        public XMLGregorianCalendar getTimestamp() {
+<span class="nc" id="L185">            return timestamp;</span>
+        }
+
+        /**
+         * Sets the value of the timestamp property.
+         *
+         * @param value allowed object is
+         *              {@link XMLGregorianCalendar }
+         */
+        public void setTimestamp(XMLGregorianCalendar value) {
+<span class="nc" id="L195">            this.timestamp = value;</span>
+<span class="nc" id="L196">        }</span>
+
+        /**
+         * Gets the value of the hostname property.
+         *
+         * @return possible object is
+         * {@link String }
+         */
+        public String getHostname() {
+<span class="nc" id="L205">            return hostname;</span>
+        }
+
+        /**
+         * Sets the value of the hostname property.
+         *
+         * @param value allowed object is
+         *              {@link String }
+         */
+        public void setHostname(String value) {
+<span class="nc" id="L215">            this.hostname = value;</span>
+<span class="nc" id="L216">        }</span>
+
+        /**
+         * Gets the value of the tests property.
+         */
+        public int getTests() {
+<span class="nc" id="L222">            return tests;</span>
+        }
+
+        /**
+         * Sets the value of the tests property.
+         */
+        public void setTests(int value) {
+<span class="nc" id="L229">            this.tests = value;</span>
+<span class="nc" id="L230">        }</span>
+
+        /**
+         * Gets the value of the failures property.
+         */
+        public int getFailures() {
+<span class="nc" id="L236">            return failures;</span>
+        }
+
+        /**
+         * Sets the value of the failures property.
+         */
+        public void setFailures(int value) {
+<span class="nc" id="L243">            this.failures = value;</span>
+<span class="nc" id="L244">        }</span>
+
+        /**
+         * Gets the value of the errors property.
+         */
+        public int getErrors() {
+<span class="nc" id="L250">            return errors;</span>
+        }
+
+        /**
+         * Sets the value of the errors property.
+         */
+        public void setErrors(int value) {
+<span class="nc" id="L257">            this.errors = value;</span>
+<span class="nc" id="L258">        }</span>
+
+        /**
+         * Gets the value of the time property.
+         *
+         * @return possible object is
+         * {@link BigDecimal }
+         */
+        public BigDecimal getTime() {
+<span class="nc" id="L267">            return time;</span>
+        }
+
+        /**
+         * Sets the value of the time property.
+         *
+         * @param value allowed object is
+         *              {@link BigDecimal }
+         */
+        public void setTime(BigDecimal value) {
+<span class="nc" id="L277">            this.time = value;</span>
+<span class="nc" id="L278">        }</span>
+
+        public String getSkipped() {
+<span class="nc" id="L281">            return skipped;</span>
+        }
+
+        public void setSkipped(String skipped) {
+<span class="nc" id="L285">            this.skipped = skipped;</span>
+<span class="nc" id="L286">        }</span>
+
+        public String getSkips() {
+<span class="nc" id="L289">            return skips;</span>
+        }
+
+        public void setSkips(String skips) {
+<span class="nc" id="L293">            this.skips = skips;</span>
+<span class="nc" id="L294">        }</span>
+
+        // PROPERTIES FIELD
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = &quot;&quot;, propOrder = {&quot;property&quot;})
+<span class="nc" id="L299">        public static class Properties {</span>
+
+            protected List&lt;TestSuite.Properties.Property&gt; property;
+
+            public List&lt;TestSuite.Properties.Property&gt; getProperty() {
+<span class="nc bnc" id="L304" title="All 2 branches missed.">                if (property == null) {</span>
+<span class="nc" id="L305">                    property = new ArrayList&lt;&gt;();</span>
+                }
+<span class="nc" id="L307">                return this.property;</span>
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = &quot;&quot;)
+<span class="nc" id="L312">            public static class Property {</span>
+
+                @XmlAttribute(name = &quot;name&quot;, required = true)
+                @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+                protected String name;
+                @XmlAttribute(name = &quot;value&quot;, required = true)
+                protected String value;
+
+                /**
+                 * Gets the value of the name property.
+                 *
+                 * @return possible object is
+                 * {@link String }
+                 */
+                public String getName() {
+<span class="nc" id="L327">                    return name;</span>
+                }
+
+                /**
+                 * Sets the value of the name property.
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
+                 */
+                public void setName(String value) {
+<span class="nc" id="L337">                    this.name = value;</span>
+<span class="nc" id="L338">                }</span>
+
+                /**
+                 * Gets the value of the value property.
+                 *
+                 * @return possible object is
+                 * {@link String }
+                 */
+                public String getValue() {
+<span class="nc" id="L347">                    return value;</span>
+                }
+
+                /**
+                 * Sets the value of the value property.
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
+                 */
+                public void setValue(String value) {
+<span class="nc" id="L357">                    this.value = value;</span>
+<span class="nc" id="L358">                }</span>
+
+            }
+
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = &quot;&quot;, propOrder = {&quot;error&quot;, &quot;failure&quot;})
+<span class="nc" id="L366">        public static class Testcase {</span>
+
+            protected TestSuite.Testcase.Error error;
+            protected TestSuite.Testcase.Failure failure;
+            @XmlAttribute(name = &quot;name&quot;, required = true)
+            @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+            @XmlSchemaType(name = &quot;token&quot;)
+            protected String name;
+            @XmlAttribute(name = &quot;classname&quot;, required = true)
+            @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+            @XmlSchemaType(name = &quot;token&quot;)
+            protected String classname;
+            @XmlAttribute(name = &quot;time&quot;, required = true)
+            protected BigDecimal time;
+            @XmlAttribute(name = &quot;skipped&quot;, required = true)
+            protected String skipped;
+
+            /**
+             * Gets the value of the error property.
+             *
+             * @return possible object is
+             * {@link TestSuite.Testcase.Error }
+             */
+            public TestSuite.Testcase.Error getError() {
+<span class="nc" id="L390">                return error;</span>
+            }
+
+            /**
+             * Sets the value of the error property.
+             *
+             * @param value allowed object is
+             *              {@link TestSuite.Testcase.Error }
+             */
+            public void setError(TestSuite.Testcase.Error value) {
+<span class="nc" id="L400">                this.error = value;</span>
+<span class="nc" id="L401">            }</span>
+
+            /**
+             * Gets the value of the failure property.
+             *
+             * @return possible object is
+             * {@link TestSuite.Testcase.Failure }
+             */
+            public TestSuite.Testcase.Failure getFailure() {
+<span class="nc" id="L410">                return failure;</span>
+            }
+
+            /**
+             * Sets the value of the failure property.
+             *
+             * @param value allowed object is
+             *              {@link TestSuite.Testcase.Failure }
+             */
+            public void setFailure(TestSuite.Testcase.Failure value) {
+<span class="nc" id="L420">                this.failure = value;</span>
+<span class="nc" id="L421">            }</span>
+
+            /**
+             * Gets the value of the name property.
+             *
+             * @return possible object is
+             * {@link String }
+             */
+            public String getName() {
+<span class="nc" id="L430">                return name;</span>
+            }
+
+            /**
+             * Sets the value of the name property.
+             *
+             * @param value allowed object is
+             *              {@link String }
+             */
+            public void setName(String value) {
+<span class="nc" id="L440">                this.name = value;</span>
+<span class="nc" id="L441">            }</span>
+
+            /**
+             * Gets the value of the classname property.
+             *
+             * @return possible object is
+             * {@link String }
+             */
+            public String getClassname() {
+<span class="nc" id="L450">                return classname;</span>
+            }
+
+            /**
+             * Sets the value of the classname property.
+             *
+             * @param value allowed object is
+             *              {@link String }
+             */
+            public void setClassname(String value) {
+<span class="nc" id="L460">                this.classname = value;</span>
+<span class="nc" id="L461">            }</span>
+
+            /**
+             * Gets the value of the time property.
+             *
+             * @return possible object is
+             * {@link BigDecimal }
+             */
+            public BigDecimal getTime() {
+<span class="nc" id="L470">                return time;</span>
+            }
+
+            /**
+             * Sets the value of the time property.
+             *
+             * @param value allowed object is
+             *              {@link BigDecimal }
+             */
+            public void setTime(BigDecimal value) {
+<span class="nc" id="L480">                this.time = value;</span>
+<span class="nc" id="L481">            }</span>
+
+
+            public String getSkipped() {
+<span class="nc" id="L485">                return skipped;</span>
+            }
+
+            public void setSkipped(String skipped) {
+<span class="nc" id="L489">                this.skipped = skipped;</span>
+<span class="nc" id="L490">            }</span>
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = &quot;&quot;, propOrder = {&quot;value&quot;})
+<span class="nc" id="L494">            public static class Error {</span>
+
+                @XmlValue
+                protected String value;
+                @XmlAttribute(name = &quot;message&quot;)
+                protected String message;
+                @XmlAttribute(name = &quot;type&quot;, required = true)
+                protected String type;
+
+                /**
+                 * Gets the value of the value property.
+                 *
+                 * @return possible object is
+                 * {@link String }
+                 */
+                public String getValue() {
+<span class="nc" id="L510">                    return value;</span>
+                }
+
+                /**
+                 * Sets the value of the value property.
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
+                 */
+                public void setValue(String value) {
+<span class="nc" id="L520">                    this.value = value;</span>
+<span class="nc" id="L521">                }</span>
+
+                /**
+                 * Gets the value of the message property.
+                 *
+                 * @return possible object is
+                 * {@link String }
+                 */
+                public String getMessage() {
+<span class="nc" id="L530">                    return message;</span>
+                }
+
+                /**
+                 * Sets the value of the message property.
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
+                 */
+                public void setMessage(String value) {
+<span class="nc" id="L540">                    this.message = value;</span>
+<span class="nc" id="L541">                }</span>
+
+                /**
+                 * Gets the value of the type property.
+                 *
+                 * @return possible object is
+                 * {@link String }
+                 */
+                public String getType() {
+<span class="nc" id="L550">                    return type;</span>
+                }
+
+                /**
+                 * Sets the value of the type property.
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
+                 */
+                public void setType(String value) {
+<span class="nc" id="L560">                    this.type = value;</span>
+<span class="nc" id="L561">                }</span>
+
+            }
+
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = &quot;&quot;, propOrder = {&quot;value&quot;})
+<span class="nc" id="L567">            public static class Failure {</span>
+
+                @XmlValue
+                protected String value;
+                @XmlAttribute(name = &quot;message&quot;)
+                protected String message;
+                @XmlAttribute(name = &quot;type&quot;, required = true)
+                protected String type;
+
+                /**
+                 * Gets the value of the value property.
+                 *
+                 * @return possible object is
+                 * {@link String }
+                 */
+                public String getValue() {
+<span class="nc" id="L583">                    return value;</span>
+                }
+
+                /**
+                 * Sets the value of the value property.
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
+                 */
+                public void setValue(String value) {
+<span class="nc" id="L593">                    this.value = value;</span>
+<span class="nc" id="L594">                }</span>
+
+                /**
+                 * Gets the value of the message property.
+                 *
+                 * @return possible object is
+                 * {@link String }
+                 */
+                public String getMessage() {
+<span class="nc" id="L603">                    return message;</span>
+                }
+
+                /**
+                 * Sets the value of the message property.
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
+                 */
+                public void setMessage(String value) {
+<span class="nc" id="L613">                    this.message = value;</span>
+<span class="nc" id="L614">                }</span>
+
+                /**
+                 * Gets the value of the type property.
+                 *
+                 * @return possible object is
+                 * {@link String }
+                 */
+                public String getType() {
+<span class="nc" id="L623">                    return type;</span>
+                }
+
+                /**
+                 * Sets the value of the type property.
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
+                 */
+                public void setType(String value) {
+<span class="nc" id="L633">                    this.type = value;</span>
+<span class="nc" id="L634">                }</span>
+
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

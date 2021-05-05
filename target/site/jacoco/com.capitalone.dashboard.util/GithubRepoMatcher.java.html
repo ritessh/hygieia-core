@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GithubRepoMatcher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.util</a> &gt; <span class="el_source">GithubRepoMatcher.java</span></div><h1>GithubRepoMatcher.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.util;
+
+import com.capitalone.dashboard.model.webhook.github.GitHubParsed;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+<span class="nc" id="L8">public class GithubRepoMatcher {</span>
+
+    public static boolean repoNameMatcher (String url, String regex){
+<span class="fc" id="L11">        boolean repoNameMatcher = true;</span>
+
+        try {
+<span class="fc" id="L14">            GitHubParsed gitHubParsed = new GitHubParsed(url);</span>
+<span class="fc" id="L15">            String text = gitHubParsed.getRepoName().substring(0,1);</span>
+<span class="fc" id="L16">            String alphaRegex = &quot;[a-zA-Z]&quot;;</span>
+<span class="fc" id="L17">            Pattern pattern = Pattern.compile(alphaRegex);</span>
+<span class="fc" id="L18">            Matcher matcher = pattern.matcher(text);</span>
+            // First repoName should be Alpha
+<span class="fc bfc" id="L20" title="All 2 branches covered.">            if(matcher.find()){</span>
+<span class="fc" id="L21">                pattern = Pattern.compile(regex);</span>
+<span class="fc" id="L22">                matcher = pattern.matcher(text);</span>
+
+<span class="fc bfc" id="L24" title="All 2 branches covered.">                if (!matcher.find()) {</span>
+<span class="fc" id="L25">                    repoNameMatcher = false;</span>
+                }
+
+            }else{
+                // If repoName is not alphabet the it should filter on A to M
+<span class="fc bfc" id="L30" title="All 2 branches covered.">                if(!regex.contains(&quot;a&quot;)){</span>
+<span class="fc" id="L31">                    repoNameMatcher = false;</span>
+                }
+            }
+<span class="nc" id="L34">        }catch (Exception ex){</span>
+
+<span class="fc" id="L36">        }</span>
+<span class="fc" id="L37">        return repoNameMatcher;</span>
+    }
+
+    public static boolean orgNameMatcher (String url, String regex){
+<span class="fc" id="L41">        boolean orgNameMatcher = true;</span>
+
+        try {
+<span class="fc" id="L44">            GitHubParsed gitHubParsed = new GitHubParsed(url);</span>
+<span class="fc" id="L45">            String text = gitHubParsed.getOrgName().substring(0,1);</span>
+<span class="fc" id="L46">            String alphaRegex = &quot;[a-zA-Z]&quot;;</span>
+<span class="fc" id="L47">            Pattern pattern = Pattern.compile(alphaRegex);</span>
+<span class="fc" id="L48">            Matcher matcher = pattern.matcher(text);</span>
+            // First repoName should be Alpha
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">            if(matcher.find()){</span>
+<span class="fc" id="L51">                pattern = Pattern.compile(regex);</span>
+<span class="fc" id="L52">                matcher = pattern.matcher(text);</span>
+
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">                if (!matcher.find()) {</span>
+<span class="nc" id="L55">                    orgNameMatcher = false;</span>
+                }
+
+            }else{
+                // If repoName is not alphabet the it should filter on A to M
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                if(!regex.contains(&quot;a&quot;)){</span>
+<span class="nc" id="L61">                    orgNameMatcher = false;</span>
+                }
+            }
+<span class="nc" id="L64">        }catch (Exception ex){</span>
+
+<span class="fc" id="L66">        }</span>
+<span class="fc" id="L67">        return orgNameMatcher;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

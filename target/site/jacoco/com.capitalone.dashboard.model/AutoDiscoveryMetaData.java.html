@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AutoDiscoveryMetaData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">AutoDiscoveryMetaData.java</span></div><h1>AutoDiscoveryMetaData.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import jdk.nashorn.internal.ir.annotations.Ignore;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import java.util.List;
+
+/**
+ * AutoDiscovery Metadata
+ */
+public class AutoDiscoveryMetaData {
+    @NotNull
+    private String template;
+
+    @NotNull
+    private String type;
+
+    @NotNull
+    @Size(min = 6, max = 50)
+    @Pattern(message = &quot;Special character(s) found&quot;, regexp = &quot;^[a-zA-Z0-9 ]*$&quot;)
+    private String title;
+
+    @NotNull
+    private String applicationName;
+
+    @NotNull
+    private String componentName;
+
+    private String businessService;
+
+    private String businessApplication;
+
+    @Ignore
+    private Owner owner;
+
+    @Ignore
+    private List&lt;Owner&gt; owners;
+
+    public String getTemplate() {
+<span class="nc" id="L43">        return template;</span>
+    }
+
+    public void setTemplate(String template) {
+<span class="nc" id="L47">        this.template = template;</span>
+<span class="nc" id="L48">    }</span>
+
+    public String getTitle() {
+<span class="nc" id="L51">        return title;</span>
+    }
+
+    public void setTitle(String title) {
+<span class="nc" id="L55">        this.title = title;</span>
+<span class="nc" id="L56">    }</span>
+
+    public String getApplicationName() {
+<span class="nc" id="L59">        return applicationName;</span>
+    }
+
+    public void setApplicationName(String applicationName) {
+<span class="nc" id="L63">        this.applicationName = applicationName;</span>
+<span class="nc" id="L64">    }</span>
+
+    public String getComponentName() {
+<span class="nc" id="L67">        return componentName;</span>
+    }
+
+    public void setComponentName(String componentName) {
+<span class="nc" id="L71">        this.componentName = componentName;</span>
+<span class="nc" id="L72">    }</span>
+
+    public String getBusinessService() {
+<span class="nc" id="L75">        return businessService;</span>
+    }
+
+    public void setBusinessService(String businessService) {
+<span class="nc" id="L79">        this.businessService = businessService;</span>
+<span class="nc" id="L80">    }</span>
+
+    public String getBusinessApplication() {
+<span class="nc" id="L83">        return businessApplication;</span>
+    }
+
+    public void setBusinessApplication(String businessApplication) {
+<span class="nc" id="L87">        this.businessApplication = businessApplication;</span>
+<span class="nc" id="L88">    }</span>
+
+    public String getType() {
+<span class="nc" id="L91">        return type;</span>
+    }
+
+    public void setType(String type) {
+<span class="nc" id="L95">        this.type = type;</span>
+<span class="nc" id="L96">    }</span>
+
+<span class="nc" id="L98">    public Owner getOwner() { return owner; }</span>
+
+<span class="nc" id="L100">    public void setOwner(Owner owner) { this.owner = owner; }</span>
+
+<span class="nc" id="L102">    public List&lt;Owner&gt; getOwners() { return owners; }</span>
+
+<span class="nc" id="L104">    public void setOwners(List&lt;Owner&gt; owners) { this.owners = owners; }</span>
+
+<span class="nc" id="L106">    public AutoDiscoveryMetaData(){ }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

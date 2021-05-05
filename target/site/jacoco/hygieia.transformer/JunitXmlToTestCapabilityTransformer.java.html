@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JunitXmlToTestCapabilityTransformer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">hygieia.transformer</a> &gt; <span class="el_source">JunitXmlToTestCapabilityTransformer.java</span></div><h1>JunitXmlToTestCapabilityTransformer.java</h1><pre class="source lang-java linenums">package hygieia.transformer;
+
+import com.capitalone.dashboard.model.TestCapability;
+import com.capitalone.dashboard.model.TestCase;
+import com.capitalone.dashboard.model.TestCaseStatus;
+import com.capitalone.dashboard.model.TestSuite;
+import com.capitalone.dashboard.model.TestSuiteType;
+import com.capitalone.dashboard.model.quality.JunitXmlReport;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="fc" id="L14">public class JunitXmlToTestCapabilityTransformer {</span>
+
+
+    private TestSuite parseFeatureAsTestSuite(JunitXmlReport testJunit) {
+<span class="fc" id="L18">        TestSuite suite = new TestSuite();</span>
+<span class="fc" id="L19">        suite.setType(TestSuiteType.Unit);</span>
+<span class="fc" id="L20">        suite.setDescription(testJunit.getName());</span>
+
+<span class="fc" id="L22">        long duration = 0;</span>
+
+<span class="fc" id="L24">        int testCaseTotalCount = testJunit.getTestcase().size();</span>
+<span class="fc" id="L25">        int testCaseSkippedCount = 0, testCaseSuccessCount = 0, testCaseFailCount = 0, testCaseUnknownCount = 0;</span>
+
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        for (JunitXmlReport.Testcase testCase : testJunit.getTestcase()) {</span>
+<span class="fc" id="L28">           TestCase testCaseJunit = parseScenarioAsTestCase(testCase);</span>
+<span class="fc" id="L29">            duration += testCase.getTime().longValue();</span>
+
+<span class="pc bpc" id="L31" title="3 of 4 branches missed.">            switch (testCaseJunit.getStatus()) {</span>
+                case Success:
+<span class="fc" id="L33">                    testCaseSuccessCount++;</span>
+<span class="fc" id="L34">                    break;</span>
+                case Failure:
+<span class="nc" id="L36">                    testCaseFailCount++;</span>
+<span class="nc" id="L37">                    break;</span>
+                case Skipped:
+<span class="nc" id="L39">                    testCaseSkippedCount++;</span>
+<span class="nc" id="L40">                    break;</span>
+                default:
+<span class="nc" id="L42">                    testCaseUnknownCount++;</span>
+                    break;
+            }
+
+<span class="fc" id="L46">            suite.getTestCases().add(testCaseJunit);</span>
+<span class="fc" id="L47">        }</span>
+<span class="fc" id="L48">        suite.setSuccessTestCaseCount(testCaseSuccessCount);</span>
+<span class="fc" id="L49">        suite.setFailedTestCaseCount(testCaseFailCount);</span>
+<span class="fc" id="L50">        suite.setSkippedTestCaseCount(testCaseSkippedCount);</span>
+<span class="fc" id="L51">        suite.setTotalTestCaseCount(testCaseTotalCount);</span>
+<span class="fc" id="L52">        suite.setUnknownStatusCount(testCaseUnknownCount);</span>
+<span class="fc" id="L53">        suite.setDuration(duration);</span>
+
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (testCaseFailCount &gt; 0) {</span>
+<span class="nc" id="L56">            suite.setStatus(TestCaseStatus.Failure);</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        } else if (testCaseSkippedCount &gt; 0) {</span>
+<span class="nc" id="L58">            suite.setStatus(TestCaseStatus.Skipped);</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        } else if (testCaseSuccessCount &gt; 0) {</span>
+<span class="fc" id="L60">            suite.setStatus(TestCaseStatus.Success);</span>
+        } else {
+<span class="nc" id="L62">            suite.setStatus(TestCaseStatus.Unknown);</span>
+        }
+<span class="fc" id="L64">        return suite;</span>
+    }
+
+
+    public TestCapability convert(JunitXmlReport testJunit) {
+<span class="fc" id="L69">        List&lt;TestSuite&gt; testSuites = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L70">            testSuites.add(this.parseFeatureAsTestSuite(testJunit));</span>
+<span class="fc" id="L71">        return this.processTestSuites(testSuites);</span>
+    }
+
+    private TestCase parseScenarioAsTestCase(JunitXmlReport.Testcase scenarioElement) {
+<span class="fc" id="L75">        TestCase testCase = new TestCase();</span>
+<span class="fc" id="L76">        testCase.setDescription( scenarioElement.getName());</span>
+        // Parse each step as a TestCase
+<span class="fc" id="L78">        int testStepSuccessCount = 0, testStepFailCount = 0, testStepSkippedCount = 0, testStepUnknownCount = 0;</span>
+<span class="fc" id="L79">        long testDuration=0;</span>
+
+<span class="fc" id="L81">              testDuration += scenarioElement.getTime().longValue();</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">        if(scenarioElement.getError() != null){</span>
+<span class="nc" id="L83">            testStepFailCount++;</span>
+<span class="pc bpc" id="L84" title="3 of 4 branches missed.">        }else if (StringUtils.isNotBlank(scenarioElement.getSkipped()) &amp;&amp; &quot;0&quot;.equals(scenarioElement.getTime())){</span>
+<span class="nc" id="L85">            testStepSkippedCount++;</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        }else if(scenarioElement.getTime().doubleValue() &gt; 0){</span>
+<span class="fc" id="L87">            testStepSuccessCount++;</span>
+        }else {
+<span class="nc" id="L89">            testStepUnknownCount++;</span>
+        }
+        // Set Duration
+<span class="fc" id="L92">        testCase.setDuration(testDuration);</span>
+<span class="fc" id="L93">        testCase.setSuccessTestStepCount(testStepSuccessCount);</span>
+<span class="fc" id="L94">        testCase.setSkippedTestStepCount(testStepSkippedCount);</span>
+<span class="fc" id="L95">        testCase.setFailedTestStepCount(testStepFailCount);</span>
+<span class="fc" id="L96">        testCase.setUnknownStatusCount(testStepUnknownCount);</span>
+<span class="fc" id="L97">        testCase.setTotalTestStepCount(testCase.getTestSteps().size());</span>
+        // Set Status
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        if (testStepFailCount &gt; 0) {</span>
+<span class="nc" id="L100">            testCase.setStatus(TestCaseStatus.Failure);</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">        } else if (testStepSkippedCount &gt; 0) {</span>
+<span class="nc" id="L102">            testCase.setStatus(TestCaseStatus.Skipped);</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        } else if (testStepSuccessCount &gt; 0) {</span>
+<span class="fc" id="L104">            testCase.setStatus(TestCaseStatus.Success);</span>
+        } else {
+<span class="nc" id="L106">            testCase.setStatus(TestCaseStatus.Unknown);</span>
+        }
+<span class="fc" id="L108">        return testCase;</span>
+    }
+
+
+    private TestCapability processTestSuites(List&lt;TestSuite&gt; testSuites){
+<span class="fc" id="L113">        TestCapability cap = new TestCapability();</span>
+<span class="fc" id="L114">        cap.setType(TestSuiteType.Unit);</span>
+
+<span class="fc" id="L116">        cap.getTestSuites().addAll(testSuites);</span>
+        //add test suites
+<span class="fc" id="L118">        long duration = 0;</span>
+<span class="fc" id="L119">        int testSuiteSkippedCount = 0, testSuiteSuccessCount = 0, testSuiteFailCount = 0, testSuiteUnknownCount = 0;</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        for (TestSuite t : testSuites) {</span>
+<span class="fc" id="L121">            duration += t.getDuration();</span>
+<span class="pc bpc" id="L122" title="3 of 4 branches missed.">            switch (t.getStatus()) {</span>
+                case Success:
+<span class="fc" id="L124">                    testSuiteSuccessCount++;</span>
+<span class="fc" id="L125">                    break;</span>
+                case Failure:
+<span class="nc" id="L127">                    testSuiteFailCount++;</span>
+<span class="nc" id="L128">                    break;</span>
+                case Skipped:
+<span class="nc" id="L130">                    testSuiteSkippedCount++;</span>
+<span class="nc" id="L131">                    break;</span>
+                default:
+<span class="nc" id="L133">                    testSuiteUnknownCount++;</span>
+                    break;
+            }
+<span class="fc" id="L136">        }</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (testSuiteFailCount &gt; 0) {</span>
+<span class="nc" id="L138">            cap.setStatus(TestCaseStatus.Failure);</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        } else if (testSuiteSkippedCount &gt; 0) {</span>
+<span class="nc" id="L140">            cap.setStatus(TestCaseStatus.Skipped);</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        } else if (testSuiteSuccessCount &gt; 0) {</span>
+<span class="fc" id="L142">            cap.setStatus(TestCaseStatus.Success);</span>
+        } else {
+<span class="nc" id="L144">            cap.setStatus(TestCaseStatus.Unknown);</span>
+        }
+<span class="fc" id="L146">        cap.setFailedTestSuiteCount(testSuiteFailCount);</span>
+<span class="fc" id="L147">        cap.setSkippedTestSuiteCount(testSuiteSkippedCount);</span>
+<span class="fc" id="L148">        cap.setSuccessTestSuiteCount(testSuiteSuccessCount);</span>
+<span class="fc" id="L149">        cap.setUnknownStatusTestSuiteCount(testSuiteUnknownCount);</span>
+<span class="fc" id="L150">        cap.setTotalTestSuiteCount(testSuites.size());</span>
+<span class="fc" id="L151">        cap.setDuration(duration);</span>
+<span class="fc" id="L152">        return cap;</span>
+    }
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

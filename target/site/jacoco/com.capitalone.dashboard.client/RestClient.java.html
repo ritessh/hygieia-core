@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.client</a> &gt; <span class="el_source">RestClient.java</span></div><h1>RestClient.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.client;
+
+import com.capitalone.dashboard.util.Encryption;
+import com.capitalone.dashboard.util.EncryptionException;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestOperations;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+
+@Component
+public class RestClient {
+<span class="nc" id="L30">    private static final Log LOG = LogFactory.getLog(RestClient.class);</span>
+    private final RestOperations restOperations;
+
+    @Autowired
+<span class="nc" id="L34">    public RestClient(RestOperationsSupplier restOperationsSupplier) {</span>
+<span class="nc" id="L35">        this.restOperations = restOperationsSupplier.get();</span>
+<span class="nc" id="L36">    }</span>
+
+    /**
+     * The most general version of POST call
+     * @param url
+     * @param httpEntity HTTP headers and body
+     * @return
+     */
+    private &lt;T&gt; ResponseEntity&lt;String&gt; makeRestCallPost(String url, HttpEntity&lt;T&gt; httpEntity) {
+
+<span class="nc" id="L46">        long start = System.currentTimeMillis();</span>
+        ResponseEntity&lt;String&gt; response;
+<span class="nc" id="L48">        String status = null;</span>
+<span class="nc" id="L49">        String status_phrase = null;</span>
+        try {
+<span class="nc" id="L51">            response = restOperations.exchange(url, HttpMethod.POST, httpEntity, String.class);</span>
+<span class="nc" id="L52">            status = response.getStatusCode().toString();</span>
+<span class="nc" id="L53">            status_phrase = response.getStatusCode().getReasonPhrase();</span>
+<span class="nc" id="L54">        } catch (HttpStatusCodeException e) {</span>
+<span class="nc" id="L55">            status = e.getStatusCode().toString();</span>
+<span class="nc" id="L56">            status_phrase = e.getStatusCode().getReasonPhrase();</span>
+<span class="nc" id="L57">            LOG.info(&quot;makeRestCall http_method=POST http_status=&quot; + status + &quot; http_status_phrase=&quot; +status_phrase+&quot; http_request_body=&quot; + httpEntity.getBody());</span>
+<span class="nc" id="L58">            throw e;</span>
+        } finally {
+<span class="nc" id="L60">            long end = System.currentTimeMillis();</span>
+<span class="nc" id="L61">            LOG.info(&quot;makeRestCall http_method=POST http_url=&quot; + url + &quot; http_status=&quot; + status + &quot; http_status_phrase=&quot;+status_phrase+&quot; http_duration=&quot; + (end - start));</span>
+        }
+
+<span class="nc" id="L64">        return response;</span>
+    }
+
+    /**
+     * The general POST call taking a JSONObject as the body
+     * @param url
+     * @param headers HTTP headers, can be null
+     * @param body Cannot be null
+     * @return
+     */
+    public ResponseEntity&lt;String&gt; makeRestCallPost(String url, HttpHeaders headers, JSONObject body) {
+<span class="nc bnc" id="L75" title="All 2 branches missed.">	if (headers==null) headers = new HttpHeaders();</span>
+<span class="nc" id="L76">	headers.setContentType(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L77">	HttpEntity httpEntity = new HttpEntity&lt;Object&gt;(body, headers);</span>
+<span class="nc" id="L78">	return this.makeRestCallPost(url, httpEntity);</span>
+    }
+
+    /**
+     * The general POST call taking a String as the body, for non-json data
+     * @param url
+     * @param headers HTTP headers, can be null
+     * @param body Cannot be null
+     * @return
+     */
+    public ResponseEntity&lt;String&gt; makeRestCallPost(String url, HttpHeaders headers, String body) {
+<span class="nc" id="L89">	HttpEntity httpEntity = new HttpEntity&lt;Object&gt;(body, headers);</span>
+<span class="nc" id="L90">	return this.makeRestCallPost(url, httpEntity);</span>
+    }
+
+    /**
+     * Make a POST call with no HTTP headers and a Json body
+     *
+     * @param url
+     * @param body Cannot be null
+     * @return
+     */
+    public ResponseEntity&lt;String&gt; makeRestCallPost(String url, JSONObject body) {
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (restOperations == null) { return null; }</span>
+
+<span class="nc" id="L103">        return this.makeRestCallPost(url, (HttpHeaders)null, body);</span>
+    }
+
+    /**
+     * Make a POST call with a single header, Authorization, which has the value &quot;[headerKey] [token]&quot;.
+     * E.g. Authorization: token xxxxxxxxxxx
+     * When either headerKey or token is null, no header is added
+     * @param url
+     * @param headerKey
+     * @param token
+     * @param body
+     * @return
+     */
+    public ResponseEntity&lt;String&gt; makeRestCallPost(String url, String headerKey, String token, JSONObject body) {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (restOperations == null) { return null; }</span>
+
+<span class="nc" id="L119">        HttpHeaders headers = null;</span>
+<span class="nc bnc" id="L120" title="All 4 branches missed.">        if (StringUtils.isNotEmpty(headerKey) &amp;&amp; StringUtils.isNotEmpty(token)) {</span>
+<span class="nc" id="L121">            headers = createHeaders(headerKey, token);</span>
+        }
+
+<span class="nc" id="L124">        return this.makeRestCallPost(url, headers, body);</span>
+    }
+
+    /**
+     * Make a POST call with a single header, Authorization, which has the value &quot;Basic &quot; plus base64 encoded userId:passCode.
+     * E.g. Authorization: Basic base64EncodedUserIdAndPassCode
+     * When userInfo is null, no header is added
+     * @param url
+     * @param userInfo
+     * @param body
+     * @return
+     */
+    public ResponseEntity&lt;String&gt; makeRestCallPost(String url, RestUserInfo userInfo, JSONObject body) {
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (restOperations == null) { return null; }</span>
+
+<span class="nc" id="L139">        HttpHeaders headers = null;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        if ((userInfo != null)) {</span>
+<span class="nc" id="L141">            headers = createHeaders(userInfo.getFormattedString());</span>
+        }
+
+<span class="nc" id="L144">        return this.makeRestCallPost(url, headers, body);</span>
+    }
+
+    /**
+     * The most general form of GET calls.
+     * @param url
+     * @param headers Can be null if no header is needed
+     * @return
+     * @throws RestClientException
+     */
+    public ResponseEntity&lt;String&gt; makeRestCallGet(String url, HttpHeaders headers) throws RestClientException {
+
+<span class="nc" id="L156">        long start = System.currentTimeMillis();</span>
+        ResponseEntity&lt;String&gt; response;
+<span class="nc" id="L158">        String status = null;</span>
+        try {
+<span class="nc bnc" id="L160" title="All 2 branches missed.">            HttpEntity entity = headers==null?null:new HttpEntity(headers);</span>
+<span class="nc" id="L161">            response = restOperations.exchange(url, HttpMethod.GET, entity, String.class);</span>
+<span class="nc" id="L162">            status = response.getStatusCode().toString();</span>
+<span class="nc" id="L163">        } catch (HttpStatusCodeException e) {</span>
+<span class="nc" id="L164">            status = e.getStatusCode().toString();</span>
+<span class="nc" id="L165">            throw e;</span>
+<span class="nc" id="L166">        } catch (Exception e) {</span>
+<span class="nc" id="L167">            status = e.getClass().getCanonicalName();</span>
+<span class="nc" id="L168">            throw e;</span>
+        } finally {
+<span class="nc" id="L170">            long end = System.currentTimeMillis();</span>
+<span class="nc" id="L171">            LOG.info(&quot;makeRestCall http_method=GET http_url=&quot; + url + &quot; http_status=&quot; + status + &quot; http_duration=&quot; + (end - start));</span>
+        }
+<span class="nc" id="L173">        return response;</span>
+    }
+
+
+    /**
+     * Make a GET call without headers
+     * @param url
+     * @return
+     * @throws RestClientException
+     */
+    public ResponseEntity&lt;String&gt; makeRestCallGet(String url) throws RestClientException {
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (restOperations == null) { return null; }</span>
+
+<span class="nc" id="L186">        return this.makeRestCallGet(url, (HttpHeaders)null);</span>
+    }
+
+    /**
+     * Make a GET call with a single header, Authorization, which has the value &quot;[headerKey] [token]&quot;.
+     * E.g. Authorization: token xxxxxxxxxxx
+     * When either headerKey or token is null, no header is added
+     * @param url
+     * @param headerKey
+     * @param token
+     * @return
+     * @throws RestClientException
+     */
+    public ResponseEntity&lt;String&gt; makeRestCallGet(String url, String headerKey, String token) throws RestClientException {
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (restOperations == null) { return null; }</span>
+
+<span class="nc" id="L202">        HttpHeaders headers = null;</span>
+<span class="nc bnc" id="L203" title="All 4 branches missed.">        if (StringUtils.isNotEmpty(headerKey) &amp;&amp; StringUtils.isNotEmpty(token)) {</span>
+<span class="nc" id="L204">            headers = createHeaders(headerKey, token);</span>
+        }
+
+<span class="nc" id="L207">        return this.makeRestCallGet(url, headers);</span>
+
+    }
+
+    /**
+     * Make a GET call with a single header, Authorization, which has the value &quot;Basic &quot; plus base64 encoded userId:passCode.
+     * E.g. Authorization: Basic base64EncodedUserIdAndPassCode
+     * When userInfo is null, no header is added
+     * @param url
+     * @param userInfo
+     * @return
+     * @throws RestClientException
+     */
+    public ResponseEntity&lt;String&gt; makeRestCallGet(String url, RestUserInfo userInfo) throws RestClientException {
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (restOperations == null) { return null; }</span>
+
+<span class="nc" id="L223">        HttpHeaders headers = null;</span>
+<span class="nc bnc" id="L224" title="All 4 branches missed.">        if (userInfo != null &amp;&amp; StringUtils.isNotEmpty(userInfo.getFormattedString())) {</span>
+<span class="nc" id="L225">            headers = createHeaders(userInfo.getFormattedString());</span>
+        }
+<span class="nc" id="L227">        return this.makeRestCallGet(url, headers);</span>
+    }
+
+    protected HttpHeaders createHeaders(RestUserInfo restUserInfo) {
+<span class="nc" id="L231">        return createHeaders(restUserInfo.getFormattedString());</span>
+    }
+
+    protected HttpHeaders createHeaders(String user) {
+<span class="nc" id="L235">        byte[] encodedAuth = Base64.encodeBase64(user.getBytes(StandardCharsets.US_ASCII));</span>
+<span class="nc" id="L236">        String authHeader = &quot;Basic &quot; + new String(encodedAuth);</span>
+<span class="nc" id="L237">        HttpHeaders headers = new HttpHeaders();</span>
+<span class="nc" id="L238">        headers.set(&quot;Authorization&quot;, authHeader);</span>
+<span class="nc" id="L239">        return headers;</span>
+    }
+
+    protected HttpHeaders createHeaders(String key, String token) {
+<span class="nc" id="L243">        String authHeader = key.trim() + &quot; &quot; + token.trim();</span>
+<span class="nc" id="L244">        HttpHeaders headers = new HttpHeaders();</span>
+<span class="nc" id="L245">        headers.set(&quot;Authorization&quot;, authHeader);</span>
+<span class="nc" id="L246">        return headers;</span>
+    }
+
+    public JSONObject parseAsObject(ResponseEntity&lt;String&gt; response) throws ParseException {
+<span class="nc bnc" id="L250" title="All 2 branches missed.">        if (response == null) { return new JSONObject(); }</span>
+
+<span class="nc" id="L252">        return (JSONObject) new JSONParser().parse(response.getBody());</span>
+    }
+
+    public JSONArray parseAsArray(ResponseEntity&lt;String&gt; response) throws ParseException {
+<span class="nc" id="L256">        return (JSONArray) new JSONParser().parse(response.getBody());</span>
+    }
+
+    public JSONArray getArray(JSONObject json, String key) {
+<span class="nc bnc" id="L260" title="All 2 branches missed.">        if (json == null) return new JSONArray();</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (json.get(key) == null) return new JSONArray();</span>
+<span class="nc" id="L262">        return (JSONArray) json.get(key);</span>
+    }
+
+    public String getString(Object obj, String key) {
+<span class="nc bnc" id="L266" title="All 2 branches missed.">        if (obj == null) return &quot;&quot;;</span>
+
+<span class="nc bnc" id="L268" title="All 2 branches missed.">        if (obj instanceof Map) {</span>
+<span class="nc" id="L269">            Map map = (Map) obj;</span>
+<span class="nc" id="L270">            Object value = map.get(key);</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">            return (value == null) ? &quot;&quot; : value.toString();</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        } else if (obj instanceof JSONObject) {</span>
+<span class="nc" id="L273">            JSONObject json = (JSONObject) obj;</span>
+<span class="nc" id="L274">            Object value = json.get(key);</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">            return (value == null) ? &quot;&quot; : value.toString();</span>
+        }
+<span class="nc" id="L277">        return &quot;&quot;;</span>
+    }
+
+    public Integer getInteger(Object obj, String key) throws NumberFormatException{
+<span class="nc" id="L281">        return NumberUtils.toInt(getString(obj, key));</span>
+    }
+
+    public Object getAsObject(Object obj, String key) {
+<span class="nc bnc" id="L285" title="All 2 branches missed.">        if (obj == null) return null;</span>
+
+<span class="nc bnc" id="L287" title="All 2 branches missed.">        if (obj instanceof Map) {</span>
+<span class="nc" id="L288">            Map map = (Map) obj;</span>
+<span class="nc" id="L289">            return map.get(key);</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">        } else if (obj instanceof JSONObject) {</span>
+<span class="nc" id="L291">            JSONObject json = (JSONObject) obj;</span>
+<span class="nc" id="L292">            return json.get(key);</span>
+        }
+
+<span class="nc" id="L295">        return null;</span>
+    }
+
+    public boolean getBoolean(Object obj, String key) {
+<span class="nc bnc" id="L299" title="All 2 branches missed.">        if (obj == null) return false;</span>
+
+<span class="nc bnc" id="L301" title="All 2 branches missed.">        if (obj instanceof Map) {</span>
+<span class="nc" id="L302">            Map map = (Map) obj;</span>
+<span class="nc" id="L303">            return (Boolean) map.get(key);</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">        } else if (obj instanceof JSONObject) {</span>
+<span class="nc" id="L305">            JSONObject json = (JSONObject) obj;</span>
+<span class="nc" id="L306">            return (Boolean) json.get(key);</span>
+        }
+
+<span class="nc" id="L309">        return false;</span>
+    }
+
+    public Long getLong(Object obj, String key) throws NumberFormatException{
+<span class="nc" id="L313">        return NumberUtils.toLong(getString(obj, key));</span>
+    }
+
+    /**
+     * Decrypt string
+     *
+     * @param string
+     * @param key
+     * @return String
+     */
+    public static String decryptString(String string, String key) {
+<span class="nc bnc" id="L324" title="All 2 branches missed.">        if (StringUtils.isEmpty(string)) { return &quot;&quot;; }</span>
+
+<span class="nc" id="L326">        String result = &quot;&quot;;</span>
+        try {
+<span class="nc" id="L328">            result = Encryption.decryptString(string, key);</span>
+<span class="nc" id="L329">        } catch (EncryptionException e) {</span>
+<span class="nc" id="L330">            LOG.error(e.getMessage());</span>
+<span class="nc" id="L331">        }</span>
+<span class="nc" id="L332">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

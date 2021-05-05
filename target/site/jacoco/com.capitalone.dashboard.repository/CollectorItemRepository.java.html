@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CollectorItemRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.repository</a> &gt; <span class="el_source">CollectorItemRepository.java</span></div><h1>CollectorItemRepository.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.repository;
+
+import com.capitalone.dashboard.model.CollectorItem;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.PathBuilder;
+import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * A {@link CollectorItem} repository
+ */
+public interface CollectorItemRepository extends BaseCollectorItemRepository&lt;CollectorItem&gt;, QueryDslPredicateExecutor&lt;CollectorItem&gt; {
+
+    //// FIXME: 1/20/16 I really hate this dashboard specific method in the collectoritem repository, should we move the dashboardcollectoritem repository into core?
+    @Query(value=&quot;{'options.dashboardId': ?1, 'collectorId': ?0 }&quot;)
+    CollectorItem findTeamDashboardCollectorItemsByCollectorIdAndDashboardId(ObjectId collectorId, String dashboardId);
+    @Query(value=&quot;{'options.applicationName' : ?1, 'collectorId' : ?0}&quot;)
+    List&lt;CollectorItem&gt; findByOptionsAndDeployedApplicationName(ObjectId collectorId, String applicationName);
+
+    // FIXME: 3/1/16 Really need to refactor this. Do not want collector specific lookups here.
+    @Query(value=&quot;{'options.jobName' : ?2, 'niceName' : ?1, 'collectorId' : ?0}&quot;)
+    CollectorItem findByCollectorIdNiceNameAndJobName(ObjectId collectorId, String niceName, String jobName);
+    @Query(value=&quot;{'options.projectId' : ?2, 'niceName' : ?1, 'collectorId' : ?0}&quot;)
+    CollectorItem findByCollectorIdNiceNameAndProjectId(ObjectId collectorId, String niceName, String projectId);
+
+    @Query(value=&quot;{ 'collectorId' : ?0, options.url : {$regex : '^?1$', $options: 'i'}, options.branch : {$regex : '^?2$', $options: 'i'}, enabled : ?3}&quot;)
+    CollectorItem findRepoByUrlAndBranch(ObjectId collectorId, String url, String branch, boolean enabled);
+
+    @Query(value = &quot;{ 'collectorId' : ?0, options.url : {$regex : '^?1$', $options: 'i'}, options.branch : {$regex : '^?2$', $options: 'i'}}&quot;)
+    CollectorItem findRepoByUrlAndBranch(ObjectId collectorId, String url, String branch);
+
+    @Query(value=&quot;{ 'collectorId': { $in: ?0 }, ?1 : {$regex : '.*?2.*', $options: 'i'}}&quot;)
+    Page&lt;CollectorItem&gt; findByCollectorIdAndSearchField(List&lt;ObjectId&gt; collectorId, String searchField, String searchFieldValue, Pageable pageable);
+
+    @Query(value=&quot;{ 'collectorId': { $in: ?0 }, ?1 : {$regex : '.*?2.*', $options: 'i'} ,  ?3 : {$regex : '.*?4.*', $options: 'i'}}&quot;)
+    Page&lt;CollectorItem&gt; findByCollectorIdAndSearchFields(List&lt;ObjectId&gt; collectorId,String searchField1, String searchFieldValue1, String searchField2,String searchFieldValue2,  Pageable pageable);
+
+    @Query(value=&quot;{'options.teamId' : ?0}&quot;)
+    CollectorItem findByJiraTeamId(String teamId);
+
+    @Query(value=&quot;{'options.projectId' : ?0}&quot;)
+    CollectorItem findByJiraProjectId(String projectId);
+
+    @Query(value =&quot;{'options.artifactName': ?0, 'options.path': ?1}&quot;)
+    List&lt;CollectorItem&gt; findByArtifactNameAndPath(String artifactName, String path);
+
+    List&lt;CollectorItem&gt; findByDescription(String description);
+
+    @Query(&quot;{'options.orgName' : ?0, 'options.projectName' : ?1, 'options.projectToken' : ?2}&quot;)
+    CollectorItem findByOrgNameAndProjectNameAndProjectToken(String var1, String var2, String var3);
+
+    @Query(&quot;{'options.project' : ?0, 'options.team' : ?1}&quot;)
+    CollectorItem findByProjectAndTeam(String var1, String var2);
+
+    @Query(&quot;{'collectorId' : ?0, 'options.jobUrl' : ?1}&quot;)
+    CollectorItem findByJobUrl(ObjectId collectorId , String jobUrl);
+
+    default Iterable&lt;CollectorItem&gt; findAllByOptionNameValue(String optionName, String optionValue) {
+<span class="nc" id="L67">        PathBuilder&lt;CollectorItem&gt; path = new PathBuilder&lt;&gt;(CollectorItem.class, &quot;collectorItem&quot;);</span>
+<span class="nc" id="L68">        BooleanBuilder builder = new BooleanBuilder();</span>
+<span class="nc" id="L69">        builder.and(path.get(&quot;options&quot;, Map.class).get(optionName, String.class).eq(optionValue));</span>
+<span class="nc" id="L70">        return findAll(builder.getValue());</span>
+    }
+
+    default Iterable&lt;CollectorItem&gt; findAllByOptionNameValueAndCollectorIdsIn(String optionName, String optionValue, List&lt;ObjectId&gt; collectorIds) {
+<span class="fc" id="L74">        Map&lt;String, Object&gt; inMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L75">        inMap.put(optionName, optionValue);</span>
+<span class="fc" id="L76">        return findAllByOptionMapAndCollectorIdsIn(inMap, collectorIds);</span>
+    }
+
+    default Iterable&lt;CollectorItem&gt; findAllByOptionMapAndCollectorIdsIn(Map&lt;String, Object&gt; options, List&lt;ObjectId&gt; collectorIds) {
+<span class="fc" id="L80">        PathBuilder&lt;CollectorItem&gt; path = new PathBuilder&lt;&gt;(CollectorItem.class, &quot;collectorItem&quot;);</span>
+<span class="fc" id="L81">        BooleanBuilder builder = new BooleanBuilder();</span>
+<span class="fc" id="L82">        builder.and(path.get(&quot;collectorId&quot;, ObjectId.class).in(collectorIds));</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        options.forEach((key, value) -&gt; builder.and(Objects.isNull(value)?path.get(&quot;options&quot;, Map.class).get(key, Object.class).isNull():path.get(&quot;options&quot;, Map.class).get(key, Object.class).eq(value)));</span>
+<span class="fc" id="L84">        return findAll(builder.getValue());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

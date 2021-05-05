@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RequestLog.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">RequestLog.java</span></div><h1>RequestLog.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+
+@Document(collection = &quot;requests&quot;)
+<span class="nc" id="L8">public class RequestLog extends BaseModel {</span>
+
+    @Indexed
+    private String apiUser;
+    private String client;
+    @Indexed
+    private String endpoint;
+    private String method;
+    private String parameter;
+    private long requestSize;
+    private String requestContentType;
+    private Object requestBody;
+    private long responseSize;
+    private String responseContentType;
+    private Object responseBody;
+    private int responseCode;
+    private long timestamp;
+    private long responseTime;
+    private String application;
+
+<span class="nc" id="L28">    public String getApiUser() { return apiUser; }</span>
+
+<span class="nc" id="L30">    public void setApiUser(String apiUser) { this.apiUser = apiUser; }</span>
+
+    public String getClient() {
+<span class="nc" id="L33">        return client;</span>
+    }
+
+    public void setClient(String client) {
+<span class="nc" id="L37">        this.client = client;</span>
+<span class="nc" id="L38">    }</span>
+
+    public String getEndpoint() {
+<span class="nc" id="L41">        return endpoint;</span>
+    }
+
+    public void setEndpoint(String endpoint) {
+<span class="nc" id="L45">        this.endpoint = endpoint;</span>
+<span class="nc" id="L46">    }</span>
+
+    public String getMethod() {
+<span class="nc" id="L49">        return method;</span>
+    }
+
+    public void setMethod(String method) {
+<span class="nc" id="L53">        this.method = method;</span>
+<span class="nc" id="L54">    }</span>
+
+    public String getParameter() {
+<span class="nc" id="L57">        return parameter;</span>
+    }
+
+    public void setParameter(String parameter) {
+<span class="nc" id="L61">        this.parameter = parameter;</span>
+<span class="nc" id="L62">    }</span>
+
+    public Object getResponseBody() {
+<span class="nc" id="L65">        return responseBody;</span>
+    }
+
+    public void setResponseBody(Object responseBody) {
+<span class="nc" id="L69">        this.responseBody = responseBody;</span>
+<span class="nc" id="L70">    }</span>
+
+    public Object getRequestBody() {
+<span class="nc" id="L73">        return requestBody;</span>
+    }
+
+    public void setRequestBody(Object requestBody) {
+<span class="nc" id="L77">        this.requestBody = requestBody;</span>
+<span class="nc" id="L78">    }</span>
+
+    public long getTimestamp() {
+<span class="nc" id="L81">        return timestamp;</span>
+    }
+
+    public void setTimestamp(long timestamp) {
+<span class="nc" id="L85">        this.timestamp = timestamp;</span>
+<span class="nc" id="L86">    }</span>
+
+    public int getResponseCode() {
+<span class="nc" id="L89">        return responseCode;</span>
+    }
+
+    public void setResponseCode(int responseCode) {
+<span class="nc" id="L93">        this.responseCode = responseCode;</span>
+<span class="nc" id="L94">    }</span>
+
+    public long getRequestSize() {
+<span class="nc" id="L97">        return requestSize;</span>
+    }
+
+    public void setRequestSize(long requestSize) {
+<span class="nc" id="L101">        this.requestSize = requestSize;</span>
+<span class="nc" id="L102">    }</span>
+
+    public long getResponseSize() {
+<span class="nc" id="L105">        return responseSize;</span>
+    }
+
+    public void setResponseSize(long responseSize) {
+<span class="nc" id="L109">        this.responseSize = responseSize;</span>
+<span class="nc" id="L110">    }</span>
+
+    public String getRequestContentType() {
+<span class="nc" id="L113">        return requestContentType;</span>
+    }
+
+    public void setRequestContentType(String requestContentType) {
+<span class="nc" id="L117">        this.requestContentType = requestContentType;</span>
+<span class="nc" id="L118">    }</span>
+
+    public String getResponseContentType() {
+<span class="nc" id="L121">        return responseContentType;</span>
+    }
+
+    public void setResponseContentType(String responseContentType) {
+<span class="nc" id="L125">        this.responseContentType = responseContentType;</span>
+<span class="nc" id="L126">    }</span>
+
+<span class="nc" id="L128">    public long getResponseTime() { return responseTime; }</span>
+
+<span class="nc" id="L130">    public void setResponseTime(long responseTime) { this.responseTime = responseTime; }</span>
+
+    public String getApplication() {
+<span class="nc" id="L133">        return application;</span>
+    }
+
+    public void setApplication(String application) {
+<span class="nc" id="L137">        this.application = application;</span>
+<span class="nc" id="L138">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L142">        return &quot;REST Request - &quot; + &quot;[&quot; + this.method + &quot;] [PARAMETERS:&quot; + parameter + &quot;] + [APIUSER:&quot; + apiUser + &quot;] [BODY:&quot; + requestBody + &quot;] [REMOTE:&quot; + client + &quot;] [clientReference:&quot; + getClientReference() + &quot;]  [STATUS:&quot; + responseCode + &quot;] [RESPONSE TIME:&quot; + responseTime + &quot;]&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MochaSpecToTestCapabilityTransformer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">hygieia.transformer</a> &gt; <span class="el_source">MochaSpecToTestCapabilityTransformer.java</span></div><h1>MochaSpecToTestCapabilityTransformer.java</h1><pre class="source lang-java linenums">package hygieia.transformer;
+
+import com.capitalone.dashboard.model.TestCapability;
+import com.capitalone.dashboard.model.TestCase;
+import com.capitalone.dashboard.model.TestCaseStatus;
+import com.capitalone.dashboard.model.TestSuite;
+import com.capitalone.dashboard.model.TestSuiteType;
+import com.capitalone.dashboard.model.quality.MochaJsSpecReport;
+import com.capitalone.dashboard.request.BuildDataCreateRequest;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Converts mocha report
+ */
+public class MochaSpecToTestCapabilityTransformer {
+
+    private BuildDataCreateRequest buildDataCreateRequest;
+    private String capabilityDescription;
+
+<span class="fc" id="L22">    public MochaSpecToTestCapabilityTransformer(BuildDataCreateRequest buildDataCreateRequest, String capabilityDescription) {</span>
+<span class="fc" id="L23">        this.buildDataCreateRequest = buildDataCreateRequest;</span>
+<span class="fc" id="L24">        this.capabilityDescription = capabilityDescription;</span>
+<span class="fc" id="L25">    }</span>
+
+    public TestCapability convert(MochaJsSpecReport testReport) {
+<span class="fc" id="L28">        List&lt;TestSuite&gt; testSuites = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        for (MochaJsSpecReport.Suite suite : testReport.getSuites()) {</span>
+<span class="fc" id="L31">            TestSuite testSuite = buildTestSuite(suite);</span>
+<span class="fc" id="L32">            testSuites.add(testSuite);</span>
+<span class="fc" id="L33">        }</span>
+
+<span class="fc" id="L35">        return buildCapability(testSuites);</span>
+    }
+
+    private TestSuite buildTestSuite(MochaJsSpecReport.Suite suite) {
+<span class="fc" id="L39">        TestSuite testSuite = new TestSuite();</span>
+<span class="fc" id="L40">        testSuite.setDescription(suite.getTitle());</span>
+<span class="fc" id="L41">        long duration = 0;</span>
+<span class="fc" id="L42">        int testCaseSkippedCount = 0, testCaseSuccessCount = 0, testCaseFailCount = 0, testCaseUnknownCount = 0, testCaseTotalCount = 0;</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        for (MochaJsSpecReport.Test mochaTest : suite.getTests()) {</span>
+<span class="fc" id="L44">            TestCase testCase = buildTestCase(mochaTest);</span>
+<span class="fc" id="L45">            duration += testCase.getDuration();</span>
+<span class="pc bpc" id="L46" title="1 of 4 branches missed.">            switch (testCase.getStatus()) {</span>
+                case Success:
+<span class="fc" id="L48">                    testCaseSuccessCount++;</span>
+<span class="fc" id="L49">                    break;</span>
+                case Failure:
+<span class="fc" id="L51">                    testCaseFailCount++;</span>
+<span class="fc" id="L52">                    break;</span>
+                case Skipped:
+<span class="fc" id="L54">                    testCaseSkippedCount++;</span>
+<span class="fc" id="L55">                    break;</span>
+                default:
+<span class="nc" id="L57">                    testCaseUnknownCount++;</span>
+                    break;
+            }
+<span class="fc" id="L60">            testCaseTotalCount++;</span>
+<span class="fc" id="L61">            testSuite.getTestCases().add(testCase);</span>
+<span class="fc" id="L62">        }</span>
+<span class="fc" id="L63">        testSuite.setSuccessTestCaseCount(testCaseSuccessCount);</span>
+<span class="fc" id="L64">        testSuite.setFailedTestCaseCount(testCaseFailCount);</span>
+<span class="fc" id="L65">        testSuite.setSkippedTestCaseCount(testCaseSkippedCount);</span>
+<span class="fc" id="L66">        testSuite.setTotalTestCaseCount(testCaseTotalCount);</span>
+<span class="fc" id="L67">        testSuite.setUnknownStatusCount(testCaseUnknownCount);</span>
+<span class="fc" id="L68">        testSuite.setDuration(duration);</span>
+
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (testCaseFailCount &gt; 0) {</span>
+<span class="fc" id="L71">            testSuite.setStatus(TestCaseStatus.Failure);</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        } else if (testCaseSkippedCount &gt; 0) {</span>
+<span class="nc" id="L73">            testSuite.setStatus(TestCaseStatus.Skipped);</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        } else if (testCaseSuccessCount &gt; 0) {</span>
+<span class="fc" id="L75">            testSuite.setStatus(TestCaseStatus.Success);</span>
+        } else {
+<span class="nc" id="L77">            testSuite.setStatus(TestCaseStatus.Unknown);</span>
+        }
+<span class="fc" id="L79">        return testSuite;</span>
+    }
+
+    private TestCase buildTestCase(MochaJsSpecReport.Test test) {
+<span class="fc" id="L83">        TestCase testCase = new TestCase();</span>
+
+<span class="fc" id="L85">        testCase.setStatus(convertStatus(test.getResult()));</span>
+<span class="fc" id="L86">        testCase.setDuration(test.getDuration());</span>
+<span class="fc" id="L87">        testCase.setDescription(test.getTitle());</span>
+<span class="fc" id="L88">        return testCase;</span>
+    }
+
+    private TestCaseStatus convertStatus(String result) {
+<span class="pc bpc" id="L92" title="1 of 4 branches missed.">        switch (result) {</span>
+            case &quot;passed&quot;:
+<span class="fc" id="L94">                return TestCaseStatus.Success;</span>
+            case &quot;failed&quot;:
+<span class="fc" id="L96">                return TestCaseStatus.Failure;</span>
+            case &quot;pending&quot;:
+<span class="fc" id="L98">                return TestCaseStatus.Skipped;</span>
+            default:
+<span class="nc" id="L100">                return TestCaseStatus.Unknown;</span>
+        }
+    }
+
+
+    private TestCapability buildCapability(List&lt;TestSuite&gt; testSuites) {
+<span class="fc" id="L106">        TestCapability cap = new TestCapability();</span>
+<span class="fc" id="L107">        cap.setType(TestSuiteType.Functional);</span>
+
+<span class="fc" id="L109">        cap.getTestSuites().addAll(testSuites);</span>
+<span class="fc" id="L110">        long duration = 0;</span>
+<span class="fc" id="L111">        int testSuiteSkippedCount = 0, testSuiteSuccessCount = 0, testSuiteFailCount = 0, testSuiteUnknownCount = 0;</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        for (TestSuite t : testSuites) {</span>
+<span class="fc" id="L113">            duration += t.getDuration();</span>
+<span class="pc bpc" id="L114" title="2 of 4 branches missed.">            switch (t.getStatus()) {</span>
+                case Success:
+<span class="fc" id="L116">                    testSuiteSuccessCount++;</span>
+<span class="fc" id="L117">                    break;</span>
+                case Failure:
+<span class="fc" id="L119">                    testSuiteFailCount++;</span>
+<span class="fc" id="L120">                    break;</span>
+                case Skipped:
+<span class="nc" id="L122">                    testSuiteSkippedCount++;</span>
+<span class="nc" id="L123">                    break;</span>
+                default:
+<span class="nc" id="L125">                    testSuiteUnknownCount++;</span>
+                    break;
+            }
+<span class="fc" id="L128">        }</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (testSuiteFailCount &gt; 0) {</span>
+<span class="fc" id="L130">            cap.setStatus(TestCaseStatus.Failure);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        } else if (testSuiteSkippedCount &gt; 0) {</span>
+<span class="nc" id="L132">            cap.setStatus(TestCaseStatus.Skipped);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        } else if (testSuiteSuccessCount &gt; 0) {</span>
+<span class="nc" id="L134">            cap.setStatus(TestCaseStatus.Success);</span>
+        } else {
+<span class="nc" id="L136">            cap.setStatus(TestCaseStatus.Unknown);</span>
+        }
+<span class="fc" id="L138">        cap.setFailedTestSuiteCount(testSuiteFailCount);</span>
+<span class="fc" id="L139">        cap.setSkippedTestSuiteCount(testSuiteSkippedCount);</span>
+<span class="fc" id="L140">        cap.setSuccessTestSuiteCount(testSuiteSuccessCount);</span>
+<span class="fc" id="L141">        cap.setUnknownStatusTestSuiteCount(testSuiteUnknownCount);</span>
+<span class="fc" id="L142">        cap.setTotalTestSuiteCount(testSuites.size());</span>
+<span class="fc" id="L143">        cap.setDuration(duration);</span>
+<span class="fc" id="L144">        cap.setExecutionId(String.valueOf(buildDataCreateRequest.getNumber()));</span>
+<span class="fc" id="L145">        cap.setDescription(this.capabilityDescription);</span>
+<span class="fc" id="L146">        return cap;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

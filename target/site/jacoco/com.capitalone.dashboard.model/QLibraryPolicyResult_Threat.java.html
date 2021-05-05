@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QLibraryPolicyResult_Threat.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">QLibraryPolicyResult_Threat.java</span></div><h1>QLibraryPolicyResult_Threat.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
+import com.querydsl.core.types.PathMetadata;
+import javax.annotation.Generated;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
+
+
+/**
+ * QLibraryPolicyResult_Threat is a Querydsl query type for Threat
+ */
+@Generated(&quot;com.querydsl.codegen.EmbeddableSerializer&quot;)
+public class QLibraryPolicyResult_Threat extends BeanPath&lt;LibraryPolicyResult.Threat&gt; {
+
+    private static final long serialVersionUID = 1587781056L;
+
+<span class="nc" id="L21">    public static final QLibraryPolicyResult_Threat threat = new QLibraryPolicyResult_Threat(&quot;threat&quot;);</span>
+
+<span class="nc" id="L23">    public final ListPath&lt;String, StringPath&gt; components = this.&lt;String, StringPath&gt;createList(&quot;components&quot;, String.class, StringPath.class, PathInits.DIRECT2);</span>
+
+<span class="nc" id="L25">    public final NumberPath&lt;Integer&gt; count = createNumber(&quot;count&quot;, Integer.class);</span>
+
+<span class="nc" id="L27">    public final MapPath&lt;LibraryPolicyThreatDisposition, Integer, NumberPath&lt;Integer&gt;&gt; dispositionCounts = this.&lt;LibraryPolicyThreatDisposition, Integer, NumberPath&lt;Integer&gt;&gt;createMap(&quot;dispositionCounts&quot;, LibraryPolicyThreatDisposition.class, Integer.class, NumberPath.class);</span>
+
+<span class="nc" id="L29">    public final EnumPath&lt;LibraryPolicyThreatLevel&gt; level = createEnum(&quot;level&quot;, LibraryPolicyThreatLevel.class);</span>
+
+<span class="nc" id="L31">    public final NumberPath&lt;Integer&gt; maxAge = createNumber(&quot;maxAge&quot;, Integer.class);</span>
+
+<span class="nc" id="L33">    public final NumberPath&lt;Double&gt; maxScore = createNumber(&quot;maxScore&quot;, Double.class);</span>
+
+    public QLibraryPolicyResult_Threat(String variable) {
+<span class="nc" id="L36">        super(LibraryPolicyResult.Threat.class, forVariable(variable));</span>
+<span class="nc" id="L37">    }</span>
+
+    public QLibraryPolicyResult_Threat(Path&lt;? extends LibraryPolicyResult.Threat&gt; path) {
+<span class="nc" id="L40">        super(path.getType(), path.getMetadata());</span>
+<span class="nc" id="L41">    }</span>
+
+    public QLibraryPolicyResult_Threat(PathMetadata metadata) {
+<span class="nc" id="L44">        super(LibraryPolicyResult.Threat.class, metadata);</span>
+<span class="nc" id="L45">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

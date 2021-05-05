@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Collector.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.capitalone.dashboard:core</a> &gt; <a href="index.source.html" class="el_package">com.capitalone.dashboard.model</a> &gt; <span class="el_source">Collector.java</span></div><h1>Collector.java</h1><pre class="source lang-java linenums">package com.capitalone.dashboard.model;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * The collectors that have been registered in the given Dashboard app instance.
+ */
+@Document(collection = &quot;collectors&quot;)
+public class Collector extends BaseModel {
+    private String name;
+    private CollectorType collectorType;
+    private boolean enabled;
+    private boolean online;
+<span class="fc" id="L22">    private List&lt;CollectionError&gt; errors = new ArrayList&lt;&gt;();</span>
+    //Every collector will have its own set of required and all fields depending upon the specific tool.
+<span class="fc" id="L24">    private Map&lt;String, Object&gt; uniqueFields = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L25">    private Map&lt;String, Object&gt; allFields = new HashMap&lt;&gt;();</span>
+
+    private long lastExecuted;
+    @DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME)
+    private java.util.Date lastExecutedTime;
+    private long lastExecutionRecordCount;
+    private long lastExecutedSeconds;
+<span class="fc" id="L32">    private List&lt;String&gt; searchFields = Arrays.asList(&quot;description&quot;);</span>
+<span class="fc" id="L33">    private Map&lt;String, Object&gt; properties = new HashMap&lt;&gt;(); //general purpose name-value properties</span>
+
+<span class="fc" id="L35">    public Collector() {</span>
+<span class="fc" id="L36">    }</span>
+
+<span class="fc" id="L38">    public Collector(String name, CollectorType collectorType) {</span>
+<span class="fc" id="L39">        this.name = name;</span>
+<span class="fc" id="L40">        this.collectorType = collectorType;</span>
+<span class="fc" id="L41">    }</span>
+
+    public String getName() {
+<span class="fc" id="L44">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L48">        this.name = name;</span>
+<span class="fc" id="L49">    }</span>
+
+    public CollectorType getCollectorType() {
+<span class="fc" id="L52">        return collectorType;</span>
+    }
+
+    public void setCollectorType(CollectorType collectorType) {
+<span class="fc" id="L56">        this.collectorType = collectorType;</span>
+<span class="fc" id="L57">    }</span>
+
+    public boolean isEnabled() {
+<span class="fc" id="L60">        return enabled;</span>
+    }
+
+    public void setEnabled(boolean enabled) {
+<span class="fc" id="L64">        this.enabled = enabled;</span>
+<span class="fc" id="L65">    }</span>
+
+    public boolean isOnline() {
+<span class="fc" id="L68">        return online;</span>
+    }
+
+    public void setOnline(boolean online) {
+<span class="fc" id="L72">        this.online = online;</span>
+<span class="fc" id="L73">    }</span>
+
+    public long getLastExecuted() {
+<span class="fc" id="L76">        return lastExecuted;</span>
+    }
+
+    public void setLastExecuted(long lastExecuted) {
+
+<span class="fc" id="L81">        this.lastExecuted = lastExecuted;</span>
+<span class="fc" id="L82">        this.setLastExecutedTime(new Date(lastExecuted));</span>
+<span class="fc" id="L83">    }</span>
+
+    public long getLastExecutionRecordCount() {
+<span class="fc" id="L86">        return lastExecutionRecordCount;</span>
+    }
+
+<span class="nc" id="L89">    public long getLastExecutedSeconds() { return lastExecutedSeconds; }</span>
+
+<span class="fc" id="L91">    public void setLastExecutedSeconds(long lastExecutedSeconds) { this.lastExecutedSeconds = lastExecutedSeconds; }</span>
+
+    public void setLastExecutionRecordCount(long lastExecutionRecordCount) {
+<span class="nc" id="L94">        this.lastExecutionRecordCount = lastExecutionRecordCount;</span>
+<span class="nc" id="L95">    }</span>
+
+    public List&lt;CollectionError&gt; getErrors() {
+<span class="nc" id="L98">        return errors;</span>
+    }
+
+    public void setErrors(List&lt;CollectionError&gt; errors) {
+<span class="nc" id="L102">        this.errors = errors;</span>
+<span class="nc" id="L103">    }</span>
+
+    public Map&lt;String, Object&gt; getUniqueFields() {
+<span class="nc" id="L106">        return uniqueFields;</span>
+    }
+
+    public void setUniqueFields(Map&lt;String, Object&gt; uniqueFields) {
+<span class="nc" id="L110">        this.uniqueFields = uniqueFields;</span>
+<span class="nc" id="L111">    }</span>
+
+    public Map&lt;String, Object&gt; getAllFields() {
+<span class="nc" id="L114">        return allFields;</span>
+    }
+
+    public void setAllFields(Map&lt;String, Object&gt; allFields) {
+<span class="nc" id="L118">        this.allFields = allFields;</span>
+<span class="nc" id="L119">    }</span>
+
+    public List&lt;String&gt; getSearchFields() {
+<span class="nc" id="L122">        return searchFields;</span>
+    }
+
+    public void setSearchFields(List&lt;String&gt; searchFields) {
+<span class="nc" id="L126">        this.searchFields = searchFields;</span>
+<span class="nc" id="L127">    }</span>
+
+    public Map&lt;String, Object&gt; getProperties() {
+<span class="nc" id="L130">        return properties;</span>
+    }
+
+    public void setProperties(Map&lt;String, Object&gt; properties) {
+<span class="nc" id="L134">        this.properties = properties;</span>
+<span class="nc" id="L135">    }</span>
+
+    public Date getLastExecutedTime() {
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        return lastExecutedTime == null ? new Date(System.currentTimeMillis()) : lastExecutedTime;</span>
+    }
+
+<span class="fc" id="L141">    public void setLastExecutedTime(Date lastExecutedTime) { this.lastExecutedTime = lastExecutedTime; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
